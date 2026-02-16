@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { VideoGrid, Controls, Chat, Participants } from '../components/room';
 import { useSocket } from '../hooks/useSocket';
 import { useWebRTC } from '../hooks/useWebRTC';
+import { useChat } from '../hooks/useChat';
 import { useRoomStore } from '../store/roomStore';
 import { useMediaStore } from '../store/mediaStore';
 import { useAuthStore } from '../store/authStore';
@@ -22,6 +23,15 @@ export const RoomPage = () => {
   const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [iceServers, setIceServers] = useState(PEER_CONNECTION_CONFIG.iceServers);
+
+  // Подключение к чату - всегда активно пока в комнате
+  const { messages, isLoading: isChatLoading, sendMessage } = useChat();
+  
+  console.log('[RoomPage] Chat state:', {
+    messagesCount: messages.length,
+    isChatOpen,
+    isChatLoading,
+  });
 
   // Загрузка ICE серверов с сервера (если есть TURN)
   useEffect(() => {
@@ -91,7 +101,7 @@ export const RoomPage = () => {
             useMediaStore.getState().setLocalStream(stream);
           } catch (mediaError) {
             console.error('[RoomPage] Failed to get media:', mediaError);
-            toast.error('Не удалось получить доступ к камере и микрофону');
+            toast.error('Не удалось получить доступ к камере и микрофону. Вы можете продолжить без них.');
           }
         } else {
           console.log('[RoomPage] Using existing media stream:', currentStream.id);
@@ -99,20 +109,18 @@ export const RoomPage = () => {
 
         console.log('[RoomPage] Joining room via socket...');
         
-        // ВАЖНО: Убеждаемся что у нас есть localStream перед присоединением к комнате
+        // Проверяем наличие медиа (опционально)
         const finalStream = useMediaStore.getState().localStream;
-        if (!finalStream) {
-          console.error('[RoomPage] No localStream available before joining room!');
-          toast.error('Не удалось инициализировать медиа устройства');
-          navigate('/');
-          return;
+        if (finalStream) {
+          console.log('[RoomPage] LocalStream ready, joining room with media:', {
+            streamId: finalStream.id,
+            videoTracks: finalStream.getVideoTracks().length,
+            audioTracks: finalStream.getAudioTracks().length,
+          });
+        } else {
+          console.warn('[RoomPage] Joining room without media stream');
+          toast('Вы присоединяетесь без камеры и микрофона', { icon: '⚠️' });
         }
-        
-        console.log('[RoomPage] LocalStream ready, joining room:', {
-          streamId: finalStream.id,
-          videoTracks: finalStream.getVideoTracks().length,
-          audioTracks: finalStream.getAudioTracks().length,
-        });
         
         // Присоединяемся к комнате через Socket.io
         await joinRoom(slug);
@@ -188,8 +196,15 @@ export const RoomPage = () => {
           <VideoGrid />
         </div>
 
-        {/* Чат */}
-        {isChatOpen && <Chat onClose={() => setIsChatOpen(false)} />}
+        {/* Чат - только визуальное открытие/закрытие */}
+        {isChatOpen && (
+          <Chat
+            messages={messages}
+            isLoading={isChatLoading}
+            sendMessage={sendMessage}
+            onClose={() => setIsChatOpen(false)}
+          />
+        )}
 
         {/* Участники */}
         {isParticipantsOpen && <Participants onClose={() => setIsParticipantsOpen(false)} />}

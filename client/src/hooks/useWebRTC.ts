@@ -208,7 +208,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         });
         
         if (!localStream) {
-          console.error('[useWebRTC] Cannot create offer - no localStream!');
+          console.warn('[useWebRTC] Cannot create offer - no localStream. User will receive streams but not send.');
           return;
         }
         
@@ -264,11 +264,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
           hasAudio: data.sdp.sdp?.includes('m=audio'),
         });
         
-        if (!localStream) {
-          console.error('[useWebRTC] Cannot handle offer - no localStream!');
-          return;
-        }
-        
+        // Создаем peer connection (даже без localStream - чтобы получать удаленные треки)
         const pc = createPeerConnection(data.from);
         await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
 

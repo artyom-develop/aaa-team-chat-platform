@@ -1,17 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, X } from 'lucide-react';
-import { useChat } from '../../hooks/useChat';
 import { useAuthStore } from '../../store/authStore';
+import { ChatMessage } from '../../types';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 interface ChatProps {
+  messages: ChatMessage[];
+  isLoading: boolean;
+  sendMessage: (content: string) => Promise<void>;
   onClose: () => void;
 }
 
-export const Chat = ({ onClose }: ChatProps) => {
+export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) => {
   const { user } = useAuthStore();
-  const { messages, isLoading, sendMessage } = useChat();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 

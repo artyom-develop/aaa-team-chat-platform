@@ -56,7 +56,7 @@ export const LobbyPage = () => {
         console.log('[LobbyPage] Local stream initialized:', stream.id);
       } catch (error) {
         console.error('Error accessing media devices:', error);
-        toast.error('Не удалось получить доступ к камере и микрофону');
+        toast.error('Не удалось получить доступ к камере и микрофону. Вы можете продолжить без них.');
       }
     };
 
