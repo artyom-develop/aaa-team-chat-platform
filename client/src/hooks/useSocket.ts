@@ -268,6 +268,15 @@ export const useSocket = () => {
     [room]
   );
 
+  const transferHost = useCallback(
+    (userId: string) => {
+      if (room) {
+        socketService.transferHost(room.slug, userId);
+      }
+    },
+    [room]
+  );
+
   return {
     joinRoom,
     leaveRoom,
@@ -275,5 +284,6 @@ export const useSocket = () => {
     toggleCamera,
     toggleScreenShare,
     kickUser,
+    transferHost,
   };
 };

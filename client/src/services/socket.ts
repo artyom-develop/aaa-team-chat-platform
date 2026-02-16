@@ -130,6 +130,11 @@ class SocketService {
     this.socket?.emit('host:kick-user', { roomSlug, targetUserId });
   }
 
+  transferHost(roomSlug: string, targetUserId: string): void {
+    console.log('[SocketService] Transferring host:', { roomSlug, targetUserId });
+    this.socket?.emit('host:transfer-host', { roomSlug, targetUserId });
+  }
+
   admitUser(targetUserId: string): void {
     this.socket?.emit('host:admit-user', { targetUserId });
   }

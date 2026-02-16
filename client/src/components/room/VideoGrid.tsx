@@ -78,22 +78,14 @@ export const VideoGrid = () => {
         <div className="flex justify-end gap-2 mb-2">
           <button
             onClick={() => setLayout('grid')}
-            className={`p-2 rounded-lg transition ${
-              layout === 'grid'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
+            className="p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
             title="Grid View"
           >
             <Grid className="w-5 h-5" />
           </button>
           <button
             onClick={() => setLayout('spotlight')}
-            className={`p-2 rounded-lg transition ${
-              layout === 'spotlight'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
+            className="p-2 rounded-lg transition bg-purple-600 text-white"
             title="Spotlight View"
           >
             <Users className="w-5 h-5" />
@@ -115,7 +107,7 @@ export const VideoGrid = () => {
             {otherParticipants.map((participant) => (
               <div
                 key={participant.userId}
-                className="flex-shrink-0 w-48 cursor-pointer transform transition hover:scale-105"
+                className="shrink-0 w-48 cursor-pointer transform transition hover:scale-105"
                 onClick={() => setSpotlightUserId(participant.userId)}
               >
                 <VideoTile
@@ -138,22 +130,14 @@ export const VideoGrid = () => {
       <div className="flex justify-end gap-2 mb-2">
         <button
           onClick={() => setLayout('grid')}
-          className={`p-2 rounded-lg transition ${
-            layout === 'grid'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-          }`}
+          className="p-2 rounded-lg transition bg-purple-600 text-white"
           title="Grid View"
         >
           <Grid className="w-5 h-5" />
         </button>
         <button
           onClick={() => setLayout('spotlight')}
-          className={`p-2 rounded-lg transition ${
-            layout === 'spotlight'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-          }`}
+          className="p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
           title="Spotlight View"
         >
           <Users className="w-5 h-5" />
