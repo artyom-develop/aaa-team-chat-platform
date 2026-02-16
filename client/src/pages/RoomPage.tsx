@@ -8,6 +8,7 @@ import { useMediaStore } from '../store/mediaStore';
 import { useAuthStore } from '../store/authStore';
 import { apiService } from '../services/api';
 import { socketService } from '../services/socket';
+import { PEER_CONNECTION_CONFIG } from '../constants';
 import toast from 'react-hot-toast';
 
 export const RoomPage = () => {
@@ -20,12 +21,29 @@ export const RoomPage = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [iceServers, setIceServers] = useState(PEER_CONNECTION_CONFIG.iceServers);
 
-  // Инициализация WebRTC с дефолтными ICE серверами
-  useWebRTC([
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-  ]);
+  // Загрузка ICE серверов с сервера (если есть TURN)
+  useEffect(() => {
+    const loadIceServers = async () => {
+      try {
+        const servers = await apiService.getIceServers();
+        if (servers && servers.length > 0) {
+          console.log('[RoomPage] Loaded ICE servers from API:', servers);
+          setIceServers(servers);
+        } else {
+          console.log('[RoomPage] Using default ICE servers from config');
+        }
+      } catch (error) {
+        console.log('[RoomPage] Failed to load ICE servers, using defaults:', error);
+      }
+    };
+    
+    loadIceServers();
+  }, []);
+
+  // Инициализация WebRTC с ICE серверами
+  useWebRTC(iceServers);
 
   // Присоединение к комнате
   useEffect(() => {
@@ -42,22 +60,60 @@ export const RoomPage = () => {
 
         // Получаем медиа если его еще нет (например при перезагрузке страницы)
         const currentStream = useMediaStore.getState().localStream;
+        console.log('[RoomPage] Current media stream state:', {
+          hasStream: !!currentStream,
+          streamId: currentStream?.id,
+          videoTracks: currentStream?.getVideoTracks().length || 0,
+          audioTracks: currentStream?.getAudioTracks().length || 0,
+        });
+        
         if (!currentStream) {
           console.log('[RoomPage] No media stream found, requesting access...');
           try {
             const stream = await navigator.mediaDevices.getUserMedia({
-              audio: true,
-              video: { width: 1280, height: 720 },
+              audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true,
+              },
+              video: { 
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                frameRate: { ideal: 30 },
+              },
+            });
+            console.log('[RoomPage] Media stream obtained:', {
+              streamId: stream.id,
+              videoTracks: stream.getVideoTracks().length,
+              audioTracks: stream.getAudioTracks().length,
+              videoTrackSettings: stream.getVideoTracks()[0]?.getSettings(),
             });
             useMediaStore.getState().setLocalStream(stream);
-            console.log('[RoomPage] Media stream obtained:', stream.id);
           } catch (mediaError) {
             console.error('[RoomPage] Failed to get media:', mediaError);
             toast.error('Не удалось получить доступ к камере и микрофону');
           }
+        } else {
+          console.log('[RoomPage] Using existing media stream:', currentStream.id);
         }
 
         console.log('[RoomPage] Joining room via socket...');
+        
+        // ВАЖНО: Убеждаемся что у нас есть localStream перед присоединением к комнате
+        const finalStream = useMediaStore.getState().localStream;
+        if (!finalStream) {
+          console.error('[RoomPage] No localStream available before joining room!');
+          toast.error('Не удалось инициализировать медиа устройства');
+          navigate('/');
+          return;
+        }
+        
+        console.log('[RoomPage] LocalStream ready, joining room:', {
+          streamId: finalStream.id,
+          videoTracks: finalStream.getVideoTracks().length,
+          audioTracks: finalStream.getAudioTracks().length,
+        });
+        
         // Присоединяемся к комнате через Socket.io
         await joinRoom(slug);
         console.log('[RoomPage] Successfully joined room');

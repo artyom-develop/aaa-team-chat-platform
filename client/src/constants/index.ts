@@ -10,10 +10,35 @@ export const CHAT_MESSAGES_PER_PAGE = 50;
 export const PEER_CONNECTION_CONFIG: RTCConfiguration = {
   iceServers: [
     {
-      urls: 'stun:stun.l.google.com:19302',
+      urls: [
+        'stun:stun.l.google.com:19302',
+        'stun:stun1.l.google.com:19302',
+        'stun:stun2.l.google.com:19302',
+        'stun:stun3.l.google.com:19302',
+        'stun:stun4.l.google.com:19302',
+      ],
+    },
+    // Публичные TURN серверы для обхода NAT/firewall
+    {
+      urls: 'turn:openrelay.metered.ca:80',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
     },
   ],
   iceCandidatePoolSize: 10,
+  iceTransportPolicy: 'all', // Пробуем все типы соединений
+  bundlePolicy: 'max-bundle',
+  rtcpMuxPolicy: 'require',
 };
 
 export const MEDIA_CONSTRAINTS: MediaStreamConstraints = {

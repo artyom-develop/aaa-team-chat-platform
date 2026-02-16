@@ -33,7 +33,13 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
         videoTracks: participant.stream.getVideoTracks().length,
         audioTracks: participant.stream.getAudioTracks().length,
       });
+      
       videoRef.current.srcObject = participant.stream;
+      
+      // Принудительно запускаем воспроизведение
+      videoRef.current.play().catch(err => {
+        console.warn('[VideoTile] Failed to play video:', participant.userId, err);
+      });
       
       // Проверяем состояние треков
       const videoTrack = participant.stream.getVideoTracks()[0];
@@ -44,61 +50,44 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
           trackReadyState: videoTrack.readyState,
           participantVideoEnabled: participant.videoEnabled,
         });
-
-        // ВАЖНО: Синхронизируем track.enabled с participant.videoEnabled
-        // Это нужно для правильного отображения видео после toggle
-        if (videoTrack.enabled !== participant.videoEnabled) {
-          console.log('[VideoTile] Syncing track.enabled with participant.videoEnabled:', {
-            userId: participant.userId,
-            oldTrackEnabled: videoTrack.enabled,
-            newTrackEnabled: participant.videoEnabled,
-          });
-          videoTrack.enabled = participant.videoEnabled;
-        }
       }
 
-      // Аналогично для аудио треков
+      // Проверяем аудио треки
       const audioTrack = participant.stream.getAudioTracks()[0];
-      if (audioTrack && audioTrack.enabled !== participant.audioEnabled) {
-        console.log('[VideoTile] Syncing audio track.enabled with participant.audioEnabled:', {
+      if (audioTrack) {
+        console.log('[VideoTile] Audio track state:', {
           userId: participant.userId,
-          oldTrackEnabled: audioTrack.enabled,
-          newTrackEnabled: participant.audioEnabled,
+          trackEnabled: audioTrack.enabled,
+          trackReadyState: audioTrack.readyState,
         });
-        audioTrack.enabled = participant.audioEnabled;
       }
     } else {
-      console.log('[VideoTile] Cannot attach stream:', {
+      console.log('[VideoTile] No stream available:', {
         userId: participant.userId,
         hasVideoRef: !!videoRef.current,
-        hasStream: !!participant.stream,
       });
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
     }
-  }, [participant.stream, participant.userId, participant.videoEnabled, participant.audioEnabled]);
-
-  // Проверяем, можно ли показать видео
-  const shouldShowVideo = participant.stream && participant.videoEnabled;
-  
-  console.log('[VideoTile] shouldShowVideo:', {
-    userId: participant.userId,
-    shouldShowVideo,
-    hasStream: !!participant.stream,
-    videoEnabled: participant.videoEnabled,
-  });
+  }, [participant.stream, participant.userId]);
 
   return (
     <div className="relative bg-gray-900 rounded-lg overflow-hidden aspect-video">
-      {/* Видео */}
-      {shouldShowVideo ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted={isLocal}
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
+      {/* Видео - показываем всегда когда есть stream */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted={isLocal}
+        className={`w-full h-full object-cover ${
+          !participant.stream || !participant.videoEnabled ? 'hidden' : ''
+        }`}
+      />
+      
+      {/* Аватар - показываем когда нет видео или оно выключено */}
+      {(!participant.stream || !participant.videoEnabled) && (
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
           <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center">
             <span className="text-4xl font-bold text-white">
               {participant.displayName.charAt(0).toUpperCase()}

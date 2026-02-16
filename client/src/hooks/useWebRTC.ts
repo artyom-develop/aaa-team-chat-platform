@@ -21,8 +21,17 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
 
   // Конфигурация ICE серверов
   const rtcConfig: RTCConfiguration = iceServers
-    ? { iceServers }
+    ? { 
+        iceServers,
+        iceCandidatePoolSize: PEER_CONNECTION_CONFIG.iceCandidatePoolSize,
+      }
     : PEER_CONNECTION_CONFIG;
+  
+  console.log('[useWebRTC] RTCConfiguration:', {
+    iceServersCount: rtcConfig.iceServers?.length,
+    iceServers: rtcConfig.iceServers,
+    iceCandidatePoolSize: rtcConfig.iceCandidatePoolSize,
+  });
 
   // Создание peer connection для участника
   const createPeerConnection = useCallback(
@@ -41,15 +50,35 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         peerConnectionsRef.current.delete(userId);
       }
 
-      console.log('[useWebRTC] Creating new peer connection for:', userId);
+      console.log('[useWebRTC] Creating new peer connection for:', userId, {
+        hasLocalStream: !!localStream,
+        localStreamId: localStream?.id,
+        videoTracks: localStream?.getVideoTracks().length || 0,
+        audioTracks: localStream?.getAudioTracks().length || 0,
+      });
       const pc = new RTCPeerConnection(rtcConfig);
 
       // Добавляем локальные треки
       if (localStream) {
-        localStream.getTracks().forEach((track) => {
+        const tracks = localStream.getTracks();
+        console.log('[useWebRTC] Adding local tracks to peer connection:', {
+          userId,
+          tracksCount: tracks.length,
+        });
+        
+        tracks.forEach((track) => {
+          console.log('[useWebRTC] Adding track:', {
+            userId,
+            trackKind: track.kind,
+            trackId: track.id,
+            trackEnabled: track.enabled,
+            trackReadyState: track.readyState,
+          });
           pc.addTrack(track, localStream);
         });
         console.log('[useWebRTC] Added local tracks to peer connection for:', userId);
+      } else {
+        console.warn('[useWebRTC] No localStream available when creating peer connection for:', userId);
       }
 
       // Обработка ICE candidates
@@ -61,10 +90,28 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
 
       // Обработка входящих треков
       pc.ontrack = (event) => {
+        console.log('[useWebRTC] ontrack event received:', {
+          userId,
+          trackKind: event.track.kind,
+          trackId: event.track.id,
+          trackEnabled: event.track.enabled,
+          trackReadyState: event.track.readyState,
+          streamsCount: event.streams.length,
+        });
+        
         const [remoteStream] = event.streams;
         if (remoteStream) {
-          console.log('[useWebRTC] Received remote stream from:', userId, 'streamId:', remoteStream.id);
+          console.log('[useWebRTC] Received remote stream from:', userId, {
+            streamId: remoteStream.id,
+            videoTracks: remoteStream.getVideoTracks().length,
+            audioTracks: remoteStream.getAudioTracks().length,
+            videoTracksEnabled: remoteStream.getVideoTracks().map(t => t.enabled),
+            audioTracksEnabled: remoteStream.getAudioTracks().map(t => t.enabled),
+          });
+          
           updateParticipant(userId, { stream: remoteStream });
+        } else {
+          console.warn('[useWebRTC] No stream in ontrack event for:', userId);
         }
       };
 
@@ -97,6 +144,44 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         }
       };
 
+      // Обработка ICE connection state
+      pc.oniceconnectionstatechange = () => {
+        console.log(`[useWebRTC] ICE connection state for ${userId}:`, pc.iceConnectionState);
+        
+        if (pc.iceConnectionState === 'failed') {
+          console.error(`[useWebRTC] ICE connection failed for ${userId}`);
+          console.log('[useWebRTC] Attempting ICE restart...');
+          
+          // Пытаемся перезапустить ICE
+          if (pc.restartIce) {
+            pc.restartIce();
+            
+            // Создаем новый offer с iceRestart
+            setTimeout(async () => {
+              try {
+                if (room && localStream && pc.signalingState === 'stable') {
+                  console.log('[useWebRTC] Creating new offer with ICE restart for:', userId);
+                  const offer = await pc.createOffer({ iceRestart: true });
+                  await pc.setLocalDescription(offer);
+                  socketService.sendOffer(room.slug, userId, offer);
+                }
+              } catch (error) {
+                console.error('[useWebRTC] Error during ICE restart:', error);
+              }
+            }, 1000);
+          }
+        }
+        
+        if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
+          console.log(`[useWebRTC] ICE connection established for ${userId}`);
+        }
+      };
+
+      // Обработка ICE gathering state
+      pc.onicegatheringstatechange = () => {
+        console.log(`[useWebRTC] ICE gathering state for ${userId}:`, pc.iceGatheringState);
+      };
+
       // Обработка ошибок ICE
       pc.onicecandidateerror = (event: any) => {
         console.error(`[useWebRTC] ICE candidate error for ${userId}:`, {
@@ -116,10 +201,41 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
   const createOffer = useCallback(
     async (userId: string) => {
       try {
-        console.log('[useWebRTC] Creating offer for user:', userId, 'localStream:', !!localStream);
+        console.log('[useWebRTC] Creating offer for user:', userId, {
+          hasLocalStream: !!localStream,
+          localStreamId: localStream?.id,
+          hasRoom: !!room,
+        });
+        
+        if (!localStream) {
+          console.error('[useWebRTC] Cannot create offer - no localStream!');
+          return;
+        }
+        
         const pc = createPeerConnection(userId);
+        
+        // Проверяем что треки добавлены
+        const senders = pc.getSenders();
+        console.log('[useWebRTC] Peer connection senders before offer:', {
+          userId,
+          sendersCount: senders.length,
+          senders: senders.map(s => ({
+            trackKind: s.track?.kind,
+            trackId: s.track?.id,
+            trackEnabled: s.track?.enabled,
+          })),
+        });
+        
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
+        
+        console.log('[useWebRTC] Offer created:', {
+          userId,
+          type: offer.type,
+          hasVideo: offer.sdp?.includes('m=video'),
+          hasAudio: offer.sdp?.includes('m=audio'),
+          sdpLines: offer.sdp?.split('\n').length,
+        });
 
         if (!room) {
           console.error('[useWebRTC] Cannot send offer - no room');
@@ -133,19 +249,39 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         toast.error('Ошибка создания offer');
       }
     },
-    [createPeerConnection, localStream]
+    [createPeerConnection, localStream, room]
   );
 
   // Обработка входящего offer
   const handleOffer = useCallback(
     async (data: { from: string; sdp: RTCSessionDescriptionInit }) => {
       try {
-        console.log('[useWebRTC] Received offer from:', data.from, 'localStream:', !!localStream);
+        console.log('[useWebRTC] Received offer from:', data.from, {
+          hasLocalStream: !!localStream,
+          localStreamId: localStream?.id,
+          offerType: data.sdp.type,
+          hasVideo: data.sdp.sdp?.includes('m=video'),
+          hasAudio: data.sdp.sdp?.includes('m=audio'),
+        });
+        
+        if (!localStream) {
+          console.error('[useWebRTC] Cannot handle offer - no localStream!');
+          return;
+        }
+        
         const pc = createPeerConnection(data.from);
         await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
 
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
+        
+        console.log('[useWebRTC] Answer created:', {
+          from: data.from,
+          type: answer.type,
+          hasVideo: answer.sdp?.includes('m=video'),
+          hasAudio: answer.sdp?.includes('m=audio'),
+          senders: pc.getSenders().length,
+        });
 
         if (!room) {
           console.error('[useWebRTC] Cannot send answer - no room');
@@ -159,7 +295,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         toast.error('Ошибка обработки offer');
       }
     },
-    [createPeerConnection, localStream]
+    [createPeerConnection, localStream, room]
   );
 
   // Обработка входящего answer
