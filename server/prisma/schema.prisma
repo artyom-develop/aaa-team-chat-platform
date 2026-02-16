@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model - registered users and guests
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  displayName     String   @map("display_name")
+  password        String?  // null for guests
+  avatarUrl       String?  @map("avatar_url")
+  isGuest         Boolean  @default(false) @map("is_guest")
+  role            Role     @default(USER)
+  isActive        Boolean  @default(true) @map("is_active")
+  tokenVersion    Int      @default(0) @map("token_version")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  hostedRooms      Room[]              @relation("HostedRooms")
+  roomParticipants RoomParticipant[]
+  chatMessages     ChatMessage[]
+
+  @@map("users")
+  @@index([email])
+  @@index([isGuest])
+}
+
+// Room model - video conference rooms
+model Room {
+  id              String    @id @default(uuid())
+  slug            String    @unique // abc-defg-hijk format
+  name            String
+  password        String?   // hashed password
+  hostId          String    @map("host_id")
+  isActive        Boolean   @default(true) @map("is_active")
+  hasLobby        Boolean   @default(false) @map("has_lobby")
+  maxParticipants Int       @default(50) @map("max_participants")
+  scheduledAt     DateTime? @map("scheduled_at")
+  endsAt          DateTime? @map("ends_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  host         User              @relation("HostedRooms", fields: [hostId], references: [id], onDelete: Cascade)
+  participants RoomParticipant[]
+  chatMessages ChatMessage[]
+
+  @@map("rooms")
+  @@index([slug])
+  @@index([hostId])
+  @@index([isActive])
+  @@index([scheduledAt])
+}
+
+// RoomParticipant - history of room participation
+model RoomParticipant {
+  id        String    @id @default(uuid())
+  roomId    String    @map("room_id")
+  userId    String    @map("user_id")
+  joinedAt  DateTime  @default(now()) @map("joined_at")
+  leftAt    DateTime? @map("left_at")
+  isHost    Boolean   @default(false) @map("is_host")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("room_participants")
+  @@index([roomId])
+  @@index([userId])
+  @@index([joinedAt])
+}
+
+// ChatMessage - chat messages in rooms
+model ChatMessage {
+  id        String   @id @default(uuid())
+  roomId    String   @map("room_id")
+  userId    String   @map("user_id")
+  text      String
+  replyToId String?  @map("reply_to_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  room    Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replyTo ChatMessage?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies ChatMessage[] @relation("MessageReplies")
+
+  @@map("chat_messages")
+  @@index([roomId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Enums
+enum Role {
+  ADMIN
+  USER
+}

@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/authStore';
 import { apiService } from '../services/api';
 import { Video, Mail, Lock, User } from 'lucide-react';
 
+
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const { register, isLoading } = useAuthStore();

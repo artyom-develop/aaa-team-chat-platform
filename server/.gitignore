@@ -1,0 +1,56 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+build
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+error.log
+combined.log
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Prisma generated client
+/src/generated/prisma
+
+# Documentation (optional guides)
+SWAGGER_GUIDE.md
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# OS
+Thumbs.db
+
+# Testing
+.nyc_output
