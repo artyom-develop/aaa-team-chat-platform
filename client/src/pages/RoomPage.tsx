@@ -1,0 +1,151 @@
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { VideoGrid, Controls, Chat, Participants } from '../components/room';
+import { useSocket } from '../hooks/useSocket';
+import { useWebRTC } from '../hooks/useWebRTC';
+import { useRoomStore } from '../store/roomStore';
+import { useMediaStore } from '../store/mediaStore';
+import { useAuthStore } from '../store/authStore';
+import { apiService } from '../services/api';
+import { socketService } from '../services/socket';
+import toast from 'react-hot-toast';
+
+export const RoomPage = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { joinRoom } = useSocket();
+  const { setRoom, updateLocalParticipant, room, localParticipant } = useRoomStore();
+  const { screenSharing, audioEnabled, videoEnabled, localStream } = useMediaStore();
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Инициализация WebRTC с дефолтными ICE серверами
+  useWebRTC([
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+  ]);
+
+  // Присоединение к комнате
+  useEffect(() => {
+    if (!slug) return;
+
+    const init = async () => {
+      try {
+        console.log('[RoomPage] Loading room data for slug:', slug);
+        
+        // Загружаем данные о комнате
+        const room = await apiService.getRoom(slug);
+        console.log('[RoomPage] Room data loaded:', room);
+        setRoom(room);
+
+        // Получаем медиа если его еще нет (например при перезагрузке страницы)
+        const currentStream = useMediaStore.getState().localStream;
+        if (!currentStream) {
+          console.log('[RoomPage] No media stream found, requesting access...');
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+              audio: true,
+              video: { width: 1280, height: 720 },
+            });
+            useMediaStore.getState().setLocalStream(stream);
+            console.log('[RoomPage] Media stream obtained:', stream.id);
+          } catch (mediaError) {
+            console.error('[RoomPage] Failed to get media:', mediaError);
+            toast.error('Не удалось получить доступ к камере и микрофону');
+          }
+        }
+
+        console.log('[RoomPage] Joining room via socket...');
+        // Присоединяемся к комнате через Socket.io
+        await joinRoom(slug);
+        console.log('[RoomPage] Successfully joined room');
+        toast.success('Вы присоединились к комнате');
+      } catch (error: any) {
+        console.error('[RoomPage] Error joining room:', error);
+        toast.error(error.message || 'Не удалось присоединиться к комнате');
+        navigate('/');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    init();
+  }, [slug, navigate, joinRoom, setRoom]);
+
+  // Инициализация локального участника - теперь происходит в useSocket handleRoomJoined
+  // Этот useEffect только для обновления существующего localParticipant
+  useEffect(() => {
+    if (!localParticipant) {
+      console.log('[RoomPage] Waiting for room:joined event to create localParticipant');
+      return;
+    }
+
+    // Проверяем что нужно обновить
+    const needsUpdate = 
+      (localStream && localParticipant.stream?.id !== localStream.id) ||
+      localParticipant.audioEnabled !== audioEnabled ||
+      localParticipant.videoEnabled !== videoEnabled ||
+      localParticipant.screenSharing !== screenSharing;
+
+    if (needsUpdate) {
+      console.log('[RoomPage] Updating local participant:', {
+        streamChanged: localStream && localParticipant.stream?.id !== localStream.id,
+        audioChanged: localParticipant.audioEnabled !== audioEnabled,
+        videoChanged: localParticipant.videoEnabled !== videoEnabled,
+        screenChanged: localParticipant.screenSharing !== screenSharing,
+      });
+      
+      updateLocalParticipant({
+        stream: localStream || localParticipant.stream,
+        audioEnabled,
+        videoEnabled,
+        screenSharing,
+      });
+    }
+  }, [localStream, audioEnabled, videoEnabled, screenSharing, localParticipant, updateLocalParticipant]);
+
+  // Очищаем localParticipant при выходе из комнаты
+  useEffect(() => {
+    return () => {
+      console.log('[RoomPage] Cleaning up - clearing room state');
+      const { clearRoom } = useRoomStore.getState();
+      clearRoom();
+    };
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-xl">Подключение к комнате...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen bg-gray-900 flex flex-col overflow-hidden">
+      {/* Основной контент */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Видео сетка */}
+        <div className="flex-1 overflow-hidden">
+          <VideoGrid />
+        </div>
+
+        {/* Чат */}
+        {isChatOpen && <Chat onClose={() => setIsChatOpen(false)} />}
+
+        {/* Участники */}
+        {isParticipantsOpen && <Participants onClose={() => setIsParticipantsOpen(false)} />}
+      </div>
+
+      {/* Панель управления */}
+      <Controls
+        onToggleChat={() => setIsChatOpen(!isChatOpen)}
+        onToggleParticipants={() => setIsParticipantsOpen(!isParticipantsOpen)}
+        isChatOpen={isChatOpen}
+        isParticipantsOpen={isParticipantsOpen}
+      />
+    </div>
+  );
+};
