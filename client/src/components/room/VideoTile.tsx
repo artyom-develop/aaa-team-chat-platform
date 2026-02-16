@@ -72,6 +72,18 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
     }
   }, [participant.stream, participant.userId]);
 
+  const shouldShowVideo = participant.stream && participant.videoEnabled;
+  const hasVideoTrack = (participant.stream?.getVideoTracks().length ?? 0) > 0;
+  
+  console.log('[VideoTile] Video visibility decision:', {
+    userId: participant.userId,
+    hasStream: !!participant.stream,
+    videoEnabled: participant.videoEnabled,
+    hasVideoTrack,
+    shouldShowVideo,
+    isHidden: !shouldShowVideo,
+  });
+
   return (
     <div className="relative bg-gray-900 rounded-lg overflow-hidden aspect-video">
       {/* Видео - показываем всегда когда есть stream */}
@@ -80,13 +92,11 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
         autoPlay
         playsInline
         muted={isLocal}
-        className={`w-full h-full object-cover ${
-          !participant.stream || !participant.videoEnabled ? 'hidden' : ''
-        }`}
+        className={`w-full h-full object-cover ${!shouldShowVideo ? 'hidden' : ''}`}
       />
       
       {/* Аватар - показываем когда нет видео или оно выключено */}
-      {(!participant.stream || !participant.videoEnabled) && (
+      {!shouldShowVideo && (
         <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
           <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center">
             <span className="text-4xl font-bold text-white">

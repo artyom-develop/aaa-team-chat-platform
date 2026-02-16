@@ -138,7 +138,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  'room:join': (data: { roomSlug: string; password?: string }, callback: (response: { success: boolean; error?: string }) => void) => void;
+  'room:join': (data: { roomSlug: string; password?: string; isMuted?: boolean; isCameraOff?: boolean }, callback: (response: { success: boolean; error?: string }) => void) => void;
   'room:leave': (data: { roomSlug: string }) => void;
   
   'webrtc:offer': (data: { roomSlug: string; targetUserId: string; offer: RTCSessionDescriptionInit }) => void;

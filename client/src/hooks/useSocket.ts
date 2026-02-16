@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 export const useSocket = () => {
   const { user } = useAuthStore();
   const { room, addParticipant, removeParticipant, updateParticipant, setRoom, clearRoom } = useRoomStore();
+  const { audioEnabled, videoEnabled } = useMediaStore();
 
   // Подключение к Socket.io
   useEffect(() => {
@@ -192,9 +193,14 @@ export const useSocket = () => {
   const joinRoom = useCallback(
     (slug: string, password?: string) => {
       return new Promise<void>((resolve, reject) => {
-        console.log('[useSocket] joinRoom called for:', slug);
+        console.log('[useSocket] joinRoom called for:', slug, {
+          audioEnabled,
+          videoEnabled,
+          isMuted: !audioEnabled,
+          isCameraOff: !videoEnabled,
+        });
         
-        socketService.joinRoom(slug, password, (response) => {
+        socketService.joinRoom(slug, password, !audioEnabled, !videoEnabled, (response) => {
           console.log('[useSocket] joinRoom callback response:', response);
           if (response.success) {
             resolve();
@@ -204,7 +210,7 @@ export const useSocket = () => {
         });
       });
     },
-    []
+    [audioEnabled, videoEnabled]
   );
 
   const leaveRoom = useCallback(() => {

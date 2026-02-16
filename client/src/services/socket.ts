@@ -57,9 +57,11 @@ class SocketService {
   joinRoom(
     roomSlug: string,
     password: string | undefined,
+    isMuted: boolean,
+    isCameraOff: boolean,
     callback: (response: { success: boolean; error?: string }) => void
   ): void {
-    this.socket?.emit('room:join', { roomSlug, password }, callback);
+    this.socket?.emit('room:join', { roomSlug, password, isMuted, isCameraOff }, callback);
   }
 
   leaveRoom(roomSlug: string): void {
