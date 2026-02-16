@@ -141,9 +141,9 @@ export interface ClientToServerEvents {
   'room:join': (data: { roomSlug: string; password?: string }, callback: (response: { success: boolean; error?: string }) => void) => void;
   'room:leave': (data: { roomSlug: string }) => void;
   
-  'webrtc:offer': (data: { to: string; sdp: RTCSessionDescriptionInit }) => void;
-  'webrtc:answer': (data: { to: string; sdp: RTCSessionDescriptionInit }) => void;
-  'webrtc:ice-candidate': (data: { to: string; candidate: RTCIceCandidateInit }) => void;
+  'webrtc:offer': (data: { roomSlug: string; targetUserId: string; offer: RTCSessionDescriptionInit }) => void;
+  'webrtc:answer': (data: { roomSlug: string; targetUserId: string; answer: RTCSessionDescriptionInit }) => void;
+  'webrtc:ice-candidate': (data: { roomSlug: string; targetUserId: string; candidate: RTCIceCandidateInit }) => void;
   
   'media:toggle-mute': (data: { roomSlug: string; isMuted: boolean }) => void;
   'media:toggle-camera': (data: { roomSlug: string; isCameraOff: boolean }) => void;

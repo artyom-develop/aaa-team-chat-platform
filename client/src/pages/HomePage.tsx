@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Video, LogOut, User, Plus, ArrowRight } from 'lucide-react';
@@ -7,10 +7,15 @@ import toast from 'react-hot-toast';
 
 export const HomePage = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout, checkAuth } = useAuthStore();
   const [roomName, setRoomName] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+
+  // Проверка авторизации при монтировании компонента
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();

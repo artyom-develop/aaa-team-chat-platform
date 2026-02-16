@@ -67,16 +67,18 @@ class SocketService {
   }
 
   // WebRTC signaling
-  sendOffer(to: string, sdp: RTCSessionDescriptionInit): void {
-    this.socket?.emit('webrtc:offer', { to, sdp });
+  sendOffer(roomSlug: string, targetUserId: string, offer: RTCSessionDescriptionInit): void {
+    console.log('[SocketService] Sending offer to:', targetUserId, 'in room:', roomSlug);
+    this.socket?.emit('webrtc:offer', { roomSlug, targetUserId, offer });
   }
 
-  sendAnswer(to: string, sdp: RTCSessionDescriptionInit): void {
-    this.socket?.emit('webrtc:answer', { to, sdp });
+  sendAnswer(roomSlug: string, targetUserId: string, answer: RTCSessionDescriptionInit): void {
+    console.log('[SocketService] Sending answer to:', targetUserId, 'in room:', roomSlug);
+    this.socket?.emit('webrtc:answer', { roomSlug, targetUserId, answer });
   }
 
-  sendIceCandidate(to: string, candidate: RTCIceCandidateInit): void {
-    this.socket?.emit('webrtc:ice-candidate', { to, candidate });
+  sendIceCandidate(roomSlug: string, targetUserId: string, candidate: RTCIceCandidateInit): void {
+    this.socket?.emit('webrtc:ice-candidate', { roomSlug, targetUserId, candidate });
   }
 
   // Media controls

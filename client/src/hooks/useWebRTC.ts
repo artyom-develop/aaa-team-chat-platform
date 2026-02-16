@@ -55,7 +55,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
       // Обработка ICE candidates
       pc.onicecandidate = (event) => {
         if (event.candidate && room) {
-          socketService.sendIceCandidate(userId, event.candidate);
+          socketService.sendIceCandidate(room.slug, userId, event.candidate);
         }
       };
 
@@ -121,8 +121,13 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
 
+        if (!room) {
+          console.error('[useWebRTC] Cannot send offer - no room');
+          return;
+        }
+
         console.log('[useWebRTC] Sending offer to:', userId);
-        socketService.sendOffer(userId, offer);
+        socketService.sendOffer(room.slug, userId, offer);
       } catch (error) {
         console.error('[useWebRTC] Error creating offer:', error);
         toast.error('Ошибка создания offer');
@@ -142,8 +147,13 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
 
+        if (!room) {
+          console.error('[useWebRTC] Cannot send answer - no room');
+          return;
+        }
+
         console.log('[useWebRTC] Sending answer to:', data.from);
-        socketService.sendAnswer(data.from, answer);
+        socketService.sendAnswer(room.slug, data.from, answer);
       } catch (error) {
         console.error('[useWebRTC] Error handling offer:', error);
         toast.error('Ошибка обработки offer');
@@ -292,7 +302,9 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
             console.log('[useWebRTC] Creating new offer for renegotiation:', userId);
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
-            socketService.sendOffer(userId, offer);
+            if (room) {
+              socketService.sendOffer(room.slug, userId, offer);
+            }
           } else {
             console.log('[useWebRTC] Skipping offer creation - connection not ready:', {
               userId,

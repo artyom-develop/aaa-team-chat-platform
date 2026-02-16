@@ -15,7 +15,11 @@ export const useChat = () => {
 
   // Загрузка истории чата
   useEffect(() => {
-    if (!room) return;
+    if (!room) {
+      // Очищаем сообщения только при выходе из комнаты
+      setMessages([]);
+      return;
+    }
 
     const loadHistory = async () => {
       setIsLoading(true);
@@ -31,7 +35,7 @@ export const useChat = () => {
     };
 
     loadHistory();
-  }, [room]);
+  }, [room?.slug]); // Зависимость от room.slug, чтобы избежать лишних перезагрузок
 
   // Обработка новых сообщений
   useEffect(() => {
@@ -70,13 +74,6 @@ export const useChat = () => {
     },
     [room]
   );
-
-  // Очистка при выходе из комнаты
-  useEffect(() => {
-    if (!room) {
-      setMessages([]);
-    }
-  }, [room]);
 
   return {
     messages,
