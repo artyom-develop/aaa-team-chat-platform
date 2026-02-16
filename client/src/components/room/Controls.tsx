@@ -70,14 +70,19 @@ export const Controls = ({
         toggleScreenShare(false);
       }
     } else {
-      console.log('[Controls] Starting screen share');
+      console.log('[Controls] Starting screen share - доступно для всех участников');
       try {
         const stream = await startScreenShare();
+        console.log('[Controls] Screen share stream obtained:', !!stream);
         if (stream && toggleScreenShare) {
+          console.log('[Controls] Notifying server about screen share');
           toggleScreenShare(true);
+        } else if (!stream) {
+          console.log('[Controls] Screen share cancelled or failed');
         }
       } catch (error) {
         console.error('[Controls] Error sharing screen:', error);
+        // Ошибка уже обработана в startScreenShare
       }
     }
   };

@@ -133,6 +133,13 @@ export const useSocket = () => {
       toast.success(`${participant.displayName} присоединился к комнате`);
     };
 
+    const handleRequestOffers = (data: { participants: any[] }) => {
+      console.log('[useSocket] Request to create offers for participants:', data.participants);
+      // Этот обработчик будет вызван, когда мы присоединяемся к комнате
+      // и должны создать offers для всех существующих участников
+      // Логика создания offers находится в useWebRTC, мы просто логируем
+    };
+
     const handleUserLeft = (data: { userId: string }) => {
       const participant = useRoomStore.getState().participants.get(data.userId);
       if (participant) {
@@ -147,13 +154,27 @@ export const useSocket = () => {
       videoEnabled?: boolean;
       screenSharing?: boolean;
     }) => {
+      console.log('[useSocket] Received media:control event:', {
+        userId: data.userId,
+        audioEnabled: data.audioEnabled,
+        videoEnabled: data.videoEnabled,
+        screenSharing: data.screenSharing,
+      });
+      
       const updates: Partial<Participant> = {};
       if (data.audioEnabled !== undefined) updates.audioEnabled = data.audioEnabled;
       if (data.videoEnabled !== undefined) updates.videoEnabled = data.videoEnabled;
-      if (data.screenSharing !== undefined) updates.screenSharing = data.screenSharing;
+      if (data.screenSharing !== undefined) {
+        updates.screenSharing = data.screenSharing;
+        console.log('[useSocket] Updating participant screen sharing state:', {
+          userId: data.userId,
+          screenSharing: data.screenSharing,
+        });
+      }
       
       if (Object.keys(updates).length > 0) {
         updateParticipant(data.userId, updates);
+        console.log('[useSocket] Participant updated successfully');
       }
     };
 
@@ -162,30 +183,22 @@ export const useSocket = () => {
       clearRoom();
     };
 
-    const handleHostChanged = (data: { newHostId: string; newHostName: string }) => {
-      if (data.newHostId === user?.id) {
-        toast.success('Вы теперь хост комнаты');
-      } else {
-        toast(`${data.newHostName} теперь хост комнаты`);
-      }
-    };
-
     // Подписываемся на события
     socketService.on('room:joined', handleRoomJoined);
     socketService.on('room:user-joined', handleUserJoined);
     socketService.on('room:user-left', handleUserLeft);
+    socketService.on('room:request-offers', handleRequestOffers);
     socketService.on('media:control', handleMediaControl);
     socketService.on('user:kicked', handleUserKicked);
-    socketService.on('host:changed', handleHostChanged);
 
     // Отписываемся при размонтировании
     return () => {
       socketService.off('room:joined', handleRoomJoined);
       socketService.off('room:user-joined', handleUserJoined);
       socketService.off('room:user-left', handleUserLeft);
+      socketService.off('room:request-offers', handleRequestOffers);
       socketService.off('media:control', handleMediaControl);
       socketService.off('user:kicked', handleUserKicked);
-      socketService.off('host:changed', handleHostChanged);
     };
   }, [user, addParticipant, removeParticipant, updateParticipant, clearRoom]);
 
@@ -248,16 +261,11 @@ export const useSocket = () => {
 
   const kickUser = useCallback(
     (userId: string) => {
-      socketService.kickUser(userId);
+      if (room) {
+        socketService.kickUser(room.slug, userId);
+      }
     },
-    []
-  );
-
-  const transferHost = useCallback(
-    (userId: string) => {
-      socketService.transferHost(userId);
-    },
-    []
+    [room]
   );
 
   return {
@@ -267,6 +275,5 @@ export const useSocket = () => {
     toggleCamera,
     toggleScreenShare,
     kickUser,
-    transferHost,
   };
 };

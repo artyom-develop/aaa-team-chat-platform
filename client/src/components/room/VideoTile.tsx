@@ -5,9 +5,16 @@ import { Mic, MicOff, Video, VideoOff, MonitorUp } from 'lucide-react';
 interface VideoTileProps {
   participant: Participant;
   isLocal?: boolean;
+  isSpotlight?: boolean;
+  isThumbnail?: boolean;
 }
 
-export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
+export const VideoTile = ({ 
+  participant, 
+  isLocal = false,
+  isSpotlight = false,
+  isThumbnail = false,
+}: VideoTileProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   console.log('[VideoTile] Rendering participant:', {
@@ -18,6 +25,8 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
     videoEnabled: participant.videoEnabled,
     audioEnabled: participant.audioEnabled,
     isLocal,
+    isSpotlight,
+    isThumbnail,
   });
 
   useEffect(() => {
@@ -84,8 +93,20 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
     isHidden: !shouldShowVideo,
   });
 
+  // Стили в зависимости от режима
+  const containerClasses = isSpotlight 
+    ? 'w-full h-full'
+    : isThumbnail
+    ? 'w-full h-full'
+    : 'aspect-video';
+
+  const avatarSize = isSpotlight ? 'w-32 h-32' : isThumbnail ? 'w-16 h-16' : 'w-24 h-24';
+  const avatarTextSize = isSpotlight ? 'text-6xl' : isThumbnail ? 'text-2xl' : 'text-4xl';
+  const nameTextSize = isThumbnail ? 'text-xs' : 'text-sm';
+  const iconSize = isThumbnail ? 'w-3 h-3' : 'w-4 h-4';
+
   return (
-    <div className="relative bg-gray-900 rounded-lg overflow-hidden aspect-video">
+    <div className={`relative bg-gray-900 rounded-lg overflow-hidden ${containerClasses} ${isThumbnail ? 'ring-2 ring-transparent hover:ring-purple-500 transition' : ''}`}>
       {/* Видео - показываем всегда когда есть stream */}
       <video
         ref={videoRef}
@@ -98,8 +119,8 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
       {/* Аватар - показываем когда нет видео или оно выключено */}
       {!shouldShowVideo && (
         <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
-          <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center">
-            <span className="text-4xl font-bold text-white">
+          <div className={`${avatarSize} rounded-full bg-white/10 flex items-center justify-center`}>
+            <span className={`${avatarTextSize} font-bold text-white`}>
               {participant.displayName.charAt(0).toUpperCase()}
             </span>
           </div>
@@ -107,28 +128,31 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
       )}
 
       {/* Индикаторы */}
-      <div className="absolute top-2 right-2 flex gap-2">
-        {participant.screenSharing && (
-          <div className="bg-green-500 text-white px-2 py-1 rounded-md flex items-center gap-1 text-sm">
-            <MonitorUp className="w-4 h-4" />
-            Экран
-          </div>
-        )}
-      </div>
+      {!isThumbnail && (
+        <div className="absolute top-2 right-2 flex gap-2">
+          {participant.screenSharing && (
+            <div className="bg-green-500 text-white px-2 py-1 rounded-md flex items-center gap-1 text-sm">
+              <MonitorUp className="w-4 h-4" />
+              Экран
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Имя и статус микрофона */}
       <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
-        <span className="bg-black/50 text-white px-3 py-1 rounded-md text-sm font-medium backdrop-blur-sm">
+        <span className={`bg-black/50 text-white px-3 py-1 rounded-md ${nameTextSize} font-medium backdrop-blur-sm truncate max-w-[70%]`}>
           {participant.displayName}
           {isLocal && ' (Вы)'}
           {participant.isGuest && ' (Гость)'}
+          {participant.isHost && ' (Хост)'}
         </span>
 
         <div className="bg-black/50 p-2 rounded-md backdrop-blur-sm">
           {participant.audioEnabled ? (
-            <Mic className="w-4 h-4 text-white" />
+            <Mic className={iconSize + ' text-white'} />
           ) : (
-            <MicOff className="w-4 h-4 text-red-500" />
+            <MicOff className={iconSize + ' text-red-500'} />
           )}
         </div>
       </div>
@@ -136,6 +160,11 @@ export const VideoTile = ({ participant, isLocal = false }: VideoTileProps) => {
       {/* Рамка для локального видео */}
       {isLocal && (
         <div className="absolute inset-0 border-2 border-purple-500 rounded-lg pointer-events-none" />
+      )}
+
+      {/* Рамка для spotlight */}
+      {isSpotlight && !isLocal && (
+        <div className="absolute inset-0 border-2 border-blue-500 rounded-lg pointer-events-none" />
       )}
     </div>
   );

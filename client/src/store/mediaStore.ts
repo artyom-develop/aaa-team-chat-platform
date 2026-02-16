@@ -137,15 +137,24 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
 
   startScreenShare: async () => {
     try {
+      console.log('[mediaStore] Requesting screen share access...');
+      
       const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
+        video: {
+          displaySurface: 'monitor', // или 'window', 'application', 'browser'
+        },
         audio: false,
       });
 
-      console.log('[mediaStore] Screen share started:', stream.id);
+      console.log('[mediaStore] Screen share started successfully:', {
+        streamId: stream.id,
+        videoTracks: stream.getVideoTracks().length,
+        videoTrackSettings: stream.getVideoTracks()[0]?.getSettings(),
+      });
 
       // Автоматически останавливаем шаринг когда пользователь нажимает "Stop sharing"
       stream.getVideoTracks()[0].onended = () => {
+        console.log('[mediaStore] Screen share ended by user');
         get().stopScreenShare();
       };
 
@@ -156,15 +165,35 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
         const { useRoomStore } = await import('../store/roomStore');
         const localParticipant = useRoomStore.getState().localParticipant;
         if (localParticipant) {
-          console.log('[mediaStore] Updating localParticipant screenSharing: true');
+          console.log('[mediaStore] Updating localParticipant screenSharing: true', {
+            userId: localParticipant.userId,
+            isHost: localParticipant.isHost,
+            displayName: localParticipant.displayName,
+          });
           useRoomStore.getState().updateLocalParticipant({ screenSharing: true });
         }
       }, 0);
       
+      toast.success('Демонстрация экрана началась');
       return stream;
-    } catch (error) {
-      console.error('Failed to start screen share:', error);
-      toast.error('Не удалось начать демонстрацию экрана');
+    } catch (error: any) {
+      console.error('[mediaStore] Failed to start screen share:', {
+        error,
+        errorName: error.name,
+        errorMessage: error.message,
+      });
+      
+      // Более детальные сообщения об ошибках
+      if (error.name === 'NotAllowedError') {
+        toast.error('Вы отклонили разрешение на демонстрацию экрана');
+      } else if (error.name === 'NotFoundError') {
+        toast.error('Не найден источник для демонстрации');
+      } else if (error.name === 'NotSupportedError') {
+        toast.error('Демонстрация экрана не поддерживается вашим браузером');
+      } else {
+        toast.error('Не удалось начать демонстрацию экрана: ' + error.message);
+      }
+      
       return null;
     }
   },

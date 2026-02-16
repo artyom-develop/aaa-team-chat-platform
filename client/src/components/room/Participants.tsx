@@ -1,4 +1,4 @@
-import { X, Crown, UserMinus, UserCheck } from 'lucide-react';
+import { X, Crown, UserMinus } from 'lucide-react';
 import { useRoomStore } from '../../store/roomStore';
 import { useAuthStore } from '../../store/authStore';
 import { useSocket } from '../../hooks/useSocket';
@@ -10,21 +10,15 @@ interface ParticipantsProps {
 export const Participants = ({ onClose }: ParticipantsProps) => {
   const { user } = useAuthStore();
   const { room, participants, localParticipant, isHost } = useRoomStore();
-  const { kickUser, transferHost } = useSocket();
+  const { kickUser } = useSocket();
 
   const allParticipants = localParticipant
     ? [localParticipant, ...Array.from(participants.values())]
     : Array.from(participants.values());
 
-  const handleKick = (userId: string) => {
-    if (window.confirm('Вы уверены, что хотите удалить этого участника?')) {
+  const handleKick = (userId: string, displayName: string) => {
+    if (window.confirm(`Вы уверены, что хотите удалить ${displayName} из комнаты?`)) {
       kickUser(userId);
-    }
-  };
-
-  const handleTransferHost = (userId: string) => {
-    if (window.confirm('Вы уверены, что хотите передать права хоста?')) {
-      transferHost(userId);
     }
   };
 
@@ -83,14 +77,7 @@ export const Participants = ({ onClose }: ParticipantsProps) => {
               {isHost && !isMe && (
                 <div className="flex items-center gap-1">
                   <button
-                    onClick={() => handleTransferHost(participant.userId)}
-                    className="p-2 text-gray-400 hover:text-purple-500 transition-colors"
-                    title="Передать права хоста"
-                  >
-                    <UserCheck className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleKick(participant.userId)}
+                    onClick={() => handleKick(participant.userId, participant.displayName)}
                     className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                     title="Удалить из комнаты"
                   >

@@ -373,11 +373,22 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     console.log('[useWebRTC] Checking for new participants. Total:', participants.size);
 
     participants.forEach((participant) => {
-      if (!peerConnectionsRef.current.has(participant.userId)) {
+      const existingPc = peerConnectionsRef.current.get(participant.userId);
+      
+      if (!existingPc) {
         console.log('[useWebRTC] Creating offer for new participant:', participant.userId);
         createOffer(participant.userId);
+      } else if (existingPc.connectionState === 'closed' || existingPc.connectionState === 'failed') {
+        // Если соединение закрыто или failed, пересоздаем его
+        console.log('[useWebRTC] Recreating offer for participant with bad connection:', {
+          userId: participant.userId,
+          state: existingPc.connectionState,
+        });
+        existingPc.close();
+        peerConnectionsRef.current.delete(participant.userId);
+        createOffer(participant.userId);
       } else {
-        console.log('[useWebRTC] Peer connection already exists for:', participant.userId);
+        console.log('[useWebRTC] Peer connection already exists for:', participant.userId, 'state:', existingPc.connectionState);
       }
     });
 

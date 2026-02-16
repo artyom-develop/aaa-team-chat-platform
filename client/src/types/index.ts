@@ -132,9 +132,8 @@ export interface ServerToClientEvents {
   
   'chat:message': (message: ChatMessage) => void;
   
-  'host:changed': (data: { newHostId: string; newHostName: string }) => void;
   'user:kicked': () => void;
-  'waiting:room': (data: { userId: string; displayName: string }) => void;
+  'room:request-offers': (data: { participants: any[] }) => void;
 }
 
 export interface ClientToServerEvents {
@@ -152,9 +151,7 @@ export interface ClientToServerEvents {
   
   'chat:send': (data: { roomSlug: string; text: string; replyToId?: string }, callback: (response: { success: boolean; error?: string }) => void) => void;
   
-  'host:kick-user': (data: { targetUserId: string }) => void;
-  'host:transfer': (data: { targetUserId: string }) => void;
-  'host:admit-user': (data: { targetUserId: string }) => void;
+  'host:kick-user': (data: { targetUserId: string; roomSlug: string }) => void;
 }
 
 // Media device types
