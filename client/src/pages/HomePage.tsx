@@ -11,6 +11,8 @@ export const HomePage = () => {
   const [roomName, setRoomName] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [errors, setErrors] = useState({ roomName: '', roomCode: '' });
 
   // Проверка авторизации при монтировании компонента
   useEffect(() => {
@@ -28,11 +30,19 @@ export const HomePage = () => {
     }
 
     if (!roomName.trim()) {
+      setErrors({ ...errors, roomName: 'Введите название комнаты' });
       toast.error('Введите название комнаты');
       return;
     }
 
+    if (roomName.trim().length < 3) {
+      setErrors({ ...errors, roomName: 'Название должно содержать минимум 3 символа' });
+      toast.error('Название должно содержать минимум 3 символа');
+      return;
+    }
+
     setIsCreating(true);
+    setErrors({ ...errors, roomName: '' });
     try {
       // Проверяем что токен установлен
       const token = apiService.getToken();
@@ -44,7 +54,7 @@ export const HomePage = () => {
     } catch (error: any) {
       console.error('Error creating room:', error);
       const message = error.response?.data?.message || 'Не удалось создать комнату';
-      toast.error(message);
+      toast.error(message, { duration: 4000 });
     } finally {
       setIsCreating(false);
     }
@@ -54,7 +64,14 @@ export const HomePage = () => {
     e.preventDefault();
     
     if (!roomCode.trim()) {
+      setErrors({ ...errors, roomCode: 'Введите код комнаты' });
       toast.error('Введите код комнаты');
+      return;
+    }
+
+    if (roomCode.trim().length < 3) {
+      setErrors({ ...errors, roomCode: 'Код комнаты слишком короткий' });
+      toast.error('Код комнаты слишком короткий');
       return;
     }
 
@@ -65,7 +82,12 @@ export const HomePage = () => {
       return;
     }
 
-    navigate(`/lobby/${roomCode}`);
+    setIsJoining(true);
+    setErrors({ ...errors, roomCode: '' });
+    // Небольшая задержка для визуального эффекта loading
+    setTimeout(() => {
+      navigate(`/lobby/${roomCode}`);
+    }, 300);
   };
 
   return (
@@ -139,20 +161,39 @@ export const HomePage = () => {
                 <input
                   type="text"
                   value={roomName}
-                  onChange={(e) => setRoomName(e.target.value)}
+                  onChange={(e) => {
+                    setRoomName(e.target.value);
+                    if (errors.roomName) setErrors({ ...errors, roomName: '' });
+                  }}
                   placeholder="Название встречи (например, 'Совещание команды')"
-                  className="flex-1 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`flex-1 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.roomName ? 'border-red-500 focus:ring-red-500' : 'border-gray-700 focus:ring-blue-500'
+                  }`}
                   required
+                  disabled={isCreating}
+                  minLength={3}
                 />
                 <button
                   type="submit"
                   disabled={isCreating}
                   className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {isCreating ? 'Создание...' : 'Создать'}
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {isCreating ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Создание...
+                    </>
+                  ) : (
+                    <>
+                      Создать
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </>
+                  )}
                 </button>
               </div>
+              {errors.roomName && (
+                <p className="mt-2 text-sm text-red-400">{errors.roomName}</p>
+              )}
             </form>
 
             {/* Присоединиться к встрече */}
@@ -166,19 +207,39 @@ export const HomePage = () => {
                 <input
                   type="text"
                   value={roomCode}
-                  onChange={(e) => setRoomCode(e.target.value)}
+                  onChange={(e) => {
+                    setRoomCode(e.target.value);
+                    if (errors.roomCode) setErrors({ ...errors, roomCode: '' });
+                  }}
                   placeholder="Введите код комнаты"
-                  className="flex-1 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`flex-1 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.roomCode ? 'border-red-500 focus:ring-red-500' : 'border-gray-700 focus:ring-blue-500'
+                  }`}
                   required
+                  disabled={isJoining}
+                  minLength={3}
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold flex items-center justify-center gap-2"
+                  disabled={isJoining}
+                  className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Присоединиться
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  {isJoining ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Переход...
+                    </>
+                  ) : (
+                    <>
+                      Присоединиться
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </>
+                  )}
                 </button>
               </div>
+              {errors.roomCode && (
+                <p className="mt-2 text-sm text-red-400">{errors.roomCode}</p>
+              )}
             </form>
           </div>
         </div>

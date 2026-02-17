@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { apiService } from '../services/api';
 import { Video, Mail, Lock, User } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 
 export const RegisterPage = () => {
@@ -67,6 +68,7 @@ export const RegisterPage = () => {
           return;
         } catch (error) {
           console.error('Error creating room:', error);
+          toast.error('Не удалось создать комнату');
         }
       }
       
@@ -79,6 +81,7 @@ export const RegisterPage = () => {
       navigate('/');
     } catch (error) {
       console.error('Registration error:', error);
+      // Ошибка уже обработана в authStore с toast
     }
   };
 
@@ -111,9 +114,15 @@ export const RegisterPage = () => {
                 type="text"
                 required
                 value={formData.displayName}
-                onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => {
+                  setFormData({ ...formData, displayName: e.target.value });
+                  if (errors.displayName) setErrors({ ...errors, displayName: '' });
+                }}
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                  errors.displayName ? 'border-red-500 focus:ring-red-500' : 'border-gray-700 focus:ring-blue-500'
+                }`}
                 placeholder="Иван Иванов"
+                disabled={isLoading}
               />
             </div>
             {errors.displayName && (
@@ -131,9 +140,15 @@ export const RegisterPage = () => {
                 type="email"
                 required
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value });
+                  if (errors.email) setErrors({ ...errors, email: '' });
+                }}
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                  errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-700 focus:ring-blue-500'
+                }`}
                 placeholder="your@email.com"
+                disabled={isLoading}
               />
             </div>
             {errors.email && (
@@ -151,9 +166,15 @@ export const RegisterPage = () => {
                 type="password"
                 required
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => {
+                  setFormData({ ...formData, password: e.target.value });
+                  if (errors.password) setErrors({ ...errors, password: '' });
+                }}
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                  errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-700 focus:ring-blue-500'
+                }`}
                 placeholder="••••••••"
+                disabled={isLoading}
               />
             </div>
             {errors.password && (
@@ -171,9 +192,15 @@ export const RegisterPage = () => {
                 type="password"
                 required
                 value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => {
+                  setFormData({ ...formData, confirmPassword: e.target.value });
+                  if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: '' });
+                }}
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                  errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : 'border-gray-700 focus:ring-blue-500'
+                }`}
                 placeholder="••••••••"
+                disabled={isLoading}
               />
             </div>
             {errors.confirmPassword && (
@@ -184,9 +211,16 @@ export const RegisterPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2.5 sm:py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-2.5 sm:py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Регистрация...
+              </>
+            ) : (
+              'Зарегистрироваться'
+            )}
           </button>
 
           <div className="mt-6 text-center">
