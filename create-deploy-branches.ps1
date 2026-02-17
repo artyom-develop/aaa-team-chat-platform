@@ -1,120 +1,120 @@
-# PowerShell скрипт для создания отдельных веток для Frontend и Backend деплоя
+# PowerShell script for creating separate Frontend and Backend deployment branches
 
-Write-Host "🚀 Создание веток для деплоя VideoMeet" -ForegroundColor Cyan
-Write-Host "======================================" -ForegroundColor Cyan
+Write-Host "Creating deployment branches for VideoMeet" -ForegroundColor Cyan
+Write-Host "==========================================" -ForegroundColor Cyan
 
-# Проверка что мы в git репозитории
+# Check if we are in a git repository
 try {
     git rev-parse --git-dir 2>&1 | Out-Null
 } catch {
-    Write-Host "❌ Ошибка: Это не git репозиторий!" -ForegroundColor Red
-    Write-Host "Инициализируйте git: git init" -ForegroundColor Yellow
+    Write-Host "Error: This is not a git repository!" -ForegroundColor Red
+    Write-Host "Initialize git: git init" -ForegroundColor Yellow
     exit 1
 }
 
-# Получаем текущую ветку
+# Get current branch
 $currentBranch = git branch --show-current
-Write-Host "📍 Текущая ветка: $currentBranch" -ForegroundColor Green
+Write-Host "Current branch: $currentBranch" -ForegroundColor Green
 
-# Проверка чистоты рабочей директории
+# Check for uncommitted changes
 $gitStatus = git status --porcelain
 
 if ($gitStatus) {
     Write-Host ""
-    Write-Host "⚠️  У вас есть незакоммиченные изменения!" -ForegroundColor Yellow
-    $response = Read-Host "Хотите зафиксировать их перед созданием веток? (y/n)"
+    Write-Host "Warning: You have uncommitted changes!" -ForegroundColor Yellow
+    $response = Read-Host "Do you want to commit them before creating branches? (y/n)"
     
     if ($response -eq 'y' -or $response -eq 'Y') {
         git add .
-        $commitMsg = Read-Host "Введите commit message"
+        $commitMsg = Read-Host "Enter commit message"
         git commit -m $commitMsg
-        Write-Host "✅ Изменения зафиксированы" -ForegroundColor Green
+        Write-Host "Changes committed" -ForegroundColor Green
     } else {
-        Write-Host "❌ Прервано. Зафиксируйте изменения и запустите скрипт снова." -ForegroundColor Red
+        Write-Host "Aborted. Commit your changes and run the script again." -ForegroundColor Red
         exit 1
     }
 }
 
 Write-Host ""
-Write-Host "📦 Создание ветки для Frontend деплоя..." -ForegroundColor Cyan
+Write-Host "Creating Frontend deployment branch..." -ForegroundColor Cyan
 
-# Проверка существования ветки frontend-deploy
+# Check if frontend-deploy branch exists
 $frontendBranchExists = git branch --list frontend-deploy
 
 if ($frontendBranchExists) {
-    Write-Host "⚠️  Ветка 'frontend-deploy' уже существует" -ForegroundColor Yellow
-    $response = Read-Host "Хотите пересоздать её? (y/n)"
+    Write-Host "Warning: Branch 'frontend-deploy' already exists" -ForegroundColor Yellow
+    $response = Read-Host "Do you want to recreate it? (y/n)"
     
     if ($response -eq 'y' -or $response -eq 'Y') {
         git branch -D frontend-deploy
         git checkout -b frontend-deploy
         git push -f origin frontend-deploy
-        Write-Host "✅ Ветка 'frontend-deploy' пересоздана" -ForegroundColor Green
+        Write-Host "Branch 'frontend-deploy' recreated" -ForegroundColor Green
     } else {
-        Write-Host "⏭️  Пропускаем создание frontend-deploy" -ForegroundColor Gray
+        Write-Host "Skipping frontend-deploy creation" -ForegroundColor Gray
     }
 } else {
     git checkout -b frontend-deploy
     git push -u origin frontend-deploy
-    Write-Host "✅ Ветка 'frontend-deploy' создана и отправлена в remote" -ForegroundColor Green
+    Write-Host "Branch 'frontend-deploy' created and pushed to remote" -ForegroundColor Green
 }
 
-# Возврат в исходную ветку
+# Return to original branch
 git checkout $currentBranch
 
 Write-Host ""
-Write-Host "📦 Создание ветки для Backend деплоя..." -ForegroundColor Cyan
+Write-Host "Creating Backend deployment branch..." -ForegroundColor Cyan
 
-# Проверка существования ветки backend-deploy
+# Check if backend-deploy branch exists
 $backendBranchExists = git branch --list backend-deploy
 
 if ($backendBranchExists) {
-    Write-Host "⚠️  Ветка 'backend-deploy' уже существует" -ForegroundColor Yellow
-    $response = Read-Host "Хотите пересоздать её? (y/n)"
+    Write-Host "Warning: Branch 'backend-deploy' already exists" -ForegroundColor Yellow
+    $response = Read-Host "Do you want to recreate it? (y/n)"
     
     if ($response -eq 'y' -or $response -eq 'Y') {
         git branch -D backend-deploy
         git checkout -b backend-deploy
         git push -f origin backend-deploy
-        Write-Host "✅ Ветка 'backend-deploy' пересоздана" -ForegroundColor Green
+        Write-Host "Branch 'backend-deploy' recreated" -ForegroundColor Green
     } else {
-        Write-Host "⏭️  Пропускаем создание backend-deploy" -ForegroundColor Gray
+        Write-Host "Skipping backend-deploy creation" -ForegroundColor Gray
     }
 } else {
     git checkout -b backend-deploy
     git push -u origin backend-deploy
-    Write-Host "✅ Ветка 'backend-deploy' создана и отправлена в remote" -ForegroundColor Green
+    Write-Host "Branch 'backend-deploy' created and pushed to remote" -ForegroundColor Green
 }
 
-# Возврат в исходную ветку
+# Return to original branch
 git checkout $currentBranch
 
 Write-Host ""
-Write-Host "======================================" -ForegroundColor Cyan
-Write-Host "✨ Готово!" -ForegroundColor Green
+Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "Done!" -ForegroundColor Green
 Write-Host ""
-Write-Host "Созданные ветки:" -ForegroundColor Cyan
+Write-Host "Created branches:" -ForegroundColor Cyan
 git branch -a | Select-String -Pattern "(frontend-deploy|backend-deploy)"
 
 Write-Host ""
-Write-Host "📋 Следующие шаги:" -ForegroundColor Yellow
+Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "1. Frontend деплой на Vercel:" -ForegroundColor Cyan
-Write-Host "   - Зайдите на https://vercel.com"
-Write-Host "   - Импортируйте ваш репозиторий"
-Write-Host "   - Выберите ветку: frontend-deploy (или main)"
+Write-Host "1. Frontend deploy to Vercel:" -ForegroundColor Cyan
+Write-Host "   - Go to https://vercel.com"
+Write-Host "   - Import your repository"
+Write-Host "   - Select branch: frontend-deploy (or main)"
 Write-Host "   - Root Directory: client"
 Write-Host "   - Framework: Vite"
 Write-Host ""
-Write-Host "2. Backend деплой на Render:" -ForegroundColor Cyan
-Write-Host "   - Зайдите на https://render.com"
-Write-Host "   - Создайте PostgreSQL и Redis"
-Write-Host "   - Создайте Web Service (Docker)"
-Write-Host "   - Выберите ветку: backend-deploy (или main)"
+Write-Host "2. Backend deploy to Render:" -ForegroundColor Cyan
+Write-Host "   - Go to https://render.com"
+Write-Host "   - Create PostgreSQL and Redis"
+Write-Host "   - Create Web Service (Docker)"
+Write-Host "   - Select branch: backend-deploy (or main)"
 Write-Host "   - Root Directory: server"
 Write-Host ""
-Write-Host "3. Подробные инструкции:" -ForegroundColor Cyan
-Write-Host "   - Быстрый старт: .\QUICK-DEPLOY.md"
-Write-Host "   - Полная документация: .\DEPLOYMENT.md"
+Write-Host "3. Detailed instructions:" -ForegroundColor Cyan
+Write-Host "   - Quick start: .\QUICK-DEPLOY.md"
+Write-Host "   - Full documentation: .\DEPLOYMENT.md"
 Write-Host ""
-Write-Host "Удачного деплоя! 🚀" -ForegroundColor Green
+Write-Host "Happy deploying!" -ForegroundColor Green
