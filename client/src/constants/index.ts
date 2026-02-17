@@ -1,11 +1,11 @@
 /// <reference types="../vite-env.d.ts" />
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+export const API_URL = "https://video-meet-for-aaateam.onrender.com/api"
+export const SOCKET_URL = 'https://video-meet-for-aaateam.onrender.com'
 
-export const MAX_PARTICIPANTS_GRID = 6;
-export const MAX_MESSAGE_LENGTH = 1000;
-export const CHAT_MESSAGES_PER_PAGE = 50;
+export const MAX_PARTICIPANTS_GRID = 6
+export const MAX_MESSAGE_LENGTH = 1000
+export const CHAT_MESSAGES_PER_PAGE = 50
 
 export const PEER_CONNECTION_CONFIG: RTCConfiguration = {
   iceServers: [
@@ -16,7 +16,7 @@ export const PEER_CONNECTION_CONFIG: RTCConfiguration = {
   iceCandidatePoolSize: 10,
   bundlePolicy: 'max-bundle',
   rtcpMuxPolicy: 'require',
-};
+}
 
 export const MEDIA_CONSTRAINTS: MediaStreamConstraints = {
   audio: {
@@ -29,7 +29,7 @@ export const MEDIA_CONSTRAINTS: MediaStreamConstraints = {
     height: { ideal: 720 },
     frameRate: { ideal: 30 },
   },
-};
+}
 
 export const ROUTES = {
   HOME: '/',
@@ -37,4 +37,4 @@ export const ROUTES = {
   REGISTER: '/register',
   LOBBY: '/lobby/:slug',
   ROOM: '/room/:slug',
-} as const;
+} as const
