@@ -37,7 +37,7 @@ services:
       - key: CORS_ORIGIN
         value: https://your-frontend-app.vercel.app
     buildCommand: bun install && bun run prisma:generate && bun run build
-    startCommand: bun run prisma:migrate:deploy && bun run start
+    startCommand: node scripts/migrate.mjs && bun run start
 
 databases:
   - name: videomeet-db

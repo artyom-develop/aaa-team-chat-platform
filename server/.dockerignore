@@ -15,7 +15,6 @@ yarn-debug.log*
 bun-debug.log*
 docker-compose.yaml
 nodemon.json
-tsconfig.json
 tsconfig.test.json
 setup.ps1
 setup.sh

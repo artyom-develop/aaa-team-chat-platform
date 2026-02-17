@@ -10,23 +10,21 @@ const customFormat = printf(({ level, message, timestamp, stack }) => {
   return `${timestamp} [${level}]: ${message}`;
 });
 
-// Создание logger instance
-export const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
-  format: combine(
-    errors({ stack: true }),
-    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    customFormat
-  ),
-  transports: [
-    // Console transport
-    new winston.transports.Console({
-      format: combine(
-        colorize(),
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        customFormat
-      ),
-    }),
+// Создание транспортов
+const transports: winston.transport[] = [
+  // Console transport - всегда доступен
+  new winston.transports.Console({
+    format: combine(
+      colorize(),
+      timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      customFormat
+    ),
+  }),
+];
+
+// Файловые транспорты только для development окружения
+if (process.env.NODE_ENV === 'development') {
+  transports.push(
     // File transport для ошибок
     new winston.transports.File({
       filename: 'logs/error.log',
@@ -35,8 +33,19 @@ export const logger = winston.createLogger({
     // File transport для всех логов
     new winston.transports.File({
       filename: 'logs/combined.log',
-    }),
-  ],
+    })
+  );
+}
+
+// Создание logger instance
+export const logger = winston.createLogger({
+  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+  format: combine(
+    errors({ stack: true }),
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    customFormat
+  ),
+  transports,
 });
 
 // Экспорт по умолчанию
