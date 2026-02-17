@@ -23,9 +23,9 @@ export const initializeSocketIO = (httpServer: HttpServer): Server => {
         'http://localhost:5174',
         'http://localhost:5175',
         // Vercel production & preview deployments
-        'https://aaa-team-meet-p5zb.vercel.app',
-        'https://aaa-team-meet-p5zb-git-main-artems-projects-84069b41.vercel.app',
-        'https://aaa-team-meet-p5zb-4ahrbj6n7-artems-projects-84069b41.vercel.app',
+        'https://aaa-team-meet.vercel.app',
+        'https://aaa-team-meet-git-main-artems-projects-84069b41.vercel.app',
+        'https://aaa-team-meet-k6iijjr11-artems-projects-84069b41.vercel.app',
       ],
       methods: ['GET', 'POST'],
       credentials: true,

@@ -1,8 +1,8 @@
 /// <reference types="../vite-env.d.ts" />
 
 // Hardcoded URLs для продакшена (обход проблемы с Vercel Secrets)
-export const API_URL = 'https://video-meet-for-aaateam.onrender.com/api';
-export const SOCKET_URL = 'https://video-meet-for-aaateam.onrender.com';
+export const API_URL = 'https://aaa-team-chat-platform.onrender.com/api';
+export const SOCKET_URL = 'https://aaa-team-chat-platform.onrender.com';
 
 // Для локальной разработки раскомментируйте:
 // export const API_URL = 'http://localhost:3000/api';

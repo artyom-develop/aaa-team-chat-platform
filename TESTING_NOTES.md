@@ -1,3 +1,10 @@
+# Владелец проекта
+
+- Имя: artyom-develop
+- Email: artem2006pax@mail.ru
+
+---
+
 # Инструкции по тестированию WebRTC соединений
 
 ## Что исправлено:
@@ -48,13 +55,6 @@
 ```
 [useWebRTC] ICE connection state for xxx: connected
 [useWebRTC] PeerConnection state for xxx: connected
-[useWebRTC] Successfully connected to xxx
-```
-
-### Нормальные ошибки (можно игнорировать):
-- `STUN timeout` - браузер пробует разные STUN серверы
-- `ICE gathering state: gathering` → `complete` - нормальный процесс
-
 ### Реальные проблемы:
 - `ICE connection failed` - критично, будет автоматически переподключаться
 - `Connection failed` - критично, покажет toast с ошибкой

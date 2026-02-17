@@ -49,8 +49,8 @@ export class App {
 				'http://localhost:5175',
 				// Vercel production & preview deployments
 				'https://aaa-team-meet-git-main-artems-projects-84069b41.vercel.app',
-				'https://aaa-team-meet-8mvw8s9ce-artems-projects-84069b41.vercel.app',
-				process.env.VERCEL_URL_PRODUCTION || 'https://aaa-team-meet.vercel.app', // Поддержка динамического URL от Vercel
+				'https://aaa-team-meet-k6iijjr11-artems-projects-84069b41.vercel.app',
+				'https://aaa-team-meet.vercel.app',
 			],
 			credentials: true,
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
