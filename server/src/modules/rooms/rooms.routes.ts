@@ -72,6 +72,21 @@ router.post('/', authenticate, validateDto(CreateRoomDto), roomsController.creat
 
 /**
  * @swagger
+ * /rooms/ice-servers:
+ *   get:
+ *     tags: [Комнаты]
+ *     summary: Получение ICE серверов для WebRTC
+ *     description: Получение конфигурации STUN/TURN серверов
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: ICE серверы успешно получены
+ */
+router.get('/ice-servers', authenticate, roomsController.getIceServers as RequestHandler);
+
+/**
+ * @swagger
  * /rooms/my:
  *   get:
  *     tags: [Комнаты]

@@ -1,0 +1,408 @@
+index-CYw0TAVp.js:192 [apiService] setToken called with: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgwOTA0NzNhLWUxOWQtNGZmNC04Mzg4LWRhNGFmOTVkYzA3YyIsImVtYWlsIjoiZ3Vlc3QtMTg5MjU4Y2UtMWU4Zi00MmUyLTljNjktYmJlZDRmMzBkZDYwQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjAyNzIsImV4cCI6MTc3MTM2MTE3Mn0.bxJ3VG4U8_jL87HD3BL88Z448KRm1iIra3C5SWxS8Qw
+index-CYw0TAVp.js:192 [apiService] Request interceptor - token: present
+index-CYw0TAVp.js:192 [authStore] Auth check successful
+index-CYw0TAVp.js:192 Creating room with token: present
+index-CYw0TAVp.js:192 [apiService] Request interceptor - token: present
+index-CYw0TAVp.js:192 [apiService] createRoom response: Object
+index-CYw0TAVp.js:193 [ProtectedRoute] isAuthenticated: true isLoading: false user: Object
+index-CYw0TAVp.js:192 [apiService] Request interceptor - token: present
+index-CYw0TAVp.js:192 [mediaStore] Setting new local stream: 7083f449-5dbb-497d-ac5b-2909920eed4b
+index-CYw0TAVp.js:192 [LobbyPage] Local stream initialized: 7083f449-5dbb-497d-ac5b-2909920eed4b
+index-CYw0TAVp.js:192 [LobbyPage] Attaching stream to video element
+index-CYw0TAVp.js:192 [LobbyPage] Joining room, current stream: 7083f449-5dbb-497d-ac5b-2909920eed4b
+index-CYw0TAVp.js:193 [ProtectedRoute] isAuthenticated: true isLoading: false user: Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [useSocket] Setting up event listeners. Room: undefined User: 8090473a-e19d-4ff4-8388-da4af95dc07c
+index-CYw0TAVp.js:193 [useWebRTC] Not creating offers - room: false localStream: true
+index-CYw0TAVp.js:193 [useWebRTC] Updating tracks in all peer connections
+index-CYw0TAVp.js:193 [RoomPage] Loading room data for slug: 32e7-d2a8-52dd
+index-CYw0TAVp.js:193 [RoomPage] Waiting for room:joined event to create localParticipant
+index-CYw0TAVp.js:192 [apiService] Request interceptor - token: present
+index-CYw0TAVp.js:192 [apiService] Request interceptor - token: present
+index-CYw0TAVp.js:193 [RoomPage] Room data loaded: Object
+index-CYw0TAVp.js:193 [RoomPage] Current media stream state: Object
+index-CYw0TAVp.js:193 [RoomPage] Using existing media stream: 7083f449-5dbb-497d-ac5b-2909920eed4b
+index-CYw0TAVp.js:193 [RoomPage] Joining room via socket...
+index-CYw0TAVp.js:193 [RoomPage] LocalStream ready, joining room with media: Object
+index-CYw0TAVp.js:192 [useSocket] joinRoom called for: 32e7-d2a8-52dd Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+index-CYw0TAVp.js:192 [apiService] Request interceptor - token: present
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+video-meet-for-aaateam.onrender.com/api/rooms/ice-servers:1  Failed to load resource: the server responded with a status of 404 ()
+index-CYw0TAVp.js:193 [RoomPage] Failed to load ICE servers, using defaults: AxiosError: Request failed with status code 404
+    at Ip (index-CYw0TAVp.js:189:1087)
+    at XMLHttpRequest.B (index-CYw0TAVp.js:189:5928)
+    at Ua.request (index-CYw0TAVp.js:191:2094)
+    at async c2.getIceServers (index-CYw0TAVp.js:192:8386)
+    at async index-CYw0TAVp.js:193:5889
+index-CYw0TAVp.js:192 Socket connected: zWHnnqfa7AgrUwqLAAAJ
+index-CYw0TAVp.js:193 [useChat] Loaded history for room: 32e7-d2a8-52dd messages: 0
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+index-CYw0TAVp.js:192 [useSocket] joinRoom callback response: Object
+index-CYw0TAVp.js:193 [RoomPage] Successfully joined room
+index-CYw0TAVp.js:192 [useSocket] Room joined event received: Object
+index-CYw0TAVp.js:192 [useSocket] Current user ID: 8090473a-e19d-4ff4-8388-da4af95dc07c
+index-CYw0TAVp.js:192 [useSocket] Current socketId: zWHnnqfa7AgrUwqLAAAJ
+index-CYw0TAVp.js:192 [useSocket] Processing participants: 1
+index-CYw0TAVp.js:192 [useSocket] Creating localParticipant for self: 8090473a-e19d-4ff4-8388-da4af95dc07c
+index-CYw0TAVp.js:192 [useSocket] Media state: Object
+index-CYw0TAVp.js:192 [useSocket] Setting localParticipant: Object
+index-CYw0TAVp.js:192 [useSocket] Participants added. Total: 0
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(1)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [useSocket] Setting up event listeners. Room: 32e7-d2a8-52dd User: 8090473a-e19d-4ff4-8388-da4af95dc07c
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(1)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+index-CYw0TAVp.js:192 [useSocket] Request to create offers for participants: Array(1)
+index-CYw0TAVp.js:192 [useSocket] Request to create offers for participants: Array(1)
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(1)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(1)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [useSocket] Setting up event listeners. Room: 32e7-d2a8-52dd User: 8090473a-e19d-4ff4-8388-da4af95dc07c
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+index-CYw0TAVp.js:192 [useSocket] User joined: Object
+index-CYw0TAVp.js:192 [useSocket] User joined: Object
+index-CYw0TAVp.js:192 [useSocket] User joined: Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] No stream available: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 1
+index-CYw0TAVp.js:193 [useWebRTC] Creating offer for new participant: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] Creating offer for user: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:192 [useWebRTC] Creating new peer connection for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:192 [useWebRTC] Adding local tracks to peer connection: Object
+index-CYw0TAVp.js:192 [useWebRTC] Adding track: Object
+index-CYw0TAVp.js:192 [useWebRTC] Adding track: Object
+index-CYw0TAVp.js:192 [useWebRTC] Added local tracks to peer connection for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] Peer connection senders before offer: Object
+index-CYw0TAVp.js:192 [useWebRTC] Offer created: Object
+index-CYw0TAVp.js:193 [useWebRTC] Sending offer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [SocketService] Sending offer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 in room: 32e7-d2a8-52dd
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: gathering
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:193 [useWebRTC] Received offer from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:192 [useWebRTC] Peer connection already exists for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 state: new
+index-CYw0TAVp.js:192 [useWebRTC] ontrack event received: Object
+index-CYw0TAVp.js:192 [useWebRTC] Received remote stream from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 1
+index-CYw0TAVp.js:193 [useWebRTC] Peer connection already exists for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 state: new
+index-CYw0TAVp.js:192 [useWebRTC] ontrack event received: Object
+index-CYw0TAVp.js:192 [useWebRTC] Received remote stream from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 1
+index-CYw0TAVp.js:193 [useWebRTC] Peer connection already exists for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 state: new
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: new
+index-CYw0TAVp.js:193 [useWebRTC] Answer created: Object
+index-CYw0TAVp.js:193 [useWebRTC] Sending answer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [SocketService] Sending answer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 in room: 32e7-d2a8-52dd
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: gathering
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: checking
+index-CYw0TAVp.js:192 [useWebRTC] PeerConnection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: connecting
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+installHook.js:1 [useWebRTC] Error handling answer: InvalidStateError: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: complete
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: connected
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection established for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] PeerConnection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: failed
+installHook.js:1 [useWebRTC] Connection failed for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [useWebRTC] Attempting to reconnect to ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: disconnected
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted because the media was removed from the document. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted by a new load request. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [useSocket] User joined: Object
+index-CYw0TAVp.js:192 [useSocket] User joined: Object
+index-CYw0TAVp.js:192 [useSocket] User joined: Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] No stream available: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 1
+index-CYw0TAVp.js:193 [useWebRTC] Creating offer for new participant: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] Creating offer for user: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:192 [useWebRTC] Creating new peer connection for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:192 [useWebRTC] Adding local tracks to peer connection: Object
+index-CYw0TAVp.js:192 [useWebRTC] Adding track: Object
+index-CYw0TAVp.js:192 [useWebRTC] Adding track: Object
+index-CYw0TAVp.js:192 [useWebRTC] Added local tracks to peer connection for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] Peer connection senders before offer: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted by a new load request. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [useWebRTC] Offer created: Object
+index-CYw0TAVp.js:193 [useWebRTC] Sending offer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [SocketService] Sending offer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 in room: 32e7-d2a8-52dd
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: gathering
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:193 [useWebRTC] Received offer from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:192 [useWebRTC] Peer connection already exists for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 state: new
+index-CYw0TAVp.js:192 [useWebRTC] ontrack event received: Object
+index-CYw0TAVp.js:192 [useWebRTC] Received remote stream from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 1
+index-CYw0TAVp.js:193 [useWebRTC] Peer connection already exists for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 state: new
+index-CYw0TAVp.js:192 [useWebRTC] ontrack event received: Object
+index-CYw0TAVp.js:192 [useWebRTC] Received remote stream from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 1
+index-CYw0TAVp.js:193 [useWebRTC] Peer connection already exists for: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 state: new
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: new
+index-CYw0TAVp.js:193 [useWebRTC] Answer created: Object
+index-CYw0TAVp.js:193 [useWebRTC] Sending answer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [SocketService] Sending answer to: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 in room: 32e7-d2a8-52dd
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: gathering
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: checking
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] PeerConnection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: connecting
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+installHook.js:1 [useWebRTC] Error handling answer: InvalidStateError: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:193 [useWebRTC] ICE candidate added from: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] ICE gathering state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: complete
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: connected
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection established for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+index-CYw0TAVp.js:192 [useWebRTC] PeerConnection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: failed
+installHook.js:1 [useWebRTC] Connection failed for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [useWebRTC] Attempting to reconnect to ad7335d4-56cf-4b65-8ac0-93b2dbad65c4
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+installHook.js:1 [useWebRTC] ICE candidate error for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: Object
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted because the media was removed from the document. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted by a new load request. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted because the media was removed from the document. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(2)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Attaching stream to video element: Object
+index-CYw0TAVp.js:192 [VideoTile] Video track state: Object
+index-CYw0TAVp.js:192 [VideoTile] Audio track state: Object
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted by a new load request. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [SocketService] Kicking user: Object
+index-CYw0TAVp.js:193 [RoomPage] Chat state: Object
+index-CYw0TAVp.js:192 [useWebRTC] RTCConfiguration: Object
+index-CYw0TAVp.js:192 [VideoGrid] Rendering: Object
+index-CYw0TAVp.js:192 [VideoGrid] All participants: Array(1)
+index-CYw0TAVp.js:192 [VideoTile] Rendering participant: Object
+index-CYw0TAVp.js:192 [VideoTile] Video visibility decision: Object
+index-CYw0TAVp.js:193 [useWebRTC] Checking for new participants. Total: 0
+installHook.js:1 [VideoTile] Failed to play video: ad7335d4-56cf-4b65-8ac0-93b2dbad65c4 AbortError: The play() request was interrupted because the media was removed from the document. https://goo.gl/LdLk22
+overrideMethod @ installHook.js:1
+index-CYw0TAVp.js:192 [useWebRTC] ICE connection state for ad7335d4-56cf-4b65-8ac0-93b2dbad65c4: disconnected

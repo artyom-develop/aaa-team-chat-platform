@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { socketService } from '../services/socket';
 import { useRoomStore } from '../store/roomStore';
 import { useMediaStore } from '../store/mediaStore';
+import { useAuthStore } from '../store/authStore';
 import { PEER_CONNECTION_CONFIG } from '../constants';
 import { IceServer } from '../types';
 import toast from 'react-hot-toast';
@@ -17,6 +18,7 @@ interface PeerConnection {
 export const useWebRTC = (iceServers?: IceServer[]) => {
   const { room, participants, updateParticipant } = useRoomStore();
   const { localStream, screenStream } = useMediaStore();
+  const { user } = useAuthStore();
   const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map());
 
   // Конфигурация ICE серверов
@@ -266,6 +268,31 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         
         // Создаем peer connection (даже без localStream - чтобы получать удаленные треки)
         const pc = createPeerConnection(data.from);
+        
+        // Polite peer pattern: определяем кто polite по userId
+        const isPolite = user && user.id < data.from;
+        
+        // Проверяем signaling state
+        const offerCollision = pc.signalingState !== 'stable';
+        
+        if (offerCollision) {
+          console.log('[useWebRTC] Offer collision detected:', {
+            from: data.from,
+            isPolite,
+            signalingState: pc.signalingState,
+          });
+          
+          // Если мы impolite и есть collision - игнорируем
+          if (!isPolite) {
+            console.log('[useWebRTC] Impolite peer ignoring offer collision');
+            return;
+          }
+          
+          // Если мы polite - откатываем свой offer
+          console.log('[useWebRTC] Polite peer rolling back local offer');
+          await pc.setLocalDescription({ type: 'rollback' } as RTCSessionDescriptionInit);
+        }
+        
         await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
 
         const answer = await pc.createAnswer();
@@ -288,10 +315,10 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         socketService.sendAnswer(room.slug, data.from, answer);
       } catch (error) {
         console.error('[useWebRTC] Error handling offer:', error);
-        toast.error('Ошибка обработки offer');
+        // Не показываем toast - может быть normal collision
       }
     },
-    [createPeerConnection, localStream, room]
+    [createPeerConnection, localStream, room, user]
   );
 
   // Обработка входящего answer
@@ -310,12 +337,22 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
           peerConnectionsRef.current.delete(data.from);
           return;
         }
+        
+        // Проверяем signaling state перед setRemoteDescription
+        if (pc.signalingState !== 'have-local-offer') {
+          console.warn('[useWebRTC] Invalid signaling state for answer:', {
+            from: data.from,
+            signalingState: pc.signalingState,
+            expectedState: 'have-local-offer',
+          });
+          return;
+        }
 
         await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
         console.log('[useWebRTC] Answer processed successfully from:', data.from);
       } catch (error) {
         console.error('[useWebRTC] Error handling answer:', error);
-        toast.error('Ошибка обработки answer');
+        // Не показываем toast - может быть normal collision
       }
     },
     []
@@ -421,15 +458,15 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
             continue;
           }
 
-          // Удаляем старые треки
+          // ИСПРАВЛЕНО: Не удаляем все треки, а обновляем только screen share треки
           const senders = pc.getSenders();
-          for (const sender of senders) {
+          const screenSenders = senders.filter(s => 
+            s.track?.kind === 'video' && s.track.label.includes('screen')
+          );
+          
+          // Удаляем только старые screen share треки
+          for (const sender of screenSenders) {
             pc.removeTrack(sender);
-          }
-
-          // Добавляем треки из localStream
-          for (const track of localStream.getTracks()) {
-            pc.addTrack(track, localStream);
           }
 
           // Добавляем треки из screenStream, если есть
@@ -438,21 +475,26 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
             for (const track of screenStream.getTracks()) {
               pc.addTrack(track, screenStream);
             }
-          }
 
-          // Создаем новый offer для renegotiation ТОЛЬКО если соединение активно
-          if (pc.connectionState === 'connected' || pc.connectionState === 'connecting') {
-            console.log('[useWebRTC] Creating new offer for renegotiation:', userId);
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-            if (room) {
-              socketService.sendOffer(room.slug, userId, offer);
+            // Создаем новый offer для renegotiation ТОЛЬКО если соединение активно
+            if (pc.connectionState === 'connected') {
+              console.log('[useWebRTC] Creating new offer for screen share renegotiation:', userId);
+              const offer = await pc.createOffer();
+              await pc.setLocalDescription(offer);
+              if (room) {
+                socketService.sendOffer(room.slug, userId, offer);
+              }
             }
-          } else {
-            console.log('[useWebRTC] Skipping offer creation - connection not ready:', {
-              userId,
-              connectionState: pc.connectionState,
-            });
+          } else if (screenSenders.length > 0) {
+            // Screen share был остановлен - удалили треки выше, делаем renegotiation
+            console.log('[useWebRTC] Creating offer after stopping screen share:', userId);
+            if (pc.connectionState === 'connected') {
+              const offer = await pc.createOffer();
+              await pc.setLocalDescription(offer);
+              if (room) {
+                socketService.sendOffer(room.slug, userId, offer);
+              }
+            }
           }
         } catch (error) {
           console.error('[useWebRTC] Error updating tracks for user:', userId, error);
@@ -462,7 +504,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     };
 
     updateTracks();
-  }, [localStream, screenStream]);
+  }, [localStream, screenStream, room]);
 
   // Очистка соединений при размонтировании
   useEffect(() => {

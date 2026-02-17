@@ -7,6 +7,7 @@ import { RoomResponseDto } from './dto/room-response.dto.js';
 import { CreateRoomDto } from './dto/create-room.dto.js';
 import { JoinRoomDto } from './dto/join-room.dto.js';
 import { IController } from '../../shared/interfaces/IController.js';
+import { TurnConfig } from '../../config/turn.config.js';
 
 export class RoomsController implements IController {
   public readonly router: Router;
@@ -118,6 +119,22 @@ export class RoomsController implements IController {
       await this.roomsService.deleteRoom(slug, req.user!);
 
       ResponseUtil.success(res, null, 'Комната удалена');
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * GET /api/rooms/ice-servers - Получение ICE серверов для WebRTC
+   */
+  getIceServers = async (
+    req: IAuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const iceServers = TurnConfig.getIceServers();
+      ResponseUtil.success(res, { iceServers });
     } catch (error) {
       next(error);
     }
