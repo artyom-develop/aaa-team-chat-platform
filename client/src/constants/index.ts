@@ -1,7 +1,12 @@
 /// <reference types="../vite-env.d.ts" />
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+// Hardcoded URLs для продакшена (обход проблемы с Vercel Secrets)
+export const API_URL = 'https://video-meet-for-aaateam.onrender.com/api';
+export const SOCKET_URL = 'https://video-meet-for-aaateam.onrender.com';
+
+// Для локальной разработки раскомментируйте:
+// export const API_URL = 'http://localhost:3000/api';
+// export const SOCKET_URL = 'http://localhost:3000';
 
 export const MAX_PARTICIPANTS_GRID = 6;
 export const MAX_MESSAGE_LENGTH = 1000;
