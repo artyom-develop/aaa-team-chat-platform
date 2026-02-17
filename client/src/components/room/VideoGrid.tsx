@@ -64,31 +64,31 @@ export const VideoGrid = () => {
   // Grid layout - как раньше
   const getGridCols = (count: number) => {
     if (count === 1) return 'grid-cols-1';
-    if (count === 2) return 'grid-cols-2';
-    if (count <= 4) return 'grid-cols-2';
-    if (count <= 9) return 'grid-cols-3';
-    return 'grid-cols-4';
+    if (count === 2) return 'grid-cols-1 md:grid-cols-2';
+    if (count <= 4) return 'grid-cols-1 sm:grid-cols-2';
+    if (count <= 9) return 'grid-cols-2 md:grid-cols-3';
+    return 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
   };
 
   // Spotlight layout
   if (layout === 'spotlight' && allParticipants.length >= 1) {
     return (
-      <div className="h-full flex flex-col gap-2 p-4">
+      <div className="h-full flex flex-col gap-2 p-2 sm:p-4">
         {/* Кнопка переключения layout */}
         <div className="flex justify-end gap-2 mb-2">
           <button
             onClick={() => setLayout('grid')}
-            className="p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
+            className="p-1.5 sm:p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
             title="Grid View"
           >
-            <Grid className="w-5 h-5" />
+            <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button
             onClick={() => setLayout('spotlight')}
-            className="p-2 rounded-lg transition bg-purple-600 text-white"
+            className="p-1.5 sm:p-2 rounded-lg transition bg-purple-600 text-white"
             title="Spotlight View"
           >
-            <Users className="w-5 h-5" />
+            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
@@ -103,11 +103,11 @@ export const VideoGrid = () => {
 
         {/* Превью остальных участников */}
         {otherParticipants.length > 0 && (
-          <div className="h-32 flex gap-2 overflow-x-auto">
+          <div className="h-24 sm:h-32 flex gap-2 overflow-x-auto">
             {otherParticipants.map((participant) => (
               <div
                 key={participant.userId}
-                className="shrink-0 w-48 cursor-pointer transform transition hover:scale-105"
+                className="shrink-0 w-32 sm:w-48 cursor-pointer transform transition hover:scale-105"
                 onClick={() => setSpotlightUserId(participant.userId)}
               >
                 <VideoTile
@@ -125,27 +125,27 @@ export const VideoGrid = () => {
 
   // Grid layout
   return (
-    <div className="flex flex-col h-full p-4 gap-2">
+    <div className="flex flex-col h-full p-2 sm:p-4 gap-2">
       {/* Кнопка переключения layout */}
       <div className="flex justify-end gap-2 mb-2">
         <button
           onClick={() => setLayout('grid')}
-          className="p-2 rounded-lg transition bg-purple-600 text-white"
+          className="p-1.5 sm:p-2 rounded-lg transition bg-purple-600 text-white"
           title="Grid View"
         >
-          <Grid className="w-5 h-5" />
+          <Grid className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           onClick={() => setLayout('spotlight')}
-          className="p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
+          className="p-1.5 sm:p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
           title="Spotlight View"
         >
-          <Users className="w-5 h-5" />
+          <Users className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
 
       {/* Grid */}
-      <div className={`grid ${getGridCols(allParticipants.length)} gap-4 flex-1`}>
+      <div className={`grid ${getGridCols(allParticipants.length)} gap-2 sm:gap-4 flex-1`}>
         {allParticipants.map((participant) => (
           <VideoTile
             key={participant.userId}

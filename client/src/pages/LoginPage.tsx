@@ -62,21 +62,21 @@ export const LoginPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Video className="w-10 h-10 text-blue-500" />
-            <span className="text-3xl font-bold text-white">VideoMeet</span>
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+            <Video className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
+            <span className="text-2xl sm:text-3xl font-bold text-white">VideoMeet</span>
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">
             {isGuestMode ? 'Войти как гость' : 'Вход в аккаунт'}
           </h2>
-          <p className="text-gray-400">
+          <p className="text-sm sm:text-base text-gray-400">
             {isGuestMode ? 'Введите ваше имя для входа' : 'Введите ваши данные для входа'}
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-8 border border-gray-700">
+        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 sm:p-8 border border-gray-700">
           {isGuestMode ? (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -89,7 +89,7 @@ export const LoginPage = () => {
                   required
                   value={formData.displayName}
                   onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Введите ваше имя"
                 />
               </div>
@@ -107,7 +107,7 @@ export const LoginPage = () => {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -124,7 +124,7 @@ export const LoginPage = () => {
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="••••••••"
                   />
                 </div>

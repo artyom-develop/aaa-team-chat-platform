@@ -94,79 +94,79 @@ export const Controls = ({
 
   return (
     <>
-      <div className="bg-gray-900 border-t border-gray-800 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="bg-gray-900 border-t border-gray-800 px-2 sm:px-4 py-2 sm:py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-1 sm:gap-0">
           {/* Левая группа - основные контролы */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={handleToggleAudio}
-              className={`p-3 rounded-lg transition-colors ${
+              className={`p-2 sm:p-3 rounded-lg transition-colors ${
                 audioEnabled
                   ? 'bg-gray-800 hover:bg-gray-700 text-white'
                   : 'bg-red-500 hover:bg-red-600 text-white'
               }`}
               title={audioEnabled ? 'Выключить микрофон' : 'Включить микрофон'}
             >
-              {audioEnabled ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+              {audioEnabled ? <Mic className="w-4 h-4 sm:w-5 sm:h-5" /> : <MicOff className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
 
             <button
               onClick={handleToggleVideo}
-              className={`p-3 rounded-lg transition-colors ${
+              className={`p-2 sm:p-3 rounded-lg transition-colors ${
                 videoEnabled
                   ? 'bg-gray-800 hover:bg-gray-700 text-white'
                   : 'bg-red-500 hover:bg-red-600 text-white'
               }`}
               title={videoEnabled ? 'Выключить камеру' : 'Включить камеру'}
             >
-              {videoEnabled ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+              {videoEnabled ? <Video className="w-4 h-4 sm:w-5 sm:h-5" /> : <VideoOff className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
 
             <button
               onClick={handleToggleScreen}
-              className={`p-3 rounded-lg transition-colors ${
+              className={`hidden sm:flex p-2 sm:p-3 rounded-lg transition-colors ${
                 screenSharing
                   ? 'bg-green-500 hover:bg-green-600 text-white'
                   : 'bg-gray-800 hover:bg-gray-700 text-white'
               }`}
               title={screenSharing ? 'Остановить демонстрацию' : 'Поделиться экраном'}
             >
-              {screenSharing ? <MonitorX className="w-5 h-5" /> : <MonitorUp className="w-5 h-5" />}
+              {screenSharing ? <MonitorX className="w-4 h-4 sm:w-5 sm:h-5" /> : <MonitorUp className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
           </div>
 
           {/* Центральная группа - дополнительные функции */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={onToggleChat}
-              className={`p-3 rounded-lg transition-colors ${
+              className={`p-2 sm:p-3 rounded-lg transition-colors ${
                 isChatOpen
                   ? 'bg-purple-500 hover:bg-purple-600 text-white'
                   : 'bg-gray-800 hover:bg-gray-700 text-white'
               }`}
               title="Чат"
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             <button
               onClick={onToggleParticipants}
-              className={`p-3 rounded-lg transition-colors ${
+              className={`p-2 sm:p-3 rounded-lg transition-colors ${
                 isParticipantsOpen
                   ? 'bg-purple-500 hover:bg-purple-600 text-white'
                   : 'bg-gray-800 hover:bg-gray-700 text-white'
               }`}
               title="Участники"
             >
-              <Users className="w-5 h-5" />
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="p-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition-colors"
+              className="hidden sm:flex p-2 sm:p-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition-colors"
               title="Настройки"
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
@@ -174,11 +174,11 @@ export const Controls = ({
           <div>
             <button
               onClick={handleLeave}
-              className="px-6 py-3 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors flex items-center gap-2"
+              className="px-3 sm:px-6 py-2 sm:py-3 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors flex items-center gap-2"
               title="Покинуть комнату"
             >
-              <PhoneOff className="w-5 h-5" />
-              Выйти
+              <PhoneOff className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Выйти</span>
             </button>
           </div>
         </div>

@@ -37,7 +37,7 @@ export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) =
   };
 
   return (
-    <div className="w-80 bg-gray-900 border-l border-gray-800 flex flex-col h-full">
+    <div className="fixed inset-0 md:relative md:w-80 bg-gray-900 md:border-l border-gray-800 flex flex-col h-full z-20">
       {/* Заголовок */}
       <div className="bg-gray-800 px-4 py-3 flex items-center justify-between border-b border-gray-700">
         <h3 className="text-white font-semibold">Чат</h3>

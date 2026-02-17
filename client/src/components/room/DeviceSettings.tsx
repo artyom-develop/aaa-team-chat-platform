@@ -9,11 +9,11 @@ export const DeviceSettings = ({ onClose }: DeviceSettingsProps) => {
   const { devices, selectedDevices, selectDevice } = useMedia();
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-gray-900 rounded-lg w-full max-w-md">
         {/* Заголовок */}
-        <div className="bg-gray-800 px-6 py-4 flex items-center justify-between border-b border-gray-700 rounded-t-lg">
-          <h3 className="text-white font-semibold text-lg">Настройки устройств</h3>
+        <div className="bg-gray-800 px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between border-b border-gray-700 rounded-t-lg">
+          <h3 className="text-white font-semibold text-base sm:text-lg">Настройки устройств</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
@@ -23,14 +23,14 @@ export const DeviceSettings = ({ onClose }: DeviceSettingsProps) => {
         </div>
 
         {/* Контент */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Микрофон */}
           <div>
-            <label className="block text-white font-medium mb-2">Микрофон</label>
+            <label className="block text-white font-medium mb-2 text-sm sm:text-base">Микрофон</label>
             <select
               value={selectedDevices.audioInput || ''}
               onChange={(e) => selectDevice('audioInput', e.target.value)}
-              className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:px-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               {devices.audioInputs.length === 0 ? (
                 <option>Микрофон не найден</option>
@@ -46,11 +46,11 @@ export const DeviceSettings = ({ onClose }: DeviceSettingsProps) => {
 
           {/* Камера */}
           <div>
-            <label className="block text-white font-medium mb-2">Камера</label>
+            <label className="block text-white font-medium mb-2 text-sm sm:text-base">Камера</label>
             <select
               value={selectedDevices.videoInput || ''}
               onChange={(e) => selectDevice('videoInput', e.target.value)}
-              className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:px-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               {devices.videoInputs.length === 0 ? (
                 <option>Камера не найдена</option>
@@ -66,11 +66,11 @@ export const DeviceSettings = ({ onClose }: DeviceSettingsProps) => {
 
           {/* Динамики */}
           <div>
-            <label className="block text-white font-medium mb-2">Динамики</label>
+            <label className="block text-white font-medium mb-2 text-sm sm:text-base">Динамики</label>
             <select
               value={selectedDevices.audioOutput || ''}
               onChange={(e) => selectDevice('audioOutput', e.target.value)}
-              className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:px-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               {devices.audioOutputs.length === 0 ? (
                 <option>Динамики не найдены</option>
@@ -86,10 +86,10 @@ export const DeviceSettings = ({ onClose }: DeviceSettingsProps) => {
         </div>
 
         {/* Футер */}
-        <div className="bg-gray-800 px-6 py-4 flex justify-end border-t border-gray-700 rounded-b-lg">
+        <div className="bg-gray-800 px-4 py-3 sm:px-6 sm:py-4 flex justify-end border-t border-gray-700 rounded-b-lg">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+            className="px-4 py-2 sm:px-6 text-sm sm:text-base bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
           >
             Готово
           </button>

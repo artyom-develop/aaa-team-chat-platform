@@ -107,18 +107,18 @@ export const LobbyPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 flex items-center justify-center p-3 sm:p-4">
       <div className="max-w-4xl w-full">
         <div className="bg-gray-900/50 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-white/10">
           {/* Заголовок */}
-          <div className="bg-gray-800/50 px-6 py-4 border-b border-white/10">
-            <h1 className="text-2xl font-bold text-white">Готовы присоединиться?</h1>
-            <p className="text-gray-300 mt-1">{roomName}</p>
+          <div className="bg-gray-800/50 px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10">
+            <h1 className="text-xl sm:text-2xl font-bold text-white">Готовы присоединиться?</h1>
+            <p className="text-sm sm:text-base text-gray-300 mt-1">{roomName}</p>
           </div>
 
           {/* Контент */}
-          <div className="p-6">
-            <div className="grid md:grid-cols-2 gap-6">
+          <div className="p-4 sm:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Предпросмотр видео */}
               <div className="relative bg-gray-900 rounded-lg overflow-hidden aspect-video">
                 {videoEnabled && localStream ? (
@@ -131,17 +131,17 @@ export const LobbyPage = () => {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
-                    <VideoOff className="w-16 h-16 text-white/50" />
+                    <VideoOff className="w-12 h-12 sm:w-16 sm:h-16 text-white/50" />
                   </div>
                 )}
 
                 {/* Индикатор микрофона */}
-                <div className="absolute bottom-4 left-4">
-                  <div className="bg-black/50 p-2 rounded-lg backdrop-blur-sm">
+                <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+                  <div className="bg-black/50 p-1.5 sm:p-2 rounded-lg backdrop-blur-sm">
                     {audioEnabled ? (
-                      <Mic className="w-5 h-5 text-white" />
+                      <Mic className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     ) : (
-                      <MicOff className="w-5 h-5 text-red-500" />
+                      <MicOff className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                     )}
                   </div>
                 </div>
@@ -149,69 +149,69 @@ export const LobbyPage = () => {
 
               {/* Настройки */}
               <div className="flex flex-col justify-between">
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-white">Настройка устройств</h2>
+                <div className="space-y-3 sm:space-y-4">
+                  <h2 className="text-lg sm:text-xl font-semibold text-white">Настройка устройств</h2>
 
                   {!localStream && (
-                    <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mb-4">
-                      <p className="text-yellow-200 text-sm mb-2">
+                    <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 sm:p-4 mb-4">
+                      <p className="text-yellow-200 text-xs sm:text-sm mb-2">
                         Не удалось получить доступ к камере и микрофону
                       </p>
                       <button
                         onClick={retryMediaAccess}
-                        className="w-full px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-colors"
+                        className="w-full px-3 py-2 sm:px-4 text-sm sm:text-base bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-colors"
                       >
                         Попробовать снова
                       </button>
                     </div>
                   )}
 
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <button
                       onClick={toggleAudio}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 rounded-lg transition-colors ${
                         audioEnabled
                           ? 'bg-gray-800 hover:bg-gray-700'
                           : 'bg-red-500/20 hover:bg-red-500/30'
                       }`}
                     >
-                      <span className="text-white font-medium">Микрофон</span>
+                      <span className="text-sm sm:text-base text-white font-medium">Микрофон</span>
                       {audioEnabled ? (
-                        <Mic className="w-5 h-5 text-green-500" />
+                        <Mic className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       ) : (
-                        <MicOff className="w-5 h-5 text-red-500" />
+                        <MicOff className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                       )}
                     </button>
 
                     <button
                       onClick={toggleVideo}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 rounded-lg transition-colors ${
                         videoEnabled
                           ? 'bg-gray-800 hover:bg-gray-700'
                           : 'bg-red-500/20 hover:bg-red-500/30'
                       }`}
                     >
-                      <span className="text-white font-medium">Камера</span>
+                      <span className="text-sm sm:text-base text-white font-medium">Камера</span>
                       {videoEnabled ? (
-                        <Video className="w-5 h-5 text-green-500" />
+                        <Video className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       ) : (
-                        <VideoOff className="w-5 h-5 text-red-500" />
+                        <VideoOff className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                       )}
                     </button>
 
                     <button
                       onClick={() => setIsSettingsOpen(true)}
-                      className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
                     >
-                      <span className="text-white font-medium">Дополнительные настройки</span>
-                      <Settings className="w-5 h-5 text-gray-400" />
+                      <span className="text-sm sm:text-base text-white font-medium">Дополнительные настройки</span>
+                      <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </button>
                   </div>
                 </div>
 
                 <button
                   onClick={handleJoin}
-                  className="w-full mt-6 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors"
+                  className="w-full mt-4 sm:mt-6 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors"
                 >
                   Присоединиться к встрече
                 </button>
