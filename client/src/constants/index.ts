@@ -1,6 +1,6 @@
 /// <reference types="../vite-env.d.ts" />
 
-export const API_URL = "https://video-meet-for-aaateam.onrender.com/api"
+export const API_URL = "https://video-meet-for-aaateam.onrender.com"
 export const SOCKET_URL = 'https://video-meet-for-aaateam.onrender.com'
 
 export const MAX_PARTICIPANTS_GRID = 6
