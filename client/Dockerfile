@@ -4,14 +4,6 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Объявляем build arguments для переменных окружения Vite
-ARG VITE_API_URL
-ARG VITE_SOCKET_URL
-
-# Устанавливаем переменные окружения для процесса сборки
-ENV VITE_API_URL=${VITE_API_URL}
-ENV VITE_SOCKET_URL=${VITE_SOCKET_URL}
-
 # Копируем package.json и устанавливаем зависимости
 COPY package.json ./
 RUN npm install --legacy-peer-deps
