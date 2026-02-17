@@ -1,13 +1,23 @@
 import { createClient } from 'redis';
 import { logger } from '../utils/logger.js';
 
-const redisClient = createClient({
+// Создаем конфигурацию Redis с опциональным паролем
+const redisConfig: any = {
   socket: {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379'),
   },
-  password: process.env.REDIS_PASSWORD || 'redis123',
-});
+};
+
+// Добавляем пароль только если он указан
+if (process.env.REDIS_PASSWORD) {
+  redisConfig.password = process.env.REDIS_PASSWORD;
+  logger.info('Redis: Using password authentication');
+} else {
+  logger.info('Redis: No password configured (auth disabled)');
+}
+
+const redisClient = createClient(redisConfig);
 
 redisClient.on('error', (err) => logger.error('Redis Client Error:', err));
 redisClient.on('connect', () => logger.info('Redis connected successfully'));

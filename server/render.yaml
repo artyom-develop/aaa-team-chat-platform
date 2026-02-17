@@ -25,11 +25,13 @@ services:
           type: redis
           name: videomeet-redis
           property: port
-      - key: REDIS_PASSWORD
-        fromService:
-          type: redis
-          name: videomeet-redis
-          property: password
+      # REDIS_PASSWORD - закомментировано для бесплатного плана (без авторизации)
+      # Раскомментируйте для платных планов с поддержкой пароля
+      # - key: REDIS_PASSWORD
+      #   fromService:
+      #     type: redis
+      #     name: videomeet-redis
+      #     property: password
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
