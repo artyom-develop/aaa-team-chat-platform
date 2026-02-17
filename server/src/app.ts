@@ -39,7 +39,17 @@ export class App {
 		
 		// CORS configuration
 		this.app.use(cors({
-			origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+			origin: [
+				// Local development
+				'http://localhost:3000',
+				'http://localhost:5173',
+				'http://localhost:5174',
+				'http://localhost:5175',
+				// Vercel production & preview deployments
+				'https://aaa-team-meet-p5zb.vercel.app',
+				'https://aaa-team-meet-p5zb-git-main-artems-projects-84069b41.vercel.app',
+				'https://aaa-team-meet-p5zb-4ahrbj6n7-artems-projects-84069b41.vercel.app',
+			],
 			credentials: true,
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 			allowedHeaders: ['Content-Type', 'Authorization'],

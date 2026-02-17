@@ -16,7 +16,17 @@ import { AppConfig } from '../config/app.config.js';
 export const initializeSocketIO = (httpServer: HttpServer): Server => {
   const socketOptions: Partial<ServerOptions> = {
     cors: {
-      origin: AppConfig.CLIENT_URL || '*',
+      origin: [
+        // Local development
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        // Vercel production & preview deployments
+        'https://aaa-team-meet-p5zb.vercel.app',
+        'https://aaa-team-meet-p5zb-git-main-artems-projects-84069b41.vercel.app',
+        'https://aaa-team-meet-p5zb-4ahrbj6n7-artems-projects-84069b41.vercel.app',
+      ],
       methods: ['GET', 'POST'],
       credentials: true,
     },
