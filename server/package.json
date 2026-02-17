@@ -6,8 +6,9 @@
 	"scripts": {
 		"dev": "nodemon",
 		"start": "bun run src/server.ts",
+		"start:prod": "bun run migrate && bun dist/server.js",
 		"build": "tsc",
-		"migrate": "node scripts/migrate.mjs",
+		"migrate": "bun scripts/migrate.mjs",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:migrate:deploy": "prisma migrate deploy",

@@ -31,7 +31,6 @@ RUN bun run prisma:generate
 
 # Собираем TypeScript
 RUN bun run build
-
 # Production образ с минимальными зависимостями
 FROM base AS release
 COPY --from=install-prod /temp/prod/node_modules node_modules
@@ -47,5 +46,5 @@ USER bun
 # Открываем порт приложения
 EXPOSE 3000
 
-# Запускаем приложение напрямую из dist
-ENTRYPOINT ["bun", "run", "dist/server.js"]
+# Запускаем миграции и приложение
+ENTRYPOINT ["bun", "run", "start:prod"]
