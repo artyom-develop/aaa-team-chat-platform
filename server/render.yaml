@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: videomeet-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: frankfurt # или выберите свой регион
+    plan: free # или starter/standard
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: videomeet-db
+          property: connectionString
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: videomeet-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: videomeet-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromService:
+          type: redis
+          name: videomeet-redis
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: https://your-frontend-app.vercel.app
+    buildCommand: bun install && bun run prisma:generate && bun run build
+    startCommand: bun run prisma:migrate:deploy && bun run start
+
+databases:
+  - name: videomeet-db
+    databaseName: videomeet
+    plan: free # или starter
+    region: frankfurt
+
+services:
+  - type: redis
+    name: videomeet-redis
+    plan: free # или starter
+    maxmemoryPolicy: allkeys-lru
+    region: frankfurt

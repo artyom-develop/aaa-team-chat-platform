@@ -127,10 +127,10 @@ bun run dev
 
 ## 📖 Документация
 
+- **[🚀 DEPLOYMENT.md](./DEPLOYMENT.md)** - **Полная документация по деплою (Vercel, Render, Docker)**
+- **[⚡ QUICK-DEPLOY.md](./QUICK-DEPLOY.md)** - **Быстрый старт деплоя**
 - [Серверная часть](./server/README.md) - детали API и Socket.io
 - [Клиентская часть](./client/README.md) - компоненты и hooks
-- [CHANGELOG](./CHANGELOG.md) - история изменений
-- [USER_GUIDE](./USER_GUIDE.md) - руководство пользователя
 
 ## 🎮 Как использовать
 
@@ -243,10 +243,13 @@ VITE_SOCKET_URL=http://localhost:3000
 
 ## 🐳 Docker
 
-Полный запуск через Docker Compose:
+### Локальный запуск всех сервисов
 
 ```bash
-# Запуск всех сервисов
+# Создайте .env файл в корне проекта
+cp .env.example .env
+
+# Запуск всех сервисов (Frontend + Backend + PostgreSQL + Redis)
 docker-compose up -d
 
 # Остановка
@@ -254,7 +257,51 @@ docker-compose down
 
 # Просмотр логов
 docker-compose logs -f
+
+# Пересборка образов
+docker-compose build --no-cache
 ```
+
+После запуска:
+- **Frontend**: http://localhost
+- **Backend API**: http://localhost:3000
+- **API Docs**: http://localhost:3000/api-docs
+- **PostgreSQL**: localhost:5433
+- **Redis**: localhost:6378
+
+### Деплой с Docker
+
+📖 **Подробные инструкции по деплою с Docker в [DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+## 🌐 Деплой в продакшен
+
+### Быстрый деплой на Vercel + Render
+
+1. **Frontend на Vercel:**
+   ```bash
+   # Подключите GitHub репозиторий к Vercel
+   # Root Directory: client
+   # Framework: Vite
+   ```
+
+2. **Backend на Render:**
+   ```bash
+   # Создайте PostgreSQL и Redis на Render
+   # Создайте Web Service с Docker
+   # Root Directory: server
+   ```
+
+3. **Настройте переменные окружения** (детали в [QUICK-DEPLOY.md](./QUICK-DEPLOY.md))
+
+### Полная документация
+
+📚 **[DEPLOYMENT.md](./DEPLOYMENT.md)** - полное руководство по деплою на:
+- Vercel (Frontend)
+- Render (Backend)
+- Docker (VPS/Cloud)
+- С настройкой SSL, Nginx, домена и т.д.
+
+⚡ **[QUICK-DEPLOY.md](./QUICK-DEPLOY.md)** - пошаговая инструкция для быстрого деплоя
 
 ## 🧪 Тестирование
 
