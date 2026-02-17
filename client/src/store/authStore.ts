@@ -40,7 +40,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       toast.success('Вход выполнен успешно');
     } catch (error: any) {
       const message = error.response?.data?.message || 'Ошибка входа';
-      toast.error(message);
+      toast.error(message, { duration: 4000 });
       throw error;
     } finally {
       set({ isLoading: false });
@@ -55,7 +55,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       toast.success('Вход как гость выполнен');
     } catch (error: any) {
       const message = error.response?.data?.message || 'Ошибка гостевого входа';
-      toast.error(message);
+      toast.error(message, { duration: 4000 });
       throw error;
     } finally {
       set({ isLoading: false });
@@ -70,7 +70,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       toast.success('Регистрация прошла успешно');
     } catch (error: any) {
       const message = error.response?.data?.message || 'Ошибка регистрации';
-      toast.error(message);
+      toast.error(message, { duration: 4000 });
       throw error;
     } finally {
       set({ isLoading: false });
@@ -85,6 +85,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       toast.success('Выход выполнен');
     } catch (error: any) {
       console.error('Logout error:', error);
+      // Даже если сервер вернул ошибку, очищаем локальное состояние
+      socketService.disconnect();
       get().clearAuth();
     }
   },
@@ -133,6 +135,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   clearAuth: () => {
     apiService.setToken(null);
+    // Удаляем refresh token cookie
+    document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax';
     set({ user: null, accessToken: null, isAuthenticated: false });
   },
 }));

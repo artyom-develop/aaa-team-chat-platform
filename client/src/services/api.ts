@@ -133,8 +133,15 @@ class ApiService {
   }
 
   async logout(): Promise<void> {
-    await this.axiosInstance.post('/auth/logout');
+    try {
+      await this.axiosInstance.post('/auth/logout');
+    } catch (error) {
+      console.warn('[apiService] Logout request failed, clearing local token anyway');
+    }
+    // Всегда очищаем локальный токен и refresh cookie
     this.setToken(null);
+    // Удаляем refresh token cookie клиентской стороной
+    document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax';
   }
 
   async getMe(): Promise<User> {
