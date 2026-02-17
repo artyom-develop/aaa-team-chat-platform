@@ -100,8 +100,10 @@ class ApiService {
 
             return this.axiosInstance(originalRequest);
           } catch (refreshError) {
+            console.log('[apiService] Refresh token failed, clearing auth');
             this.setToken(null);
-            window.location.href = '/login';
+            // НЕ делаем window.location.href - это вызывает перезагрузку страницы!
+            // Пользователь останется на текущей странице, но без авторизации
             return Promise.reject(refreshError);
           } finally {
             this.refreshing = false;

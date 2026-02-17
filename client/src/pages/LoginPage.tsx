@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { apiService } from '../services/api';
 import { Video, Mail, Lock, User } from 'lucide-react';
@@ -7,9 +7,14 @@ import toast from 'react-hot-toast';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, loginGuest, isLoading } = useAuthStore();
   const [isGuestMode, setIsGuestMode] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Получаем путь куда нужно перенаправить после авторизации
+  const redirectTo = (location.state as any)?.from || '/';
+  console.log('[LoginPage] Redirect destination:', redirectTo);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -44,9 +49,7 @@ export const LoginPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     // Валидация перед отправкой
     if (!validateForm()) {
       return;
@@ -54,9 +57,9 @@ export const LoginPage = () => {
     
     try {
       if (isGuestMode) {
-        await loginGuest({ displayName: formData.displayName });
+        await loginGuest({ displayName: formData.displayName }, redirectTo);
       } else {
-        await login({ email: formData.email, password: formData.password });
+        await login({ email: formData.email, password: formData.password }, redirectTo);
       }
       
       console.log('[LoginPage] Login successful, checking pending operations');
@@ -86,8 +89,9 @@ export const LoginPage = () => {
         return;
       }
       
-      console.log('[LoginPage] No pending operations, navigating to home');
-      navigate('/');
+      // Перенаправляем на сохраненный путь или на главную
+      console.log('[LoginPage] No pending operations, navigating to:', redirectTo);
+      navigate(redirectTo);
     } catch (error) {
       console.error('Login error:', error);
       // Ошибка уже обработана в authStore с toast
@@ -112,7 +116,7 @@ export const LoginPage = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 sm:p-8 border border-gray-700">
+        <div className="bg-gray-800 rounded-lg p-6 sm:p-8 border border-gray-700">
           {isGuestMode ? (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -196,7 +200,8 @@ export const LoginPage = () => {
           )}
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
             disabled={isLoading}
             className="w-full py-2.5 sm:py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
@@ -230,7 +235,7 @@ export const LoginPage = () => {
               </p>
             </div>
           )}
-        </form>
+        </div>
 
         <div className="mt-6 text-center">
           <Link

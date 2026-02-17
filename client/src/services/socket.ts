@@ -6,6 +6,11 @@ type TypedSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 
 class SocketService {
   private socket: TypedSocket | null = null;
+  private currentRoomSlug: string | null = null;
+  private currentRoomPassword: string | undefined = undefined;
+  private currentIsMuted: boolean = false;
+  private currentIsCameraOff: boolean = false;
+  private reconnectCallback: (() => void) | null = null;
 
   connect(token: string): TypedSocket {
     if (this.socket?.connected) {
@@ -25,6 +30,12 @@ class SocketService {
 
     this.socket.on('connect', () => {
       console.log('Socket connected:', this.socket?.id);
+      
+      // При переподключении автоматически присоединяемся к комнате заново
+      if (this.currentRoomSlug) {
+        console.log('[SocketService] Reconnected - rejoining room:', this.currentRoomSlug);
+        this.rejoinCurrentRoom();
+      }
     });
 
     this.socket.on('disconnect', (reason) => {
@@ -36,6 +47,39 @@ class SocketService {
     });
 
     return this.socket;
+  }
+
+  // Присоединиться заново к текущей комнате (для переподключений)
+  private rejoinCurrentRoom(): void {
+    if (!this.currentRoomSlug || !this.socket) return;
+    
+    console.log('[SocketService] Rejoining room:', this.currentRoomSlug);
+    this.socket.emit(
+      'room:join',
+      {
+        roomSlug: this.currentRoomSlug,
+        password: this.currentRoomPassword,
+        isMuted: this.currentIsMuted,
+        isCameraOff: this.currentIsCameraOff,
+      },
+      (response: { success: boolean; error?: string }) => {
+        console.log('[SocketService] Rejoin response:', response);
+        if (response.success) {
+          console.log('[SocketService] Successfully rejoined room');
+          // Вызываем callback для уведомления компонентов о переподключении
+          if (this.reconnectCallback) {
+            this.reconnectCallback();
+          }
+        } else {
+          console.error('[SocketService] Failed to rejoin room:', response.error);
+        }
+      }
+    );
+  }
+
+  // Установить callback который будет вызван при успешном переподключении
+  setReconnectCallback(callback: (() => void) | null): void {
+    this.reconnectCallback = callback;
   }
 
   disconnect(): void {
@@ -61,10 +105,19 @@ class SocketService {
     isCameraOff: boolean,
     callback: (response: { success: boolean; error?: string }) => void
   ): void {
+    // Сохраняем параметры для автоматического переподключения
+    this.currentRoomSlug = roomSlug;
+    this.currentRoomPassword = password;
+    this.currentIsMuted = isMuted;
+    this.currentIsCameraOff = isCameraOff;
+    
     this.socket?.emit('room:join', { roomSlug, password, isMuted, isCameraOff }, callback);
   }
 
   leaveRoom(roomSlug: string): void {
+    // Очищаем сохраненные параметры
+    this.currentRoomSlug = null;
+    this.currentRoomPassword = undefined;
     this.socket?.emit('room:leave', { roomSlug });
   }
 

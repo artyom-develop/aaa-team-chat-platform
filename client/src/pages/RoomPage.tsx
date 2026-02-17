@@ -136,6 +136,26 @@ export const RoomPage = () => {
     };
 
     init();
+    
+    // Обработка переподключения Socket.io
+    // При переподключении сокет автоматически отправит room:join заново
+    const handleReconnect = () => {
+      console.log('[RoomPage] Socket reconnected, cleaning up old WebRTC connections');
+      toast('Переподключение...', { icon: '🔄', duration: 2000 });
+      
+      // Даем время серверу обработать room:join
+      setTimeout(() => {
+        console.log('[RoomPage] Reconnect complete');
+        toast.success('Соединение восстановлено');
+      }, 1000);
+    };
+    
+    socketService.setReconnectCallback(handleReconnect);
+
+    return () => {
+      // Очищаем callback при unmount
+      socketService.setReconnectCallback(null);
+    };
   }, [slug, navigate, joinRoom, setRoom]);
 
   // Инициализация локального участника - теперь происходит в useSocket handleRoomJoined

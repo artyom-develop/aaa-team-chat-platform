@@ -19,9 +19,7 @@ export const HomePage = () => {
     checkAuth();
   }, [checkAuth]);
 
-  const handleCreateRoom = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleCreateRoom = async () => {
     if (!isAuthenticated) {
       // Сохраняем намерение создать комнату
       localStorage.setItem('pendingRoomName', roomName);
@@ -60,9 +58,7 @@ export const HomePage = () => {
     }
   };
 
-  const handleJoinRoom = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleJoinRoom = () => {
     if (!roomCode.trim()) {
       setErrors({ ...errors, roomCode: 'Введите код комнаты' });
       toast.error('Введите код комнаты');
@@ -152,7 +148,7 @@ export const HomePage = () => {
 
           <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
             {/* Создать новую встречу */}
-            <form onSubmit={handleCreateRoom} className="bg-gray-800/50 rounded-lg p-4 sm:p-6 border border-gray-700">
+            <div className="bg-gray-800/50 rounded-lg p-4 sm:p-6 border border-gray-700">
               <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2">
                 <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                 Создать новую встречу
@@ -174,7 +170,8 @@ export const HomePage = () => {
                   minLength={3}
                 />
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleCreateRoom}
                   disabled={isCreating}
                   className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
@@ -194,14 +191,14 @@ export const HomePage = () => {
               {errors.roomName && (
                 <p className="mt-2 text-sm text-red-400">{errors.roomName}</p>
               )}
-            </form>
+            </div>
 
             {/* Присоединиться к встрече */}
             <div className="text-center">
               <p className="text-gray-400 mb-3 text-sm sm:text-base">или</p>
             </div>
 
-            <form onSubmit={handleJoinRoom} className="bg-gray-800/50 rounded-lg p-4 sm:p-6 border border-gray-700">
+            <div className="bg-gray-800/50 rounded-lg p-4 sm:p-6 border border-gray-700">
               <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Присоединиться к встрече</h3>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <input
@@ -220,7 +217,8 @@ export const HomePage = () => {
                   minLength={3}
                 />
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleJoinRoom}
                   disabled={isJoining}
                   className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
@@ -240,7 +238,7 @@ export const HomePage = () => {
               {errors.roomCode && (
                 <p className="mt-2 text-sm text-red-400">{errors.roomCode}</p>
               )}
-            </form>
+            </div>
           </div>
         </div>
 

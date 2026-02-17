@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { apiService } from '../services/api';
 import { Video, Mail, Lock, User } from 'lucide-react';
@@ -8,7 +8,11 @@ import toast from 'react-hot-toast';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register, isLoading } = useAuthStore();
+
+  // Получаем путь куда нужно перенаправить после регистрации
+  const redirectTo = (location.state as any)?.from || '/';
 
   const [formData, setFormData] = useState({
     displayName: '',
@@ -42,9 +46,7 @@ export const RegisterPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
@@ -54,7 +56,7 @@ export const RegisterPage = () => {
         displayName: formData.displayName,
         email: formData.email,
         password: formData.password,
-      });
+      }, redirectTo);
       
       // Проверяем, было ли намерение создать/присоединиться к комнате
       const pendingRoomName = localStorage.getItem('pendingRoomName');
@@ -78,7 +80,8 @@ export const RegisterPage = () => {
         return;
       }
       
-      navigate('/');
+      // Перенаправляем на сохраненный путь или на главную
+      navigate(redirectTo);
     } catch (error) {
       console.error('Registration error:', error);
       // Ошибка уже обработана в authStore с toast
@@ -103,7 +106,7 @@ export const RegisterPage = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 sm:p-8 border border-gray-700">
+        <div className="bg-gray-800 rounded-lg p-6 sm:p-8 border border-gray-700">
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Ваше имя
@@ -209,7 +212,8 @@ export const RegisterPage = () => {
           </div>
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
             disabled={isLoading}
             className="w-full py-2.5 sm:py-3 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
@@ -231,7 +235,7 @@ export const RegisterPage = () => {
               </Link>
             </p>
           </div>
-        </form>
+        </div>
 
         <div className="mt-6 text-center">
           <Link

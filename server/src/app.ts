@@ -17,7 +17,9 @@ import {
 import { httpLogger } from './middlewares/logger.middleware.js'
 import { authenticate } from './middlewares/passport.middleware.js'
 import { logger } from './utils/logger.js'
+import { config } from 'dotenv'
 
+config()
 export class App {
 	public app: Application
 
@@ -36,7 +38,7 @@ export class App {
 		this.app.use(helmet({
 			crossOriginResourcePolicy: { policy: 'cross-origin' },
 		}))
-		
+
 		// CORS configuration
 		this.app.use(cors({
 			origin: [
@@ -46,9 +48,9 @@ export class App {
 				'http://localhost:5174',
 				'http://localhost:5175',
 				// Vercel production & preview deployments
-				'https://aaa-team-meet-p5zb.vercel.app',
-				'https://aaa-team-meet-p5zb-git-main-artems-projects-84069b41.vercel.app',
-				'https://aaa-team-meet-p5zb-4ahrbj6n7-artems-projects-84069b41.vercel.app',
+				'https://aaa-team-meet-git-main-artems-projects-84069b41.vercel.app',
+				'https://aaa-team-meet-8mvw8s9ce-artems-projects-84069b41.vercel.app',
+				process.env.VERCEL_URL_PRODUCTION || 'https://aaa-team-meet.vercel.app', // Поддержка динамического URL от Vercel
 			],
 			credentials: true,
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

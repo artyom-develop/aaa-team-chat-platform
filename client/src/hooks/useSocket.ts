@@ -42,6 +42,18 @@ export const useSocket = () => {
       const socketId = socketService.getId();
       console.log('[useSocket] Current socketId:', socketId);
       
+      // Проверяем, есть ли уже участники (признак reconnect)
+      const currentParticipants = useRoomStore.getState().participants;
+      if (currentParticipants.size > 0) {
+        console.log('[useSocket] Detected reconnect - clearing old participants and WebRTC connections');
+        // Очищаем старых участников (это триггернет очистку WebRTC в useWebRTC)
+        currentParticipants.forEach((p) => {
+          if (p.userId !== user?.id) {
+            useRoomStore.getState().removeParticipant(p.userId);
+          }
+        });
+      }
+      
       // Преобразуем данные участников из серверного формата в клиентский
       if (data.participants && Array.isArray(data.participants)) {
         console.log('[useSocket] Processing participants:', data.participants.length);

@@ -409,6 +409,16 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
 
     console.log('[useWebRTC] Checking for new participants. Total:', participants.size);
 
+    // Очищаем соединения для участников которых нет в списке (они вышли или это reconnect)
+    peerConnectionsRef.current.forEach((pc, userId) => {
+      if (!participants.has(userId)) {
+        console.log('[useWebRTC] Closing peer connection for removed participant:', userId);
+        pc.close();
+        peerConnectionsRef.current.delete(userId);
+      }
+    });
+
+    // Создаем или пересоздаем соединения
     participants.forEach((participant) => {
       const existingPc = peerConnectionsRef.current.get(participant.userId);
       
@@ -424,87 +434,73 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         existingPc.close();
         peerConnectionsRef.current.delete(participant.userId);
         createOffer(participant.userId);
+      } else if (existingPc.iceConnectionState === 'disconnected' || existingPc.iceConnectionState === 'failed') {
+        // ICE в плохом состоянии - пересоздаем
+        console.log('[useWebRTC] Recreating offer for participant with bad ICE state:', {
+          userId: participant.userId,
+          iceConnectionState: existingPc.iceConnectionState,
+        });
+        existingPc.close();
+        peerConnectionsRef.current.delete(participant.userId);
+        createOffer(participant.userId);
       } else {
-        console.log('[useWebRTC] Peer connection already exists for:', participant.userId, 'state:', existingPc.connectionState);
-      }
-    });
-
-    // Очистка peer connections для участников которые вышли из комнаты
-    peerConnectionsRef.current.forEach((pc, userId) => {
-      if (!participants.has(userId)) {
-        console.log('[useWebRTC] Closing peer connection for removed participant:', userId);
-        pc.close();
-        peerConnectionsRef.current.delete(userId);
+        console.log('[useWebRTC] Peer connection already exists for:', participant.userId, {
+          connectionState: existingPc.connectionState,
+          iceConnectionState: existingPc.iceConnectionState,
+        });
       }
     });
   }, [participants, room, localStream, createOffer]);
 
-  // Обновление локальных треков во всех соединениях
+  // Обновление screen share треков во всех соединениях (ТОЛЬКО screen share!)
   useEffect(() => {
-    if (!localStream) return;
+    if (!room || peerConnectionsRef.current.size === 0) return;
 
-    const updateTracks = async () => {
-      console.log('[useWebRTC] Updating tracks in all peer connections');
+    const updateScreenShare = async () => {
+      console.log('[useWebRTC] Updating screen share in all peer connections, screenSharing:', !!screenStream);
       
       for (const [userId, pc] of peerConnectionsRef.current.entries()) {
         try {
-          // Проверяем состояние соединения перед renegotiation
+          // Проверяем состояние соединения
           if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
-            console.log('[useWebRTC] Skipping renegotiation for closed/failed connection:', {
-              userId,
-              connectionState: pc.connectionState,
-            });
-            peerConnectionsRef.current.delete(userId);
+            console.log('[useWebRTC] Skipping screen share update for closed/failed connection:', userId);
             continue;
           }
 
-          // ИСПРАВЛЕНО: Не удаляем все треки, а обновляем только screen share треки
           const senders = pc.getSenders();
           const screenSenders = senders.filter(s => 
             s.track?.kind === 'video' && s.track.label.includes('screen')
           );
           
-          // Удаляем только старые screen share треки
+          // Удаляем старые screen share треки
           for (const sender of screenSenders) {
             pc.removeTrack(sender);
+            console.log('[useWebRTC] Removed old screen share track for:', userId);
           }
 
-          // Добавляем треки из screenStream, если есть
+          // Добавляем новые screen share треки
           if (screenStream) {
             console.log('[useWebRTC] Adding screen share tracks for user:', userId);
             for (const track of screenStream.getTracks()) {
               pc.addTrack(track, screenStream);
             }
+          }
 
-            // Создаем новый offer для renegotiation ТОЛЬКО если соединение активно
-            if (pc.connectionState === 'connected') {
-              console.log('[useWebRTC] Creating new offer for screen share renegotiation:', userId);
-              const offer = await pc.createOffer();
-              await pc.setLocalDescription(offer);
-              if (room) {
-                socketService.sendOffer(room.slug, userId, offer);
-              }
-            }
-          } else if (screenSenders.length > 0) {
-            // Screen share был остановлен - удалили треки выше, делаем renegotiation
-            console.log('[useWebRTC] Creating offer after stopping screen share:', userId);
-            if (pc.connectionState === 'connected') {
-              const offer = await pc.createOffer();
-              await pc.setLocalDescription(offer);
-              if (room) {
-                socketService.sendOffer(room.slug, userId, offer);
-              }
-            }
+          // Renegotiation только если соединение активно
+          if (pc.connectionState === 'connected' && pc.signalingState === 'stable') {
+            console.log('[useWebRTC] Renegotiating after screen share change for:', userId);
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            socketService.sendOffer(room.slug, userId, offer);
           }
         } catch (error) {
-          console.error('[useWebRTC] Error updating tracks for user:', userId, error);
-          // Не удаляем соединение - возможно это временная ошибка
+          console.error('[useWebRTC] Error updating screen share for user:', userId, error);
         }
       }
     };
 
-    updateTracks();
-  }, [localStream, screenStream, room]);
+    updateScreenShare();
+  }, [screenStream, room]); // УБРАЛ localStream из зависимостей!
 
   // Очистка соединений при размонтировании
   useEffect(() => {

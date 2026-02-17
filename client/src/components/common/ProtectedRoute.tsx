@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 
 interface ProtectedRouteProps {
@@ -8,6 +8,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading, checkAuth, user } = useAuthStore();
+  const location = useLocation();
 
   useEffect(() => {
     // Проверяем авторизацию только если нет пользователя
@@ -27,8 +28,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   if (!isAuthenticated) {
-    console.log('[ProtectedRoute] Redirecting to /login');
-    return <Navigate to="/login" replace />;
+    console.log('[ProtectedRoute] Redirecting to /login, saving intended destination:', location.pathname);
+    // Сохраняем путь куда хотел попасть пользователь
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   return <>{children}</>;

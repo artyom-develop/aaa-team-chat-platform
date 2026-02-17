@@ -11,9 +11,9 @@ interface AuthStore {
   isLoading: boolean;
   
   setUser: (user: User, token: string) => void;
-  login: (credentials: LoginDto) => Promise<void>;
-  loginGuest: (data: GuestLoginDto) => Promise<void>;
-  register: (data: RegisterDto) => Promise<void>;
+  login: (credentials: LoginDto, redirectTo?: string) => Promise<string | undefined>;
+  loginGuest: (data: GuestLoginDto, redirectTo?: string) => Promise<string | undefined>;
+  register: (data: RegisterDto, redirectTo?: string) => Promise<string | undefined>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearAuth: () => void;
@@ -31,15 +31,34 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     set({ user, accessToken: token, isAuthenticated: true });
   },
 
-  login: async (credentials) => {
+  login: async (credentials, redirectTo?: string) => {
     set({ isLoading: true });
     try {
       const response = await apiService.login(credentials);
       console.log('[authStore] login response:', response);
       get().setUser(response.user, response.accessToken);
       toast.success('Вход выполнен успешно');
+      return redirectTo; // Возвращаем путь для редиректа
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Ошибка входа';
+      console.error('[authStore] Login error:', error);
+      // Обрабатываем различные типы ошибок
+      let message = 'Ошибка входа';
+      
+      if (error.response?.status === 401 || error.response?.status === 400) {
+        // Неправильный email или пароль
+        message = 'Неправильный email или пароль';
+      } else if (error.response?.data?.message) {
+        // Используем сообщение с сервера (но не технические)
+        const serverMessage = error.response.data.message;
+        if (serverMessage.toLowerCase().includes('refresh token')) {
+          message = 'Ошибка авторизации. Попробуйте снова';
+        } else {
+          message = serverMessage;
+        }
+      } else if (error.message === 'Network Error') {
+        message = 'Ошибка связи с сервером';
+      }
+      
       toast.error(message, { duration: 4000 });
       throw error;
     } finally {
@@ -47,14 +66,26 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  loginGuest: async (data) => {
+  loginGuest: async (data, redirectTo?: string) => {
     set({ isLoading: true });
     try {
       const { user, accessToken } = await apiService.loginGuest(data);
       get().setUser(user, accessToken);
       toast.success('Вход как гость выполнен');
+      return redirectTo; // Возвращаем путь для редиректа
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Ошибка гостевого входа';
+      console.error('[authStore] Guest login error:', error);
+      let message = 'Ошибка гостевого входа';
+      
+      if (error.response?.data?.message) {
+        const serverMessage = error.response.data.message;
+        if (!serverMessage.toLowerCase().includes('refresh token')) {
+          message = serverMessage;
+        }
+      } else if (error.message === 'Network Error') {
+        message = 'Ошибка связи с сервером';
+      }
+      
       toast.error(message, { duration: 4000 });
       throw error;
     } finally {
@@ -62,14 +93,29 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  register: async (data) => {
+  register: async (data, redirectTo?: string) => {
     set({ isLoading: true });
     try {
       const { user, accessToken } = await apiService.register(data);
       get().setUser(user, accessToken);
       toast.success('Регистрация прошла успешно');
+      return redirectTo; // Возвращаем путь для редиректа
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Ошибка регистрации';
+      console.error('[authStore] Registration error:', error);
+      let message = 'Ошибка регистрации';
+      
+      if (error.response?.status === 409) {
+        // Пользователь уже существует
+        message = 'Пользователь с таким email уже существует';
+      } else if (error.response?.data?.message) {
+        const serverMessage = error.response.data.message;
+        if (!serverMessage.toLowerCase().includes('refresh token')) {
+          message = serverMessage;
+        }
+      } else if (error.message === 'Network Error') {
+        message = 'Ошибка связи с сервером';
+      }
+      
       toast.error(message, { duration: 4000 });
       throw error;
     } finally {

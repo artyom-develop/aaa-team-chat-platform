@@ -1,625 +1,422 @@
-client:733 [vite] connecting...
-client:827 [vite] connected.
-login:1 [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) <input required class=​"w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:​outline-none focus:​ring-2 focus:​ring-blue-500" placeholder=​"••••••••" type=​"password" value>​
-api.ts:58 [apiService] Request interceptor - token: missing
-api.ts:131 [apiService] loginGuest response: {success: true, data: {…}, message: 'Гостевой вход выполнен'}
-authStore.ts:29 [authStore] setUser called with token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkMzRkMzg4LWU5NWYtNDkxMi05Zjk3LWE5NjI5YjdkMDc0NSIsImVtYWlsIjoiZ3Vlc3QtOTY3YTI0MWUtZmM1NC00ZWVhLTgzZWYtMDZiNWE3NzlkNTBmQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjMxMTksImV4cCI6MTc3MTM2NDAxOX0.wkp2yokqHeh5zQbyR0yd1E7AyCNHWOGoV7ZfxBKul18
-api.ts:39 [apiService] setToken called with: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkMzRkMzg4LWU5NWYtNDkxMi05Zjk3LWE5NjI5YjdkMDc0NSIsImVtYWlsIjoiZ3Vlc3QtOTY3YTI0MWUtZmM1NC00ZWVhLTgzZWYtMDZiNWE3NzlkNTBmQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjMxMTksImV4cCI6MTc3MTM2NDAxOX0.wkp2yokqHeh5zQbyR0yd1E7AyCNHWOGoV7ZfxBKul18
-LoginPage.tsx:28 [LoginPage] Login successful, checking pending operations
-LoginPage.tsx:54 [LoginPage] No pending operations, navigating to home
-api.ts:39 [apiService] setToken called with: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkMzRkMzg4LWU5NWYtNDkxMi05Zjk3LWE5NjI5YjdkMDc0NSIsImVtYWlsIjoiZ3Vlc3QtOTY3YTI0MWUtZmM1NC00ZWVhLTgzZWYtMDZiNWE3NzlkNTBmQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjMxMTksImV4cCI6MTc3MTM2NDAxOX0.wkp2yokqHeh5zQbyR0yd1E7AyCNHWOGoV7ZfxBKul18
-installHook.js:1 [apiService] setToken called with: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkMzRkMzg4LWU5NWYtNDkxMi05Zjk3LWE5NjI5YjdkMDc0NSIsImVtYWlsIjoiZ3Vlc3QtOTY3YTI0MWUtZmM1NC00ZWVhLTgzZWYtMDZiNWE3NzlkNTBmQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjMxMTksImV4cCI6MTc3MTM2NDAxOX0.wkp2yokqHeh5zQbyR0yd1E7AyCNHWOGoV7ZfxBKul18
-api.ts:58 [apiService] Request interceptor - token: present
-api.ts:58 [apiService] Request interceptor - token: present
-authStore.ts:117 [authStore] Auth check successful
-authStore.ts:117 [authStore] Auth check successful
-ProtectedRoute.tsx:19 [ProtectedRoute] isAuthenticated: true isLoading: false user: {id: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', email: 'guest-967a241e-fc54-4eea-83ef-06b5a779d50f@videomeet.local', avatarUrl: null, role: 'USER', …}
-installHook.js:1 [ProtectedRoute] isAuthenticated: true isLoading: false user: {id: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', email: 'guest-967a241e-fc54-4eea-83ef-06b5a779d50f@videomeet.local', avatarUrl: null, role: 'USER', …}
-api.ts:58 [apiService] Request interceptor - token: present
-api.ts:58 [apiService] Request interceptor - token: present
-installHook.js:1 Error accessing media devices: NotAllowedError: Permission denied
+ [ProtectedRoute] isAuthenticated: true isLoading: false user: null
+ [ProtectedRoute] isAuthenticated: true isLoading: false user: null
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useSocket] Setting up event listeners. Room: undefined User: undefined
+ [useWebRTC] Not creating offers - room: false localStream: false
+ [RoomPage] Loading room data for slug: 9c15-a5bc-fcf0
+ [RoomPage] Waiting for room:joined event to create localParticipant
+ [apiService] setToken called with: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyNTdhMGU1LTE1MDYtNDM5Ni04OTcyLTNkYzRkNjQ4YThiNSIsImVtYWlsIjoiZ3Vlc3QtNmU3MDNmMjctNDhiNS00ZjBiLWI0YzUtOTM2YTVjN2NkM2ZkQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjYwNzQsImV4cCI6MTc3MTM2Njk3NH0.skQtl7tGMisuMQYs4P3DcL5NpxCukjnj6TZAQS_AWIU
+ [RoomPage] Cleaning up - clearing room state
+ [useSocket] Setting up event listeners. Room: undefined User: undefined
+ [useWebRTC] Not creating offers - room: false localStream: false
+ [RoomPage] Loading room data for slug: 9c15-a5bc-fcf0
+ [RoomPage] Waiting for room:joined event to create localParticipant
+ [apiService] setToken called with: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAyNTdhMGU1LTE1MDYtNDM5Ni04OTcyLTNkYzRkNjQ4YThiNSIsImVtYWlsIjoiZ3Vlc3QtNmU3MDNmMjctNDhiNS00ZjBiLWI0YzUtOTM2YTVjN2NkM2ZkQHZpZGVvbWVldC5sb2NhbCIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzEzNjYwNzQsImV4cCI6MTc3MTM2Njk3NH0.skQtl7tGMisuMQYs4P3DcL5NpxCukjnj6TZAQS_AWIU
+ [ProtectedRoute] isAuthenticated: true isLoading: true user: null
+ [ProtectedRoute] isAuthenticated: true isLoading: true user: null
+ [RoomPage] Cleaning up - clearing room state
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [RoomPage] Using default ICE servers from config
+ [authStore] Auth check successful
+ [ProtectedRoute] isAuthenticated: true isLoading: false user: Object
+ [ProtectedRoute] isAuthenticated: true isLoading: false user: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useSocket] Setting up event listeners. Room: undefined User: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useWebRTC] Not creating offers - room: false localStream: false
+ [RoomPage] Loading room data for slug: 9c15-a5bc-fcf0
+ [RoomPage] Waiting for room:joined event to create localParticipant
+ [RoomPage] Cleaning up - clearing room state
+ [useSocket] Setting up event listeners. Room: undefined User: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useWebRTC] Not creating offers - room: false localStream: false
+ [RoomPage] Loading room data for slug: 9c15-a5bc-fcf0
+ [RoomPage] Waiting for room:joined event to create localParticipant
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: false localStream: false
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [apiService] Request interceptor - token: present
+ [RoomPage] Room data loaded: Object
+ [RoomPage] Current media stream state: Object
+ [RoomPage] No media stream found, requesting access...
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: true localStream: false
+ [apiService] Request interceptor - token: present
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: true localStream: false
+ [RoomPage] Using default ICE servers from config
+ [authStore] Auth check successful
+ [ProtectedRoute] isAuthenticated: true isLoading: false user: Object
+ [ProtectedRoute] isAuthenticated: true isLoading: false user: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useSocket] Setting up event listeners. Room: 9c15-a5bc-fcf0 User: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useWebRTC] Not creating offers - room: true localStream: false
+ [RoomPage] Room data loaded: Object
+ [RoomPage] Current media stream state: Object
+ [RoomPage] No media stream found, requesting access...
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: true localStream: false
+ [RoomPage] Using default ICE servers from config
+ [RoomPage] Using default ICE servers from config
+ [RoomPage] Room data loaded: Object
+ [RoomPage] Current media stream state: Object
+ [RoomPage] No media stream found, requesting access...
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: true localStream: false
+ [useChat] Loaded history for room: 9c15-a5bc-fcf0 messages: 0
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: true localStream: false
+ Socket connected: undefined
+ [RoomPage] Room data loaded: Object
+ [RoomPage] Current media stream state: Object
+ [RoomPage] No media stream found, requesting access...
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Not creating offers - room: true localStream: false
+ Socket connected: yoH7yBaXlGzsFuy_AACR
+ Socket connected: yoH7yBaXlGzsFuy_AACR
+ [RoomPage] Media stream obtained: Object
+ [mediaStore] Setting new local stream: 35d19d1d-597f-45b1-bf78-3d920284641d
+ [RoomPage] Joining room via socket...
+ [RoomPage] LocalStream ready, joining room with media: Object
+ [useSocket] joinRoom called for: 9c15-a5bc-fcf0 Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 0
+ [useWebRTC] Updating tracks in all peer connections
+ [RoomPage] Waiting for room:joined event to create localParticipant
+ [RoomPage] Media stream obtained: Object
+ [mediaStore] Stopping previous stream: 35d19d1d-597f-45b1-bf78-3d920284641d
+ [mediaStore] Setting new local stream: cd11d512-4883-42da-9b89-788620a17a67
+ [RoomPage] Joining room via socket...
+ [RoomPage] LocalStream ready, joining room with media: Object
+ [useSocket] joinRoom called for: 9c15-a5bc-fcf0 Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 0
+ [useWebRTC] Updating tracks in all peer connections
+ [RoomPage] Waiting for room:joined event to create localParticipant
+ [useSocket] joinRoom callback response: Object
+ [RoomPage] Successfully joined room
+ [useSocket] Room joined event received: Object
+ [useSocket] Current user ID: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useSocket] Current socketId: yoH7yBaXlGzsFuy_AACR
+ [useSocket] Processing participants: 2
+ [useSocket] Creating localParticipant for self: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useSocket] Media state: Object
+ [useSocket] Setting localParticipant: Object
+ [useSocket] Adding participant: Aasdfsaf 37bcfd70-84a1-476c-908f-2654f109c2c9
+ [useSocket] Participants added. Total: 1
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Creating offer for new participant: 37bcfd70-84a1-476c-908f-2654f109c2c9
+ [useWebRTC] Creating offer for user: 37bcfd70-84a1-476c-908f-2654f109c2c9 Object
+ [useWebRTC] Creating new peer connection for: 37bcfd70-84a1-476c-908f-2654f109c2c9 Object
+ [useWebRTC] Adding local tracks to peer connection: Object
+ [useWebRTC] Adding track: Object
+ [useWebRTC] Adding track: Object
+ [useWebRTC] Added local tracks to peer connection for: 37bcfd70-84a1-476c-908f-2654f109c2c9
+ [useWebRTC] Peer connection senders before offer: Object
+ [useSocket] Request to create offers for participants: Array(2)
+ [useWebRTC] Offer created: Object
+ [useWebRTC] Sending offer to: 37bcfd70-84a1-476c-908f-2654f109c2c9
+ [SocketService] Sending offer to: 37bcfd70-84a1-476c-908f-2654f109c2c9 in room: 9c15-a5bc-fcf0
+ [useWebRTC] ICE gathering state for 37bcfd70-84a1-476c-908f-2654f109c2c9: gathering
+ [useSocket] joinRoom callback response: Object
+ [RoomPage] Successfully joined room
+ [useSocket] Room joined event received: Object
+ [useSocket] Current user ID: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useSocket] Current socketId: yoH7yBaXlGzsFuy_AACR
+ [useSocket] Processing participants: 2
+ [useSocket] Creating localParticipant for self: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useSocket] Media state: Object
+ [useSocket] Setting localParticipant: Object
+ [useSocket] Adding participant: Aasdfsaf 37bcfd70-84a1-476c-908f-2654f109c2c9
+ [useSocket] Participants added. Total: 1
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [RoomPage] Media stream obtained: Object
+ [mediaStore] Stopping previous stream: cd11d512-4883-42da-9b89-788620a17a67
+ [mediaStore] Setting new local stream: 7e07dc59-811b-4428-95fb-f629fb69137d
+ [RoomPage] Joining room via socket...
+ [RoomPage] LocalStream ready, joining room with media: Object
+ [useSocket] joinRoom called for: 9c15-a5bc-fcf0 Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [useWebRTC] Updating tracks in all peer connections
+ [RoomPage] Updating local participant: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [RoomPage] Media stream obtained: Object
+ [mediaStore] Stopping previous stream: 7e07dc59-811b-4428-95fb-f629fb69137d
+ [mediaStore] Setting new local stream: 5d2fd135-d416-4094-a7d9-735dbad53931
+ [RoomPage] Joining room via socket...
+ [RoomPage] LocalStream ready, joining room with media: Object
+ [useSocket] joinRoom called for: 9c15-a5bc-fcf0 Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [useWebRTC] Updating tracks in all peer connections
+ [RoomPage] Updating local participant: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [useSocket] Request to create offers for participants: Array(2)
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-initMedia @ LobbyPage.tsx:58
-await in initMedia
-(anonymous) @ LobbyPage.tsx:63
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18567
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-commitHookEffectListMount @ react-dom_client.js?v=8bef3fe6:9411
-commitHookPassiveMountEffects @ react-dom_client.js?v=8bef3fe6:9465
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11040
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11066
-flushPassiveEffects @ react-dom_client.js?v=8bef3fe6:13150
-(anonymous) @ react-dom_client.js?v=8bef3fe6:12776
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<LobbyPage>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-App @ App.tsx:46
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18509
-renderWithHooksAgain @ react-dom_client.js?v=8bef3fe6:5729
-renderWithHooks @ react-dom_client.js?v=8bef3fe6:5665
-updateFunctionComponent @ react-dom_client.js?v=8bef3fe6:7475
-beginWork @ react-dom_client.js?v=8bef3fe6:8525
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-performUnitOfWork @ react-dom_client.js?v=8bef3fe6:12561
-workLoopSync @ react-dom_client.js?v=8bef3fe6:12424
-renderRootSync @ react-dom_client.js?v=8bef3fe6:12408
-performWorkOnRoot @ react-dom_client.js?v=8bef3fe6:11766
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=8bef3fe6:13505
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-(anonymous) @ main.tsx:13
-installHook.js:1 Error accessing media devices: NotAllowedError: Permission denied
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-initMedia @ LobbyPage.tsx:58
-await in initMedia
-(anonymous) @ LobbyPage.tsx:63
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18567
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-commitHookEffectListMount @ react-dom_client.js?v=8bef3fe6:9411
-commitHookPassiveMountEffects @ react-dom_client.js?v=8bef3fe6:9465
-reconnectPassiveEffects @ react-dom_client.js?v=8bef3fe6:11273
-recursivelyTraverseReconnectPassiveEffects @ react-dom_client.js?v=8bef3fe6:11240
-reconnectPassiveEffects @ react-dom_client.js?v=8bef3fe6:11265
-doubleInvokeEffectsOnFiber @ react-dom_client.js?v=8bef3fe6:13339
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13312
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13347
-flushPassiveEffects @ react-dom_client.js?v=8bef3fe6:13157
-(anonymous) @ react-dom_client.js?v=8bef3fe6:12776
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<LobbyPage>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-App @ App.tsx:46
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18509
-renderWithHooksAgain @ react-dom_client.js?v=8bef3fe6:5729
-renderWithHooks @ react-dom_client.js?v=8bef3fe6:5665
-updateFunctionComponent @ react-dom_client.js?v=8bef3fe6:7475
-beginWork @ react-dom_client.js?v=8bef3fe6:8525
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-performUnitOfWork @ react-dom_client.js?v=8bef3fe6:12561
-workLoopSync @ react-dom_client.js?v=8bef3fe6:12424
-renderRootSync @ react-dom_client.js?v=8bef3fe6:12408
-performWorkOnRoot @ react-dom_client.js?v=8bef3fe6:11766
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=8bef3fe6:13505
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-(anonymous) @ main.tsx:13
-LobbyPage.tsx:95 [LobbyPage] Joining room, current stream: undefined
-ProtectedRoute.tsx:19 [ProtectedRoute] isAuthenticated: true isLoading: false user: {id: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', email: 'guest-967a241e-fc54-4eea-83ef-06b5a779d50f@videomeet.local', avatarUrl: null, role: 'USER', …}
-installHook.js:1 [ProtectedRoute] isAuthenticated: true isLoading: false user: {id: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', email: 'guest-967a241e-fc54-4eea-83ef-06b5a779d50f@videomeet.local', avatarUrl: null, role: 'USER', …}
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-useSocket.ts:32 [useSocket] Setting up event listeners. Room: undefined User: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: false localStream: false
-RoomPage.tsx:64 [RoomPage] Loading room data for slug: fa72-c7fc-c039
-RoomPage.tsx:145 [RoomPage] Waiting for room:joined event to create localParticipant
-installHook.js:1 [RoomPage] Cleaning up - clearing room state
-installHook.js:1 [useSocket] Setting up event listeners. Room: undefined User: 2d34d388-e95f-4912-9f97-a9629b7d0745
-installHook.js:1 [useWebRTC] Not creating offers - room: false localStream: false
-installHook.js:1 [RoomPage] Loading room data for slug: fa72-c7fc-c039
-installHook.js:1 [RoomPage] Waiting for room:joined event to create localParticipant
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: false localStream: false
-api.ts:58 [apiService] Request interceptor - token: present
-api.ts:58 [apiService] Request interceptor - token: present
-api.ts:58 [apiService] Request interceptor - token: present
-api.ts:58 [apiService] Request interceptor - token: present
-RoomPage.tsx:68 [RoomPage] Room data loaded: {id: 'f322ca75-89a1-4548-bf59-dfb5a22e2c57', slug: 'fa72-c7fc-c039', name: 'ыфвафа', hasLobby: false, maxParticipants: 50, …}
-RoomPage.tsx:73 [RoomPage] Current media stream state: {hasStream: false, streamId: undefined, videoTracks: 0, audioTracks: 0}
-RoomPage.tsx:81 [RoomPage] No media stream found, requesting access...
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-api.ts:58 [apiService] Request interceptor - token: present
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: true}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: true}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-RoomPage.tsx:45 [RoomPage] Using default ICE servers from config
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-installHook.js:1 [RoomPage] Failed to get media: NotAllowedError: Permission denied
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-init @ RoomPage.tsx:103
-await in init
-(anonymous) @ RoomPage.tsx:138
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18567
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-commitHookEffectListMount @ react-dom_client.js?v=8bef3fe6:9411
-commitHookPassiveMountEffects @ react-dom_client.js?v=8bef3fe6:9465
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11040
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11066
-flushPassiveEffects @ react-dom_client.js?v=8bef3fe6:13150
-(anonymous) @ react-dom_client.js?v=8bef3fe6:12776
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<RoomPage>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-App @ App.tsx:55
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18509
-renderWithHooksAgain @ react-dom_client.js?v=8bef3fe6:5729
-renderWithHooks @ react-dom_client.js?v=8bef3fe6:5665
-updateFunctionComponent @ react-dom_client.js?v=8bef3fe6:7475
-beginWork @ react-dom_client.js?v=8bef3fe6:8525
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-performUnitOfWork @ react-dom_client.js?v=8bef3fe6:12561
-workLoopSync @ react-dom_client.js?v=8bef3fe6:12424
-renderRootSync @ react-dom_client.js?v=8bef3fe6:12408
-performWorkOnRoot @ react-dom_client.js?v=8bef3fe6:11766
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=8bef3fe6:13505
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-(anonymous) @ main.tsx:13
-RoomPage.tsx:110 [RoomPage] Joining room via socket...
-installHook.js:1 [RoomPage] Joining room without media stream
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-init @ RoomPage.tsx:121
-await in init
-(anonymous) @ RoomPage.tsx:138
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18567
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-commitHookEffectListMount @ react-dom_client.js?v=8bef3fe6:9411
-commitHookPassiveMountEffects @ react-dom_client.js?v=8bef3fe6:9465
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11040
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11033
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11201
-recursivelyTraversePassiveMountEffects @ react-dom_client.js?v=8bef3fe6:11010
-commitPassiveMountOnFiber @ react-dom_client.js?v=8bef3fe6:11066
-flushPassiveEffects @ react-dom_client.js?v=8bef3fe6:13150
-(anonymous) @ react-dom_client.js?v=8bef3fe6:12776
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<RoomPage>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-App @ App.tsx:55
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18509
-renderWithHooksAgain @ react-dom_client.js?v=8bef3fe6:5729
-renderWithHooks @ react-dom_client.js?v=8bef3fe6:5665
-updateFunctionComponent @ react-dom_client.js?v=8bef3fe6:7475
-beginWork @ react-dom_client.js?v=8bef3fe6:8525
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-performUnitOfWork @ react-dom_client.js?v=8bef3fe6:12561
-workLoopSync @ react-dom_client.js?v=8bef3fe6:12424
-renderRootSync @ react-dom_client.js?v=8bef3fe6:12408
-performWorkOnRoot @ react-dom_client.js?v=8bef3fe6:11766
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=8bef3fe6:13505
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-(anonymous) @ main.tsx:13
-useSocket.ts:209 [useSocket] joinRoom called for: fa72-c7fc-c039 {audioEnabled: true, videoEnabled: true, isMuted: false, isCameraOff: false}
-RoomPage.tsx:68 [RoomPage] Room data loaded: {id: 'f322ca75-89a1-4548-bf59-dfb5a22e2c57', slug: 'fa72-c7fc-c039', name: 'ыфвафа', hasLobby: false, maxParticipants: 50, …}
-RoomPage.tsx:73 [RoomPage] Current media stream state: {hasStream: false, streamId: undefined, videoTracks: 0, audioTracks: 0}
-RoomPage.tsx:81 [RoomPage] No media stream found, requesting access...
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: true}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: true}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-RoomPage.tsx:45 [RoomPage] Using default ICE servers from config
-installHook.js:1 [RoomPage] Failed to get media: NotAllowedError: Permission denied
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-init @ RoomPage.tsx:103
-await in init
-(anonymous) @ RoomPage.tsx:138
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18567
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-commitHookEffectListMount @ react-dom_client.js?v=8bef3fe6:9411
-commitHookPassiveMountEffects @ react-dom_client.js?v=8bef3fe6:9465
-reconnectPassiveEffects @ react-dom_client.js?v=8bef3fe6:11273
-doubleInvokeEffectsOnFiber @ react-dom_client.js?v=8bef3fe6:13339
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13312
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13347
-flushPassiveEffects @ react-dom_client.js?v=8bef3fe6:13157
-(anonymous) @ react-dom_client.js?v=8bef3fe6:12776
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<RoomPage>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-App @ App.tsx:55
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18509
-renderWithHooksAgain @ react-dom_client.js?v=8bef3fe6:5729
-renderWithHooks @ react-dom_client.js?v=8bef3fe6:5665
-updateFunctionComponent @ react-dom_client.js?v=8bef3fe6:7475
-beginWork @ react-dom_client.js?v=8bef3fe6:8525
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-performUnitOfWork @ react-dom_client.js?v=8bef3fe6:12561
-workLoopSync @ react-dom_client.js?v=8bef3fe6:12424
-renderRootSync @ react-dom_client.js?v=8bef3fe6:12408
-performWorkOnRoot @ react-dom_client.js?v=8bef3fe6:11766
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=8bef3fe6:13505
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-(anonymous) @ main.tsx:13
-RoomPage.tsx:110 [RoomPage] Joining room via socket...
-installHook.js:1 [RoomPage] Joining room without media stream
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-init @ RoomPage.tsx:121
-await in init
-(anonymous) @ RoomPage.tsx:138
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18567
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-commitHookEffectListMount @ react-dom_client.js?v=8bef3fe6:9411
-commitHookPassiveMountEffects @ react-dom_client.js?v=8bef3fe6:9465
-reconnectPassiveEffects @ react-dom_client.js?v=8bef3fe6:11273
-doubleInvokeEffectsOnFiber @ react-dom_client.js?v=8bef3fe6:13339
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13312
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13317
-commitDoubleInvokeEffectsInDEV @ react-dom_client.js?v=8bef3fe6:13347
-flushPassiveEffects @ react-dom_client.js?v=8bef3fe6:13157
-(anonymous) @ react-dom_client.js?v=8bef3fe6:12776
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<RoomPage>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-App @ App.tsx:55
-react_stack_bottom_frame @ react-dom_client.js?v=8bef3fe6:18509
-renderWithHooksAgain @ react-dom_client.js?v=8bef3fe6:5729
-renderWithHooks @ react-dom_client.js?v=8bef3fe6:5665
-updateFunctionComponent @ react-dom_client.js?v=8bef3fe6:7475
-beginWork @ react-dom_client.js?v=8bef3fe6:8525
-runWithFiberInDEV @ react-dom_client.js?v=8bef3fe6:997
-performUnitOfWork @ react-dom_client.js?v=8bef3fe6:12561
-workLoopSync @ react-dom_client.js?v=8bef3fe6:12424
-renderRootSync @ react-dom_client.js?v=8bef3fe6:12408
-performWorkOnRoot @ react-dom_client.js?v=8bef3fe6:11766
-performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=8bef3fe6:13505
-performWorkUntilDeadline @ react-dom_client.js?v=8bef3fe6:36
-<App>
-exports.jsxDEV @ react_jsx-dev-runtime.js?v=c6875ab9:247
-(anonymous) @ main.tsx:13
-useSocket.ts:209 [useSocket] joinRoom called for: fa72-c7fc-c039 {audioEnabled: true, videoEnabled: true, isMuted: false, isCameraOff: false}
-socket.ts:27 Socket connected: undefined
-useChat.ts:35 [useChat] Loaded history for room: fa72-c7fc-c039 messages: 0
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-socket.ts:27 Socket connected: pTfbT1qolaZyXTSjAAAX
-useSocket.ts:217 [useSocket] joinRoom callback response: {success: true}
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
+overrideMethod @ installHook.js:1
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
+overrideMethod @ installHook.js:1
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
+overrideMethod @ installHook.js:1
+ [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
+overrideMethod @ installHook.js:1
+ [useSocket] joinRoom callback response: Object
+ [RoomPage] Successfully joined room
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Attaching stream to video element: Object
+ [VideoTile] Video track state: Object
+ [VideoTile] Audio track state: Object
+ [VideoTile] No stream available: Object
+ [useSocket] Setting up event listeners. Room: 9c15-a5bc-fcf0 User: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [VideoTile] Attaching stream to video element: Object
+ [VideoTile] Video track state: Object
+ [VideoTile] Audio track state: Object
+ [VideoTile] No stream available: Object
+ [useSocket] Setting up event listeners. Room: 9c15-a5bc-fcf0 User: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [VideoTile] Failed to play video: 0257a0e5-1506-4396-8972-3dc4d648a8b5 
+overrideMethod @ installHook.js:1
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+ [useWebRTC] Checking for new participants. Total: 1
+ [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [RoomPage] Chat state: Object
+ [useWebRTC] RTCConfiguration: Object
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoGrid] Rendering: Object
+ [VideoGrid] All participants: Array(2)
+ [VideoTile] Rendering participant: Object
+ [VideoTile] Video visibility decision: Object
+installHook.js:1 [VideoTile] Rendering participant: Object
+installHook.js:1 [VideoTile] Video visibility decision: Object
+VideoTile.tsx:20 [VideoTile] Rendering participant: Object
+VideoTile.tsx:87 [VideoTile] Video visibility decision: Object
+installHook.js:1 [VideoTile] Rendering participant: Object
+installHook.js:1 [VideoTile] Video visibility decision: Object
+useWebRTC.ts:410 [useWebRTC] Checking for new participants. Total: 1
+useWebRTC.ts:428 [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+useSocket.ts:39 [useSocket] Room joined event received: Object
+useSocket.ts:40 [useSocket] Current user ID: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:43 [useSocket] Current socketId: yoH7yBaXlGzsFuy_AACR
+useSocket.ts:47 [useSocket] Processing participants: 2
+useSocket.ts:52 [useSocket] Creating localParticipant for self: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:56 [useSocket] Media state: Object
+useSocket.ts:80 [useSocket] Setting localParticipant: Object
+useSocket.ts:90 [useSocket] Adding participant: Aasdfsaf 37bcfd70-84a1-476c-908f-2654f109c2c9
+useSocket.ts:108 [useSocket] Participants added. Total: 1
+useSocket.ts:39 [useSocket] Room joined event received: Object
+useSocket.ts:40 [useSocket] Current user ID: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:43 [useSocket] Current socketId: yoH7yBaXlGzsFuy_AACR
+useSocket.ts:47 [useSocket] Processing participants: 2
+useSocket.ts:52 [useSocket] Creating localParticipant for self: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:56 [useSocket] Media state: Object
+useSocket.ts:80 [useSocket] Setting localParticipant: Object
+useSocket.ts:90 [useSocket] Adding participant: Aasdfsaf 37bcfd70-84a1-476c-908f-2654f109c2c9
+useSocket.ts:108 [useSocket] Participants added. Total: 1
+RoomPage.tsx:30 [RoomPage] Chat state: Object
+useWebRTC.ts:32 [useWebRTC] RTCConfiguration: Object
+installHook.js:1 [RoomPage] Chat state: Object
+installHook.js:1 [useWebRTC] RTCConfiguration: Object
+VideoGrid.tsx:13 [VideoGrid] Rendering: Object
+VideoGrid.tsx:38 [VideoGrid] All participants: Array(2)
+installHook.js:1 [VideoGrid] Rendering: Object
+installHook.js:1 [VideoGrid] All participants: Array(2)
+VideoTile.tsx:20 [VideoTile] Rendering participant: Object
+VideoTile.tsx:87 [VideoTile] Video visibility decision: Object
+installHook.js:1 [VideoTile] Rendering participant: Object
+installHook.js:1 [VideoTile] Video visibility decision: Object
+VideoTile.tsx:20 [VideoTile] Rendering participant: Object
+VideoTile.tsx:87 [VideoTile] Video visibility decision: Object
+installHook.js:1 [VideoTile] Rendering participant: Object
+installHook.js:1 [VideoTile] Video visibility decision: Object
+useWebRTC.ts:410 [useWebRTC] Checking for new participants. Total: 1
+useWebRTC.ts:428 [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+useSocket.ts:137 [useSocket] Request to create offers for participants: Array(2)
+useSocket.ts:137 [useSocket] Request to create offers for participants: Array(2)
+useSocket.ts:217 [useSocket] joinRoom callback response: Object
 RoomPage.tsx:127 [RoomPage] Successfully joined room
-useSocket.ts:39 [useSocket] Room joined event received: {roomSlug: 'fa72-c7fc-c039', participants: Array(2)}
-useSocket.ts:40 [useSocket] Current user ID: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useSocket.ts:43 [useSocket] Current socketId: pTfbT1qolaZyXTSjAAAX
+useSocket.ts:39 [useSocket] Room joined event received: Object
+useSocket.ts:40 [useSocket] Current user ID: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:43 [useSocket] Current socketId: yoH7yBaXlGzsFuy_AACR
 useSocket.ts:47 [useSocket] Processing participants: 2
-useSocket.ts:90 [useSocket] Adding participant: фываыфа 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useSocket.ts:52 [useSocket] Creating localParticipant for self: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useSocket.ts:56 [useSocket] Media state: {hasLocalStream: false, streamId: undefined, audioEnabled: true, videoEnabled: true, videoTracks: 0, …}
-useSocket.ts:80 [useSocket] Setting localParticipant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, audioEnabled: false, videoEnabled: false}
+useSocket.ts:52 [useSocket] Creating localParticipant for self: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:56 [useSocket] Media state: Object
+useSocket.ts:80 [useSocket] Setting localParticipant: Object
+useSocket.ts:90 [useSocket] Adding participant: Aasdfsaf 37bcfd70-84a1-476c-908f-2654f109c2c9
 useSocket.ts:108 [useSocket] Participants added. Total: 1
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: false, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: false, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: false, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: false, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:74 [VideoTile] No stream available: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasVideoRef: true}
-VideoTile.tsx:74 [VideoTile] No stream available: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasVideoRef: true}
-useSocket.ts:32 [useSocket] Setting up event listeners. Room: fa72-c7fc-c039 User: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-RoomPage.tsx:157 [RoomPage] Updating local participant: {streamChanged: null, audioChanged: true, videoChanged: true, screenChanged: false}
-installHook.js:1 [VideoTile] No stream available: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasVideoRef: true}
-installHook.js:1 [VideoTile] No stream available: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasVideoRef: true}
-installHook.js:1 [useSocket] Setting up event listeners. Room: fa72-c7fc-c039 User: 2d34d388-e95f-4912-9f97-a9629b7d0745
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:74 [VideoTile] No stream available: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasVideoRef: true}
-VideoTile.tsx:74 [VideoTile] No stream available: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasVideoRef: true}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-installHook.js:1 [VideoTile] No stream available: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasVideoRef: true}
-react-dom_client.js?v=8bef3fe6:13527 [Violation] 'message' handler took 171ms
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
- [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
- [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
- [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
- [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-useSocket.ts:137 [useSocket] Request to create offers for participants: (2) [{…}, {…}]
-useSocket.ts:137 [useSocket] Request to create offers for participants: (2) [{…}, {…}]
-useSocket.ts:217 [useSocket] joinRoom callback response: {success: true}
-RoomPage.tsx:127 [RoomPage] Successfully joined room
-useSocket.ts:39 [useSocket] Room joined event received: {roomSlug: 'fa72-c7fc-c039', participants: Array(2)}
-useSocket.ts:40 [useSocket] Current user ID: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useSocket.ts:43 [useSocket] Current socketId: pTfbT1qolaZyXTSjAAAX
+useSocket.ts:39 [useSocket] Room joined event received: Object
+useSocket.ts:40 [useSocket] Current user ID: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:43 [useSocket] Current socketId: yoH7yBaXlGzsFuy_AACR
 useSocket.ts:47 [useSocket] Processing participants: 2
-useSocket.ts:90 [useSocket] Adding participant: фываыфа 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useSocket.ts:52 [useSocket] Creating localParticipant for self: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useSocket.ts:56 [useSocket] Media state: {hasLocalStream: false, streamId: undefined, audioEnabled: true, videoEnabled: true, videoTracks: 0, …}
-useSocket.ts:80 [useSocket] Setting localParticipant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, audioEnabled: false, videoEnabled: false}
+useSocket.ts:52 [useSocket] Creating localParticipant for self: 0257a0e5-1506-4396-8972-3dc4d648a8b5
+useSocket.ts:56 [useSocket] Media state: Object
+useSocket.ts:80 [useSocket] Setting localParticipant: Object
+useSocket.ts:90 [useSocket] Adding participant: Aasdfsaf 37bcfd70-84a1-476c-908f-2654f109c2c9
 useSocket.ts:108 [useSocket] Participants added. Total: 1
-useSocket.ts:39 [useSocket] Room joined event received: {roomSlug: 'fa72-c7fc-c039', participants: Array(2)}
-useSocket.ts:40 [useSocket] Current user ID: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useSocket.ts:43 [useSocket] Current socketId: pTfbT1qolaZyXTSjAAAX
-useSocket.ts:47 [useSocket] Processing participants: 2
-useSocket.ts:90 [useSocket] Adding participant: фываыфа 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useSocket.ts:52 [useSocket] Creating localParticipant for self: 2d34d388-e95f-4912-9f97-a9629b7d0745
-useSocket.ts:56 [useSocket] Media state: {hasLocalStream: false, streamId: undefined, audioEnabled: true, videoEnabled: true, videoTracks: 0, …}
-useSocket.ts:80 [useSocket] Setting localParticipant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, audioEnabled: false, videoEnabled: false}
-useSocket.ts:108 [useSocket] Participants added. Total: 1
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: false, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: false, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: false, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: false, hasVideoTrack: false, shouldShowVideo: undefined, …}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-RoomPage.tsx:157 [RoomPage] Updating local participant: {streamChanged: null, audioChanged: true, videoChanged: true, screenChanged: false}
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-useSocket.ts:137 [useSocket] Request to create offers for participants: (2) [{…}, {…}]
-useSocket.ts:137 [useSocket] Request to create offers for participants: (2) [{…}, {…}]
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-useWebRTC.ts:261 [useWebRTC] Received offer from: 1fb460f2-65ac-4864-bd78-d35b646c2b08 {hasLocalStream: false, localStreamId: undefined, offerType: 'offer', hasVideo: true, hasAudio: true}
-useWebRTC.ts:55 [useWebRTC] Creating new peer connection for: 1fb460f2-65ac-4864-bd78-d35b646c2b08 {hasLocalStream: false, localStreamId: undefined, videoTracks: 0, audioTracks: 0}
-installHook.js:1 [useWebRTC] No localStream available when creating peer connection for: 1fb460f2-65ac-4864-bd78-d35b646c2b08
+RoomPage.tsx:30 [RoomPage] Chat state: Object
+useWebRTC.ts:32 [useWebRTC] RTCConfiguration: Object
+installHook.js:1 [RoomPage] Chat state: Object
+installHook.js:1 [useWebRTC] RTCConfiguration: Object
+VideoGrid.tsx:13 [VideoGrid] Rendering: Object
+VideoGrid.tsx:38 [VideoGrid] All participants: Array(2)
+installHook.js:1 [VideoGrid] Rendering: Object
+installHook.js:1 [VideoGrid] All participants: Array(2)
+VideoTile.tsx:20 [VideoTile] Rendering participant: Object
+VideoTile.tsx:87 [VideoTile] Video visibility decision: Object
+installHook.js:1 [VideoTile] Rendering participant: Object
+installHook.js:1 [VideoTile] Video visibility decision: Object
+VideoTile.tsx:20 [VideoTile] Rendering participant: Object
+VideoTile.tsx:87 [VideoTile] Video visibility decision: Object
+installHook.js:1 [VideoTile] Rendering participant: Object
+installHook.js:1 [VideoTile] Video visibility decision: Object
+useWebRTC.ts:410 [useWebRTC] Checking for new participants. Total: 1
+useWebRTC.ts:428 [useWebRTC] Peer connection already exists for: 37bcfd70-84a1-476c-908f-2654f109c2c9 state: new
+useSocket.ts:137 [useSocket] Request to create offers for participants: Array(2)
+useSocket.ts:137 [useSocket] Request to create offers for participants: Array(2)
+useWebRTC.ts:151 [useWebRTC] ICE connection state for 37bcfd70-84a1-476c-908f-2654f109c2c9: checking
+useWebRTC.ts:122 [useWebRTC] PeerConnection state for 37bcfd70-84a1-476c-908f-2654f109c2c9: connecting
+useWebRTC.ts:151 [useWebRTC] ICE connection state for 37bcfd70-84a1-476c-908f-2654f109c2c9: connected
+useWebRTC.ts:178 [useWebRTC] ICE connection established for 37bcfd70-84a1-476c-908f-2654f109c2c9
+useWebRTC.ts:352 [useWebRTC] Answer processed successfully from: 37bcfd70-84a1-476c-908f-2654f109c2c9
+useWebRTC.ts:184 [useWebRTC] ICE gathering state for 37bcfd70-84a1-476c-908f-2654f109c2c9: complete
+useWebRTC.ts:122 [useWebRTC] PeerConnection state for 37bcfd70-84a1-476c-908f-2654f109c2c9: connected
+useWebRTC.ts:125 [useWebRTC] Successfully connected to 37bcfd70-84a1-476c-908f-2654f109c2c9
+useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 37bcfd70-84a1-476c-908f-2654f109c2c9
+installHook.js:1 [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-(anonymous) @ useWebRTC.ts:83
-(anonymous) @ useWebRTC.ts:270
-Emitter.emit @ socket__io-client.js?v=b4cc45fa:819
-emitEvent @ socket__io-client.js?v=b4cc45fa:3158
-onevent @ socket__io-client.js?v=b4cc45fa:3146
-onpacket @ socket__io-client.js?v=b4cc45fa:3117
-Emitter.emit @ socket__io-client.js?v=b4cc45fa:819
-(anonymous) @ socket__io-client.js?v=b4cc45fa:3721
-Promise.then
-(anonymous) @ socket__io-client.js?v=b4cc45fa:837
-ondecoded @ socket__io-client.js?v=b4cc45fa:3720
-Emitter.emit @ socket__io-client.js?v=b4cc45fa:819
-add @ socket__io-client.js?v=b4cc45fa:2541
-ondata @ socket__io-client.js?v=b4cc45fa:3709
-Emitter.emit @ socket__io-client.js?v=b4cc45fa:819
-_onPacket @ socket__io-client.js?v=b4cc45fa:1844
-Emitter.emit @ socket__io-client.js?v=b4cc45fa:819
-onPacket @ socket__io-client.js?v=b4cc45fa:1018
-onData @ socket__io-client.js?v=b4cc45fa:1010
-ws.onmessage @ socket__io-client.js?v=b4cc45fa:1474
-useWebRTC.ts:95 [useWebRTC] ontrack event received: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', trackKind: 'audio', trackId: 'd2711939-d6de-4dd3-812c-821422e5d6f7', trackEnabled: true, trackReadyState: 'live', …}
-useWebRTC.ts:106 [useWebRTC] Received remote stream from: 1fb460f2-65ac-4864-bd78-d35b646c2b08 {streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoTracks: 1, audioTracks: 1, videoTracksEnabled: Array(1), audioTracksEnabled: Array(1)}
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: true, streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: true, videoEnabled: true, hasVideoTrack: true, shouldShowVideo: true, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: true, streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: true, videoEnabled: true, hasVideoTrack: true, shouldShowVideo: true, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-VideoTile.tsx:39 [VideoTile] Attaching stream to video element: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoTracks: 1, audioTracks: 1}
-VideoTile.tsx:56 [VideoTile] Video track state: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', trackEnabled: true, trackReadyState: 'live', participantVideoEnabled: true}
-VideoTile.tsx:67 [VideoTile] Audio track state: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', trackEnabled: true, trackReadyState: 'live'}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-useWebRTC.ts:95 [useWebRTC] ontrack event received: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', trackKind: 'video', trackId: '0659ef6a-6387-42b3-a451-0b697c07e2ab', trackEnabled: true, trackReadyState: 'live', …}
-useWebRTC.ts:106 [useWebRTC] Received remote stream from: 1fb460f2-65ac-4864-bd78-d35b646c2b08 {streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoTracks: 1, audioTracks: 1, videoTracksEnabled: Array(1), audioTracksEnabled: Array(1)}
-RoomPage.tsx:30 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-useWebRTC.ts:32 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-installHook.js:1 [RoomPage] Chat state: {messagesCount: 0, isChatOpen: false, isChatLoading: false}
-installHook.js:1 [useWebRTC] RTCConfiguration: {iceServersCount: 1, iceServers: Array(1), iceCandidatePoolSize: 10}
-VideoGrid.tsx:13 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-VideoGrid.tsx:38 [VideoGrid] All participants: (2) [{…}, {…}]
-installHook.js:1 [VideoGrid] Rendering: {hasLocalParticipant: true, localParticipantStream: undefined, remoteParticipantsCount: 1, totalParticipants: 2}
-installHook.js:1 [VideoGrid] All participants: (2) [{…}, {…}]
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: true, streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: true, videoEnabled: true, hasVideoTrack: true, shouldShowVideo: true, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', displayName: 'фываыфа', hasStream: true, streamId: 'db337b7e-091c-4459-b577-b067cba044d6', videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '1fb460f2-65ac-4864-bd78-d35b646c2b08', hasStream: true, videoEnabled: true, hasVideoTrack: true, shouldShowVideo: true, …}
-VideoTile.tsx:20 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-VideoTile.tsx:87 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-installHook.js:1 [VideoTile] Rendering participant: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', displayName: 'фыва', hasStream: false, streamId: undefined, videoEnabled: true, …}
-installHook.js:1 [VideoTile] Video visibility decision: {userId: '2d34d388-e95f-4912-9f97-a9629b7d0745', hasStream: false, videoEnabled: true, hasVideoTrack: false, shouldShowVideo: undefined, …}
-useWebRTC.ts:406 [useWebRTC] Not creating offers - room: true localStream: false
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:301 [useWebRTC] Answer created: {from: '1fb460f2-65ac-4864-bd78-d35b646c2b08', type: 'answer', hasVideo: true, hasAudio: true, senders: 2}
-useWebRTC.ts:314 [useWebRTC] Sending answer to: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-socket.ts:78 [SocketService] Sending answer to: 1fb460f2-65ac-4864-bd78-d35b646c2b08 in room: fa72-c7fc-c039
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:379 [useWebRTC] ICE candidate added from: 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:184 [useWebRTC] ICE gathering state for 1fb460f2-65ac-4864-bd78-d35b646c2b08: gathering
-useWebRTC.ts:151 [useWebRTC] ICE connection state for 1fb460f2-65ac-4864-bd78-d35b646c2b08: checking
-useWebRTC.ts:122 [useWebRTC] PeerConnection state for 1fb460f2-65ac-4864-bd78-d35b646c2b08: connecting
-useWebRTC.ts:151 [useWebRTC] ICE connection state for 1fb460f2-65ac-4864-bd78-d35b646c2b08: connected
-useWebRTC.ts:178 [useWebRTC] ICE connection established for 1fb460f2-65ac-4864-bd78-d35b646c2b08
-useWebRTC.ts:184 [useWebRTC] ICE gathering state for 1fb460f2-65ac-4864-bd78-d35b646c2b08: complete
-installHook.js:1 [useWebRTC] ICE candidate error for 1fb460f2-65ac-4864-bd78-d35b646c2b08: {errorCode: 701, errorText: 'STUN host lookup received error.', url: 'stun:stun.l.google.com:19302'}
+installHook.js:1 [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
 overrideMethod @ installHook.js:1
-pc.onicecandidateerror @ useWebRTC.ts:189
-useWebRTC.ts:122 [useWebRTC] PeerConnection state for 1fb460f2-65ac-4864-bd78-d35b646c2b08: connected
-useWebRTC.ts:125 [useWebRTC] Successfully connected to 1fb460f2-65ac-4864-bd78-d35b646c2b08
+installHook.js:1 [useWebRTC] ICE candidate error for 37bcfd70-84a1-476c-908f-2654f109c2c9: Object
+overrideMethod @ installHook.js:1
