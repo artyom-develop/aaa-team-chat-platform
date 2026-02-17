@@ -41,17 +41,32 @@ export class App {
 
 		// CORS configuration
 		this.app.use(cors({
-			origin: [
-				// Local development
-				'http://localhost:3000',
-				'http://localhost:5173',
-				'http://localhost:5174',
-				'http://localhost:5175',
-				// Vercel production & preview deployments
-				'https://aaa-team-meet-git-main-artems-projects-84069b41.vercel.app',
-				'https://aaa-team-meet-k6iijjr11-artems-projects-84069b41.vercel.app',
-				'https://aaa-team-meet.vercel.app',
-			],
+			origin: (origin, callback) => {
+				// Разрешаем запросы без origin (например, мобильные приложения, Postman)
+				if (!origin) return callback(null, true);
+
+				// Список разрешенных origins
+				const allowedOrigins = [
+					// Local development
+					'http://localhost:3000',
+					'http://localhost:5173',
+					'http://localhost:5174',
+					'http://localhost:5175',
+				];
+
+				// Проверяем точное совпадение
+				if (allowedOrigins.includes(origin)) {
+					return callback(null, true);
+				}
+
+				// Разрешаем все Vercel preview и production deployments
+				if (origin.endsWith('.vercel.app')) {
+					return callback(null, true);
+				}
+
+				// Запрещаем все остальные
+				callback(new Error('Not allowed by CORS'));
+			},
 			credentials: true,
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 			allowedHeaders: ['Content-Type', 'Authorization'],
