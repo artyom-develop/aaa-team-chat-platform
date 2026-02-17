@@ -193,8 +193,14 @@ export const RoomPage = () => {
   // Очищаем localParticipant при выходе из комнаты
   useEffect(() => {
     return () => {
-      console.log('[RoomPage] Cleaning up - clearing room state');
+      console.log('[RoomPage] Cleaning up - clearing room state and stopping media streams');
       const { clearRoom } = useRoomStore.getState();
+      const { stopAllStreams } = useMediaStore.getState();
+      
+      // Останавливаем все медиа потоки (камера, микрофон, скриншеринг)
+      stopAllStreams();
+      
+      // Очищаем состояние комнаты
       clearRoom();
     };
   }, []);

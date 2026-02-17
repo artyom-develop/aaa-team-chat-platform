@@ -240,6 +240,13 @@ export const useSocket = () => {
 
   const leaveRoom = useCallback(() => {
     if (room) {
+      console.log('[useSocket] Leaving room and stopping media streams');
+      
+      // Останавливаем все медиа потоки перед выходом
+      const { stopAllStreams } = useMediaStore.getState();
+      stopAllStreams();
+      
+      // Отправляем событие выхода из комнаты
       socketService.leaveRoom(room.slug);
     }
   }, [room]);

@@ -75,7 +75,7 @@ export const VideoGrid = () => {
     return (
       <div className="h-full flex flex-col gap-2 p-2 sm:p-4">
         {/* Кнопка переключения layout */}
-        <div className="flex justify-end gap-2 mb-2">
+        <div className="flex justify-end gap-2">
           <button
             onClick={() => setLayout('grid')}
             className="p-1.5 sm:p-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600"
@@ -101,9 +101,15 @@ export const VideoGrid = () => {
           />
         </div>
 
-        {/* Превью остальных участников */}
+        {/* Превью остальных участников со скроллом */}
         {otherParticipants.length > 0 && (
-          <div className="h-24 sm:h-32 flex gap-2 overflow-x-auto">
+          <div 
+            className="h-24 sm:h-32 flex gap-2 overflow-x-auto"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#a3a3a3 transparent',
+            }}
+          >
             {otherParticipants.map((participant) => (
               <div
                 key={participant.userId}
@@ -127,7 +133,7 @@ export const VideoGrid = () => {
   return (
     <div className="flex flex-col h-full p-2 sm:p-4 gap-2">
       {/* Кнопка переключения layout */}
-      <div className="flex justify-end gap-2 mb-2">
+      <div className="flex justify-end gap-2">
         <button
           onClick={() => setLayout('grid')}
           className="p-1.5 sm:p-2 rounded-lg transition bg-purple-600 text-white"
@@ -144,15 +150,24 @@ export const VideoGrid = () => {
         </button>
       </div>
 
-      {/* Grid */}
-      <div className={`grid ${getGridCols(allParticipants.length)} gap-2 sm:gap-4 flex-1`}>
-        {allParticipants.map((participant) => (
-          <VideoTile
-            key={participant.userId}
-            participant={participant}
-            isLocal={participant.userId === user?.id}
-          />
-        ))}
+      {/* Grid с ограниченной высотой и скроллом */}
+      <div 
+        className="flex-1 overflow-y-auto overflow-x-hidden"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#a3a3a3 transparent',
+        }}
+      >
+        <div className={`grid ${getGridCols(allParticipants.length)} gap-2 sm:gap-4 content-start`}>
+          {allParticipants.map((participant) => (
+            <div key={participant.userId} className="w-full" style={{ aspectRatio: '16/9' }}>
+              <VideoTile
+                participant={participant}
+                isLocal={participant.userId === user?.id}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

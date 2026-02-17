@@ -97,7 +97,19 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
     const { localStream, audioEnabled } = get();
     if (localStream) {
       const newAudioEnabled = !audioEnabled;
+      console.log('[mediaStore] toggleAudio:', {
+        from: audioEnabled,
+        to: newAudioEnabled,
+        streamId: localStream.id,
+        audioTracksCount: localStream.getAudioTracks().length,
+      });
+      
       localStream.getAudioTracks().forEach((track) => {
+        console.log('[mediaStore] Setting audio track enabled:', {
+          trackId: track.id,
+          enabled: newAudioEnabled,
+          readyState: track.readyState,
+        });
         track.enabled = newAudioEnabled;
       });
       set({ audioEnabled: newAudioEnabled });
@@ -111,6 +123,8 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
           useRoomStore.getState().updateLocalParticipant({ audioEnabled: newAudioEnabled });
         }
       }, 0);
+    } else {
+      console.warn('[mediaStore] toggleAudio called but no localStream available');
     }
   },
 
@@ -118,7 +132,20 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
     const { localStream, videoEnabled } = get();
     if (localStream) {
       const newVideoEnabled = !videoEnabled;
+      console.log('[mediaStore] toggleVideo:', {
+        from: videoEnabled,
+        to: newVideoEnabled,
+        streamId: localStream.id,
+        videoTracksCount: localStream.getVideoTracks().length,
+      });
+      
       localStream.getVideoTracks().forEach((track) => {
+        console.log('[mediaStore] Setting video track enabled:', {
+          trackId: track.id,
+          label: track.label,
+          enabled: newVideoEnabled,
+          readyState: track.readyState,
+        });
         track.enabled = newVideoEnabled;
       });
       set({ videoEnabled: newVideoEnabled });
@@ -132,6 +159,8 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
           useRoomStore.getState().updateLocalParticipant({ videoEnabled: newVideoEnabled });
         }
       }, 0);
+    } else {
+      console.warn('[mediaStore] toggleVideo called but no localStream available');
     }
   },
 

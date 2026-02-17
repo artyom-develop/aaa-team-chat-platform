@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { apiService } from '../services/api';
 import { socketService } from '../services/socket';
+import { useMediaStore } from './mediaStore';
 import type { User, RegisterDto, LoginDto, GuestLoginDto } from '../types';
 import toast from 'react-hot-toast';
 
@@ -126,12 +127,20 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   logout: async () => {
     try {
       await apiService.logout();
+      
+      // Останавливаем все медиа потоки перед выходом
+      useMediaStore.getState().stopAllStreams();
+      
       socketService.disconnect();
       get().clearAuth();
       toast.success('Выход выполнен');
     } catch (error: any) {
       console.error('Logout error:', error);
       // Даже если сервер вернул ошибку, очищаем локальное состояние
+      
+      // Останавливаем все медиа потоки
+      useMediaStore.getState().stopAllStreams();
+      
       socketService.disconnect();
       get().clearAuth();
     }

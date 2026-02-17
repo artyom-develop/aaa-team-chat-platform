@@ -98,7 +98,7 @@ export const VideoTile = ({
     ? 'w-full h-full'
     : isThumbnail
     ? 'w-full h-full'
-    : 'aspect-video';
+    : 'w-full h-full'; // Для grid используем aspect-ratio из родительского div
 
   const avatarSize = isSpotlight ? 'w-32 h-32' : isThumbnail ? 'w-16 h-16' : 'w-24 h-24';
   const avatarTextSize = isSpotlight ? 'text-6xl' : isThumbnail ? 'text-2xl' : 'text-4xl';

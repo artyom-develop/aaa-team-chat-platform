@@ -123,21 +123,34 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
 
         if (pc.connectionState === 'connected') {
           console.log(`[useWebRTC] Successfully connected to ${userId}`);
+          // Не показываем toast при каждом подключении - слишком много шума
         }
 
         if (pc.connectionState === 'failed') {
           console.error(`[useWebRTC] Connection failed for ${userId}`);
           toast.error('Ошибка соединения с участником');
           
-          // Пытаемся переподключиться
-          console.log(`[useWebRTC] Attempting to reconnect to ${userId}`);
-          peerConnectionsRef.current.delete(userId);
-          // Соединение будет пересоздано в useEffect для новых участников
+          // Пытаемся переподключиться через 2 секунды
+          console.log(`[useWebRTC] Scheduling reconnection attempt for ${userId}`);
+          setTimeout(() => {
+            if (peerConnectionsRef.current.has(userId)) {
+              console.log(`[useWebRTC] Removing failed connection for ${userId}`);
+              peerConnectionsRef.current.delete(userId);
+              // useEffect с participants автоматически создаст новое соединение
+            }
+          }, 2000);
         }
 
         if (pc.connectionState === 'disconnected') {
           console.log(`[useWebRTC] Disconnected from ${userId}, waiting for reconnection...`);
           // Не удаляем сразу - ICE может восстановить соединение
+          // Даем 10 секунд на восстановление
+          setTimeout(() => {
+            if (pc.connectionState === 'disconnected') {
+              console.warn(`[useWebRTC] Still disconnected after 10s for ${userId}, marking as failed`);
+              peerConnectionsRef.current.delete(userId);
+            }
+          }, 10000);
         }
 
         if (pc.connectionState === 'closed') {
@@ -152,7 +165,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         
         if (pc.iceConnectionState === 'failed') {
           console.error(`[useWebRTC] ICE connection failed for ${userId}`);
-          console.log('[useWebRTC] Attempting ICE restart...');
+          toast.error('Проблема с подключением. Попытка переподключения...');
           
           // Пытаемся перезапустить ICE
           if (pc.restartIce) {
@@ -177,6 +190,20 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
           console.log(`[useWebRTC] ICE connection established for ${userId}`);
         }
+        
+        // Отслеживаем disconnected (но не паникуем - может восстановиться)
+        if (pc.iceConnectionState === 'disconnected') {
+          console.warn(`[useWebRTC] ICE disconnected for ${userId}, waiting for reconnection...`);
+          // Даем 5 секунд на восстановление
+          setTimeout(() => {
+            if (pc.iceConnectionState === 'disconnected') {
+              console.log(`[useWebRTC] ICE still disconnected after 5s, trying ICE restart for ${userId}`);
+              if (pc.restartIce && pc.signalingState === 'stable') {
+                pc.restartIce();
+              }
+            }
+          }, 5000);
+        }
       };
 
       // Обработка ICE gathering state
@@ -184,9 +211,17 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         console.log(`[useWebRTC] ICE gathering state for ${userId}:`, pc.iceGatheringState);
       };
 
-      // Обработка ошибок ICE
+      // Обработка ошибок ICE - фильтруем нормальные таймауты
       pc.onicecandidateerror = (event: any) => {
-        console.error(`[useWebRTC] ICE candidate error for ${userId}:`, {
+        // STUN timeout это нормально - браузер пробует несколько серверов
+        if (event.errorCode === 701) {
+          // Логируем только в debug режиме
+          // console.log(`[useWebRTC] STUN timeout for ${userId} (normal):`, event.url);
+          return;
+        }
+        
+        // Показываем только критичные ошибки
+        console.warn(`[useWebRTC] ICE candidate error for ${userId}:`, {
           errorCode: event.errorCode,
           errorText: event.errorText,
           url: event.url,
@@ -407,7 +442,13 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
       return;
     }
 
-    console.log('[useWebRTC] Checking for new participants. Total:', participants.size);
+    console.log('[useWebRTC] ===== Participants/Stream changed, checking connections =====');
+    console.log('[useWebRTC] Current state:', {
+      roomSlug: room.slug,
+      localStreamId: localStream.id,
+      participantsCount: participants.size,
+      existingConnectionsCount: peerConnectionsRef.current.size,
+    });
 
     // Очищаем соединения для участников которых нет в списке (они вышли или это reconnect)
     peerConnectionsRef.current.forEach((pc, userId) => {
@@ -444,12 +485,14 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         peerConnectionsRef.current.delete(participant.userId);
         createOffer(participant.userId);
       } else {
-        console.log('[useWebRTC] Peer connection already exists for:', participant.userId, {
+        console.log('[useWebRTC] Peer connection OK for:', participant.userId, {
           connectionState: existingPc.connectionState,
           iceConnectionState: existingPc.iceConnectionState,
         });
       }
     });
+    
+    console.log('[useWebRTC] ===== Connections check complete =====');
   }, [participants, room, localStream, createOffer]);
 
   // Обновление screen share треков во всех соединениях (ТОЛЬКО screen share!)
