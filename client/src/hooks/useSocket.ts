@@ -158,6 +158,10 @@ export const useSocketEvents = () => {
     const handleMediaControl = (data: any) => {
       console.log('[useSocket] Received media:control event:', data);
 
+      // Пропускаем события о себе — локальный state уже обновлён напрямую
+      const currentUser = useAuthStore.getState().user;
+      if (data.userId === currentUser?.id) return;
+
       const updates: Partial<Participant> = {};
 
       if (data.isMuted !== undefined) updates.audioEnabled = !data.isMuted;

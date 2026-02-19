@@ -66,11 +66,10 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
 
   updateParticipant: (userId, updates) => {
     set((state) => {
+      const participant = state.participants.get(userId);
+      if (!participant) return state; // Не создаём новую Map если участника нет
       const newParticipants = new Map(state.participants);
-      const participant = newParticipants.get(userId);
-      if (participant) {
-        newParticipants.set(userId, { ...participant, ...updates });
-      }
+      newParticipants.set(userId, { ...participant, ...updates });
       return { participants: newParticipants };
     });
   },
