@@ -148,15 +148,15 @@ export const LobbyPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Предпросмотр видео */}
               <div className="relative bg-gray-900 rounded-lg overflow-hidden aspect-video">
-                {videoEnabled && localStream ? (
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
+                {/* Video element всегда в DOM, скрываем через CSS чтобы не терять srcObject */}
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className={`w-full h-full object-cover ${!(videoEnabled && localStream) ? 'hidden' : ''}`}
+                />
+                {!(videoEnabled && localStream) && (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900">
                     <VideoOff className="w-12 h-12 sm:w-16 sm:h-16 text-white/50" />
                   </div>
