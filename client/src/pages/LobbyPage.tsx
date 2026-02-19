@@ -90,13 +90,14 @@ export const LobbyPage = () => {
     await startMedia();
   };
 
-  // Отображение локального видео
+  // Отображение локального видео — также при переключении videoEnabled
+  // чтобы video element "проснулся" после hidden → visible
   useEffect(() => {
     if (videoRef.current && localStream) {
-      console.log('[LobbyPage] Attaching stream to video element');
       videoRef.current.srcObject = localStream;
+      videoRef.current.play().catch(() => {});
     }
-  }, [localStream]);
+  }, [localStream, videoEnabled]);
 
   // Загрузка информации о комнате
   useEffect(() => {

@@ -50,7 +50,7 @@ interface MediaStore {
   isLoadingDevices: boolean;
   
   loadDevices: () => Promise<void>;
-  selectDevice: (type: 'audioInput' | 'videoInput' | 'audioOutput', deviceId: string) => void;
+  selectDevice: (type: 'audioInput' | 'videoInput' | 'audioOutput', deviceId: string) => Promise<void> | void;
   setLocalStream: (stream: MediaStream | null) => void;
   setScreenStream: (stream: MediaStream | null) => void;
   toggleAudio: () => void;
@@ -108,13 +108,57 @@ export const useMediaStore = create<MediaStore>((set, get) => {
     }
   },
 
-  selectDevice: (type, deviceId) => {
+  selectDevice: async (type, deviceId) => {
+    const prev = get().selectedDevices;
     set((state) => ({
       selectedDevices: {
         ...state.selectedDevices,
         [type]: deviceId,
       },
     }));
+
+    // Для audioOutput просто обновляем sinkId — не нужен новый stream
+    if (type === 'audioOutput') return;
+
+    // Для audioInput и videoInput — нужно получить новый stream с выбранным устройством
+    const { localStream, audioEnabled, videoEnabled } = get();
+    if (!localStream) return;
+
+    const newSelectedDevices = { ...prev, [type]: deviceId };
+
+    try {
+      const constraints: MediaStreamConstraints = {
+        audio: newSelectedDevices.audioInput
+          ? { deviceId: { exact: newSelectedDevices.audioInput } }
+          : true,
+        video: newSelectedDevices.videoInput
+          ? { deviceId: { exact: newSelectedDevices.videoInput }, width: 1280, height: 720 }
+          : { width: 1280, height: 720 },
+      };
+
+      const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+      // Останавливаем старые треки
+      localStream.getTracks().forEach((t) => t.stop());
+
+      // Применяем текущий enabled state
+      newStream.getAudioTracks().forEach((t) => { t.enabled = audioEnabled; });
+      newStream.getVideoTracks().forEach((t) => { t.enabled = videoEnabled; });
+
+      set({ localStream: newStream });
+
+      // Обновляем localParticipant
+      const { useRoomStore } = await import('../store/roomStore');
+      const lp = useRoomStore.getState().localParticipant;
+      if (lp) {
+        useRoomStore.getState().updateLocalParticipant({ stream: newStream });
+      }
+
+      console.log('[mediaStore] Device switched, new stream:', newStream.id);
+    } catch (error) {
+      console.error('[mediaStore] Failed to switch device:', error);
+      toast.error('Не удалось переключить устройство');
+    }
   },
 
   setLocalStream: (stream) => {
