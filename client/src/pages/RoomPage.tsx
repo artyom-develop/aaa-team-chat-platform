@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { VideoGrid, Controls, Chat, Participants } from '../components/room';
 import { useSocket, useSocketEvents } from '../hooks/useSocket';
@@ -57,18 +57,26 @@ export const RoomPage = () => {
   // Инициализация WebRTC с ICE серверами
   useWebRTC(iceServers);
 
-  // Присоединение к комнате
+  // Ref-ы для стабильных ссылок на функции в init useEffect
+  const joinRoomRef = useRef(joinRoom);
+  joinRoomRef.current = joinRoom;
+  const setRoomRef = useRef(setRoom);
+  setRoomRef.current = setRoom;
+  const hasJoinedRef = useRef(false);
+
+  // Присоединение к комнате — выполняется ОДИН раз при монтировании
   useEffect(() => {
-    if (!slug) return;
+    if (!slug || hasJoinedRef.current) return;
+    hasJoinedRef.current = true;
 
     const init = async () => {
       try {
         console.log('[RoomPage] Loading room data for slug:', slug);
-        
+
         // Загружаем данные о комнате
         const room = await apiService.getRoom(slug);
         console.log('[RoomPage] Room data loaded:', room);
-        setRoom(room);
+        setRoomRef.current(room);
 
         // Получаем медиа если его еще нет (например при перезагрузке страницы)
         const currentStream = useMediaStore.getState().localStream;
@@ -78,7 +86,7 @@ export const RoomPage = () => {
           videoTracks: currentStream?.getVideoTracks().length || 0,
           audioTracks: currentStream?.getAudioTracks().length || 0,
         });
-        
+
         if (!currentStream) {
           console.log('[RoomPage] No media stream found, requesting access...');
           try {
@@ -88,7 +96,7 @@ export const RoomPage = () => {
                 noiseSuppression: true,
                 autoGainControl: true,
               },
-              video: { 
+              video: {
                 width: { ideal: 1280 },
                 height: { ideal: 720 },
                 frameRate: { ideal: 30 },
@@ -110,7 +118,7 @@ export const RoomPage = () => {
         }
 
         console.log('[RoomPage] Joining room via socket...');
-        
+
         // Проверяем наличие медиа (опционально)
         const finalStream = useMediaStore.getState().localStream;
         if (finalStream) {
@@ -123,9 +131,9 @@ export const RoomPage = () => {
           console.warn('[RoomPage] Joining room without media stream');
           toast('Вы присоединяетесь без камеры и микрофона', { icon: '⚠️' });
         }
-        
+
         // Присоединяемся к комнате через Socket.io
-        await joinRoom(slug);
+        await joinRoomRef.current(slug);
         console.log('[RoomPage] Successfully joined room');
         toast.success('Вы присоединились к комнате');
       } catch (error: any) {
@@ -138,27 +146,26 @@ export const RoomPage = () => {
     };
 
     init();
-    
+
     // Обработка переподключения Socket.io
-    // При переподключении сокет автоматически отправит room:join заново
     const handleReconnect = () => {
-      console.log('[RoomPage] Socket reconnected, cleaning up old WebRTC connections');
+      console.log('[RoomPage] Socket reconnected');
       toast('Переподключение...', { icon: '🔄', duration: 2000 });
-      
-      // Даем время серверу обработать room:join
+
       setTimeout(() => {
         console.log('[RoomPage] Reconnect complete');
         toast.success('Соединение восстановлено');
       }, 1000);
     };
-    
+
     socketService.setReconnectCallback(handleReconnect);
 
     return () => {
-      // Очищаем callback при unmount
       socketService.setReconnectCallback(null);
+      hasJoinedRef.current = false;
     };
-  }, [slug, navigate, joinRoom, setRoom]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, navigate]);
 
   // Инициализация локального участника - теперь происходит в useSocket handleRoomJoined
   // Этот useEffect только для обновления существующего localParticipant

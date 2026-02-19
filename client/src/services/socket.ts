@@ -11,10 +11,19 @@ class SocketService {
   private currentIsMuted: boolean = false;
   private currentIsCameraOff: boolean = false;
   private reconnectCallback: (() => void) | null = null;
+  private hasConnectedOnce: boolean = false;
+  private pendingListeners: Array<{ event: string; handler: any }> = [];
 
   connect(token: string): TypedSocket {
     if (this.socket?.connected) {
       return this.socket;
+    }
+
+    // Уничтожаем старый сокет перед созданием нового (предотвращает утечку listeners)
+    if (this.socket) {
+      this.socket.removeAllListeners();
+      this.socket.disconnect();
+      this.socket = null;
     }
 
     this.socket = io(SOCKET_URL, {
@@ -30,12 +39,13 @@ class SocketService {
 
     this.socket.on('connect', () => {
       console.log('Socket connected:', this.socket?.id);
-      
-      // При переподключении автоматически присоединяемся к комнате заново
-      if (this.currentRoomSlug) {
+
+      // Только при РЕАЛЬНОМ переподключении (не первый connect)
+      if (this.hasConnectedOnce && this.currentRoomSlug) {
         console.log('[SocketService] Reconnected - rejoining room:', this.currentRoomSlug);
         this.rejoinCurrentRoom();
       }
+      this.hasConnectedOnce = true;
     });
 
     this.socket.on('disconnect', (reason) => {
@@ -46,35 +56,46 @@ class SocketService {
       console.error('Socket connection error:', error);
     });
 
+    // Применяем pending listeners, зарегистрированные до connect()
+    this.pendingListeners.forEach(({ event, handler }) => {
+      this.socket!.on(event as any, handler);
+    });
+    this.pendingListeners = [];
+
     return this.socket;
   }
 
   // Присоединиться заново к текущей комнате (для переподключений)
+  // Задержка даёт useWebRTC время очистить старые peer connections
   private rejoinCurrentRoom(): void {
-    if (!this.currentRoomSlug || !this.socket) return;
-    
-    console.log('[SocketService] Rejoining room:', this.currentRoomSlug);
-    this.socket.emit(
-      'room:join',
-      {
-        roomSlug: this.currentRoomSlug,
-        password: this.currentRoomPassword,
-        isMuted: this.currentIsMuted,
-        isCameraOff: this.currentIsCameraOff,
-      },
-      (response: { success: boolean; error?: string }) => {
-        console.log('[SocketService] Rejoin response:', response);
-        if (response.success) {
-          console.log('[SocketService] Successfully rejoined room');
-          // Вызываем callback для уведомления компонентов о переподключении
-          if (this.reconnectCallback) {
-            this.reconnectCallback();
+    setTimeout(() => {
+      if (!this.currentRoomSlug || !this.socket) return;
+
+      console.log('[SocketService] Rejoining room:', this.currentRoomSlug);
+      this.socket.emit(
+        'room:join',
+        {
+          roomSlug: this.currentRoomSlug,
+          password: this.currentRoomPassword,
+          isMuted: this.currentIsMuted,
+          isCameraOff: this.currentIsCameraOff,
+        },
+        (response: { success: boolean; error?: string }) => {
+          console.log('[SocketService] Rejoin response:', response);
+          if (response.success) {
+            console.log('[SocketService] Successfully rejoined room');
+            if (this.reconnectCallback) {
+              this.reconnectCallback();
+            }
+          } else {
+            console.error('[SocketService] Failed to rejoin room:', response.error);
+            // Сбрасываем состояние комнаты при неуспешном rejoin
+            this.currentRoomSlug = null;
+            this.currentRoomPassword = undefined;
           }
-        } else {
-          console.error('[SocketService] Failed to rejoin room:', response.error);
         }
-      }
-    );
+      );
+    }, 300);
   }
 
   // Установить callback который будет вызван при успешном переподключении
@@ -84,9 +105,17 @@ class SocketService {
 
   disconnect(): void {
     if (this.socket) {
+      this.socket.removeAllListeners();
       this.socket.disconnect();
       this.socket = null;
     }
+    // Полный сброс состояния
+    this.hasConnectedOnce = false;
+    this.currentRoomSlug = null;
+    this.currentRoomPassword = undefined;
+    this.currentIsMuted = false;
+    this.currentIsCameraOff = false;
+    this.reconnectCallback = null;
   }
 
   getSocket(): TypedSocket | null {
@@ -115,9 +144,11 @@ class SocketService {
   }
 
   leaveRoom(roomSlug: string): void {
-    // Очищаем сохраненные параметры
+    // Полный сброс сохраненных параметров комнаты
     this.currentRoomSlug = null;
     this.currentRoomPassword = undefined;
+    this.currentIsMuted = false;
+    this.currentIsCameraOff = false;
     this.socket?.emit('room:leave', { roomSlug });
   }
 
@@ -198,19 +229,29 @@ class SocketService {
     this.socket?.emit('host:admit-user', { targetUserId });
   }
 
-  // Event listeners
+  // Event listeners (с pending queue если сокет ещё не создан)
   on<K extends keyof ServerToClientEvents>(
     event: K,
     handler: ServerToClientEvents[K]
   ): void {
-    this.socket?.on(event, handler as any);
+    if (this.socket) {
+      this.socket.on(event, handler as any);
+    } else {
+      this.pendingListeners.push({ event: event as string, handler });
+    }
   }
 
   off<K extends keyof ServerToClientEvents>(
     event: K,
     handler?: ServerToClientEvents[K]
   ): void {
-    this.socket?.off(event, handler as any);
+    if (this.socket) {
+      this.socket.off(event, handler as any);
+    }
+    // Удаляем из pending если ещё не применён
+    this.pendingListeners = this.pendingListeners.filter(
+      (l) => !(l.event === (event as string) && l.handler === handler)
+    );
   }
 
   // Встроенные события Socket.io (connect, disconnect и т.д.)

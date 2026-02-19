@@ -6,9 +6,6 @@ import { useMediaStore } from '../store/mediaStore';
 import { Participant } from '../types';
 import toast from 'react-hot-toast';
 
-// Глобальный флаг: event listeners зарегистрированы только один раз
-let socketEventsRegistered = false;
-
 /**
  * Хук для регистрации событий Socket.io — вызывать ТОЛЬКО ОДИН РАЗ (в RoomPage).
  * Регистрирует обработчики room:joined, room:user-joined, room:user-left и т.д.
@@ -29,13 +26,11 @@ export const useSocketEvents = () => {
 
   // Подписка на события участников — один раз
   useEffect(() => {
-    // Защита от дублирования при StrictMode и множественных маунтах
-    if (registeredRef.current || socketEventsRegistered) {
+    if (registeredRef.current) {
       console.log('[useSocket] Event listeners already registered, skipping');
       return;
     }
     registeredRef.current = true;
-    socketEventsRegistered = true;
 
     console.log('[useSocket] Setting up event listeners. User:', user?.id);
 
@@ -182,12 +177,18 @@ export const useSocketEvents = () => {
       useRoomStore.getState().clearRoom();
     };
 
+    const handleRoomError = (data: { message: string }) => {
+      console.warn('[useSocket] Room error:', data.message);
+      toast.error(data.message);
+    };
+
     socketService.on('room:joined', handleRoomJoined);
     socketService.on('room:user-joined', handleUserJoined);
     socketService.on('room:user-left', handleUserLeft);
     socketService.on('room:request-offers', handleRequestOffers);
     socketService.on('media:control', handleMediaControl);
     socketService.on('user:kicked', handleUserKicked);
+    socketService.on('room:error' as any, handleRoomError);
 
     return () => {
       socketService.off('room:joined', handleRoomJoined);
@@ -196,8 +197,8 @@ export const useSocketEvents = () => {
       socketService.off('room:request-offers', handleRequestOffers);
       socketService.off('media:control', handleMediaControl);
       socketService.off('user:kicked', handleUserKicked);
+      socketService.off('room:error' as any, handleRoomError);
       registeredRef.current = false;
-      socketEventsRegistered = false;
     };
   }, [user]);
 };
@@ -208,17 +209,24 @@ export const useSocketEvents = () => {
  */
 export const useSocket = () => {
   const { room } = useRoomStore();
-  const { audioEnabled, videoEnabled } = useMediaStore();
 
   const joinRoom = useCallback(
     (slug: string, password?: string) => {
       return new Promise<void>((resolve, reject) => {
+        // Читаем текущее состояние из store ВНУТРИ callback, а не через closure
+        // Это предотвращает пересоздание joinRoom при каждом toggle audio/video
+        const { audioEnabled, videoEnabled } = useMediaStore.getState();
         console.log('[useSocket] joinRoom called for:', slug, {
           isMuted: !audioEnabled,
           isCameraOff: !videoEnabled,
         });
 
+        const timeout = setTimeout(() => {
+          reject(new Error('Превышено время ожидания подключения'));
+        }, 10000);
+
         socketService.joinRoom(slug, password, !audioEnabled, !videoEnabled, (response) => {
+          clearTimeout(timeout);
           console.log('[useSocket] joinRoom callback response:', response);
           if (response.success) {
             resolve();
@@ -228,14 +236,13 @@ export const useSocket = () => {
         });
       });
     },
-    [audioEnabled, videoEnabled]
+    [] // Стабильная ссылка — НЕ зависит от audioEnabled/videoEnabled
   );
 
   const leaveRoom = useCallback(() => {
     if (room) {
-      console.log('[useSocket] Leaving room and stopping media streams');
-      const { stopAllStreams } = useMediaStore.getState();
-      stopAllStreams();
+      console.log('[useSocket] Leaving room');
+      // stopAllStreams вызывается в RoomPage cleanup при unmount
       socketService.leaveRoom(room.slug);
     }
   }, [room]);

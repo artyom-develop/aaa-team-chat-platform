@@ -31,11 +31,13 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
   // Синхронизируем ref-ы с Zustand state
   const localStream = useMediaStore((s) => s.localStream);
   const screenStream = useMediaStore((s) => s.screenStream);
+  const userRef = useRef(user);
   localStreamRef.current = localStream;
   screenStreamRef.current = screenStream;
   roomRef.current = room;
+  userRef.current = user;
 
-  // Конфигурация ICE серверов — стабильная ссылка
+  // Конфигурация ICE серверов
   const rtcConfigRef = useRef<RTCConfiguration>(
     iceServers
       ? {
@@ -44,6 +46,16 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         }
       : PEER_CONNECTION_CONFIG
   );
+
+  // #7: Синхронизируем rtcConfigRef при изменении iceServers (загрузка TURN с сервера)
+  useEffect(() => {
+    if (iceServers && iceServers.length > 0) {
+      rtcConfigRef.current = {
+        iceServers,
+        iceCandidatePoolSize: PEER_CONNECTION_CONFIG.iceCandidatePoolSize,
+      };
+    }
+  }, [iceServers]);
 
   // ─────────────────────────────────────────────────────────
   // Создание peer connection — стабильный callback (без зависимостей от stream)
@@ -100,6 +112,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         console.log(`[useWebRTC] Connection state ${userId}:`, pc.connectionState);
         if (pc.connectionState === 'failed') {
           setTimeout(() => {
+            pc.close();
             peerConnectionsRef.current.delete(userId);
           }, 2000);
         }
@@ -112,19 +125,24 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
       pc.oniceconnectionstatechange = () => {
         console.log(`[useWebRTC] ICE state ${userId}:`, pc.iceConnectionState);
         if (pc.iceConnectionState === 'failed') {
-          if (pc.restartIce) pc.restartIce();
-          setTimeout(async () => {
-            try {
-              const r = roomRef.current;
-              if (r && pc.signalingState === 'stable') {
-                const offer = await pc.createOffer({ iceRestart: true });
-                await pc.setLocalDescription(offer);
-                socketService.sendOffer(r.slug, userId, offer);
+          if (pc.restartIce) {
+            // Современные браузеры — restartIce() достаточно
+            pc.restartIce();
+          } else {
+            // Фоллбэк для старых браузеров — createOffer с iceRestart
+            setTimeout(async () => {
+              try {
+                const r = roomRef.current;
+                if (r && pc.signalingState === 'stable') {
+                  const offer = await pc.createOffer({ iceRestart: true });
+                  await pc.setLocalDescription(offer);
+                  socketService.sendOffer(r.slug, userId, offer);
+                }
+              } catch (e) {
+                console.error('[useWebRTC] ICE restart error:', e);
               }
-            } catch (e) {
-              console.error('[useWebRTC] ICE restart error:', e);
-            }
-          }, 1000);
+            }, 1000);
+          }
         }
       };
 
@@ -184,7 +202,8 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     async (data: { from: string; sdp: RTCSessionDescriptionInit }) => {
       try {
         const pc = createPeerConnection(data.from);
-        const isPolite = user && user.id < data.from;
+        const currentUser = userRef.current;
+        const isPolite = currentUser && currentUser.id < data.from;
         const collision = pc.signalingState !== 'stable';
 
         if (collision) {
@@ -204,7 +223,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         console.error('[useWebRTC] Error handling offer:', error);
       }
     },
-    [createPeerConnection, user]
+    [createPeerConnection]
   );
 
   // ─────────────────────────────────────────────────────────
@@ -312,17 +331,26 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
           if (pc.connectionState === 'closed' || pc.connectionState === 'failed') continue;
 
           const senders = pc.getSenders();
+          const stream = localStreamRef.current;
 
-          // Replace video track
+          // Replace video track (с fallback на addTrack если sender отсутствует)
           const videoSender = senders.find((s) => s.track?.kind === 'video');
-          if (videoSender && newVideoTrack) {
-            await videoSender.replaceTrack(newVideoTrack);
+          if (newVideoTrack) {
+            if (videoSender) {
+              await videoSender.replaceTrack(newVideoTrack);
+            } else if (stream) {
+              pc.addTrack(newVideoTrack, stream);
+            }
           }
 
-          // Replace audio track
+          // Replace audio track (с fallback на addTrack если sender отсутствует)
           const audioSender = senders.find((s) => s.track?.kind === 'audio');
-          if (audioSender && audioTrack) {
-            await audioSender.replaceTrack(audioTrack);
+          if (audioTrack) {
+            if (audioSender) {
+              await audioSender.replaceTrack(audioTrack);
+            } else if (stream) {
+              pc.addTrack(audioTrack, stream);
+            }
           }
         } catch (error) {
           console.error('[useWebRTC] replaceTrack error for:', userId, error);
@@ -344,19 +372,28 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
   }, []);
 
   // ─────────────────────────────────────────────────────────
-  // Socket reconnect
+  // Socket reconnect — очистка peer connections при реальном переподключении.
+  // Пропускаем первый 'connect' (он же — начальное подключение).
   // ─────────────────────────────────────────────────────────
+  const hasConnectedRef = useRef(false);
+
   useEffect(() => {
-    const handleSocketReconnect = () => {
+    const handleSocketConnect = () => {
+      if (!hasConnectedRef.current) {
+        // Первое подключение — просто запоминаем
+        hasConnectedRef.current = true;
+        return;
+      }
+      // Реальное переподключение
       console.log('[useWebRTC] Socket reconnected, recreating connections');
       peerConnectionsRef.current.forEach((pc) => pc.close());
       peerConnectionsRef.current.clear();
       toast('Переподключение к участникам...', { icon: '🔄' });
     };
 
-    socketService.onConnect(handleSocketReconnect);
+    socketService.onConnect(handleSocketConnect);
     return () => {
-      socketService.offConnect(handleSocketReconnect);
+      socketService.offConnect(handleSocketConnect);
     };
   }, []);
 
