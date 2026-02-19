@@ -16,7 +16,7 @@ interface PeerConnection {
  * Хук для управления WebRTC соединениями
  */
 export const useWebRTC = (iceServers?: IceServer[]) => {
-  const { room, participants, updateParticipant, streamUpdateTrigger } = useRoomStore();
+  const { room, participants, updateParticipant } = useRoomStore();
   const { localStream, screenStream } = useMediaStore();
   const { user } = useAuthStore();
   const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map());
@@ -522,13 +522,16 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     console.log('[useWebRTC] ===== Connections check complete =====');
   }, [participants, room, localStream, createOffer]);
 
+  // Отслеживаем screen share senders чтобы корректно удалять их при остановке
+  const screenSendersRef = useRef<Map<string, RTCRtpSender[]>>(new Map());
+
   // Обновление screen share треков во всех соединениях (ТОЛЬКО screen share!)
   useEffect(() => {
     if (!room || peerConnectionsRef.current.size === 0) return;
 
     const updateScreenShare = async () => {
       console.log('[useWebRTC] Updating screen share in all peer connections, screenSharing:', !!screenStream);
-      
+
       for (const [userId, pc] of peerConnectionsRef.current.entries()) {
         try {
           // Проверяем состояние соединения
@@ -537,27 +540,31 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
             continue;
           }
 
-          const senders = pc.getSenders();
-          const screenSenders = senders.filter(s => 
-            s.track?.kind === 'video' && s.track.label.includes('screen')
-          );
-          
-          // Удаляем старые screen share треки
-          for (const sender of screenSenders) {
-            pc.removeTrack(sender);
-            console.log('[useWebRTC] Removed old screen share track for:', userId);
+          // Удаляем ранее добавленные screen share senders (используем ref вместо label-based фильтрации)
+          const prevScreenSenders = screenSendersRef.current.get(userId) || [];
+          for (const sender of prevScreenSenders) {
+            try {
+              pc.removeTrack(sender);
+              console.log('[useWebRTC] Removed old screen share sender for:', userId);
+            } catch (e) {
+              console.warn('[useWebRTC] Failed to remove screen sender for:', userId, e);
+            }
           }
+          screenSendersRef.current.delete(userId);
 
           // Добавляем новые screen share треки
           if (screenStream) {
             console.log('[useWebRTC] Adding screen share tracks for user:', userId);
+            const newSenders: RTCRtpSender[] = [];
             for (const track of screenStream.getTracks()) {
-              pc.addTrack(track, screenStream);
+              const sender = pc.addTrack(track, screenStream);
+              newSenders.push(sender);
             }
+            screenSendersRef.current.set(userId, newSenders);
           }
 
-          // Renegotiation только если соединение активно
-          if (pc.connectionState === 'connected' && pc.signalingState === 'stable') {
+          // Renegotiation — нужна и при добавлении и при удалении screen share треков
+          if (pc.signalingState === 'stable') {
             console.log('[useWebRTC] Renegotiating after screen share change for:', userId);
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
@@ -570,7 +577,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     };
 
     updateScreenShare();
-  }, [screenStream, room]); // УБРАЛ localStream из зависимостей!
+  }, [screenStream, room]);
 
   // Очистка соединений при размонтировании
   useEffect(() => {
@@ -605,46 +612,8 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     };
   }, []);
 
-  // Обработка изменений треков (включение/выключение камеры/микрофона)
-  // streamUpdateTrigger меняется когда пользователь переключает камеру/микрофон
-  useEffect(() => {
-    if (!room || !localStream || peerConnectionsRef.current.size === 0 || streamUpdateTrigger === 0) {
-      return;
-    }
-
-    console.log('[useWebRTC] Stream update triggered, renegotiating all connections');
-
-    const renegotiateAll = async () => {
-      for (const [userId, pc] of peerConnectionsRef.current.entries()) {
-        try {
-          // Проверяем состояние соединения
-          if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
-            console.log('[useWebRTC] Skipping renegotiation for closed/failed connection:', userId);
-            continue;
-          }
-
-          // Проверяем signaling state
-          if (pc.signalingState !== 'stable') {
-            console.log('[useWebRTC] Skipping renegotiation - signaling state not stable:', userId, pc.signalingState);
-            continue;
-          }
-
-          console.log('[useWebRTC] Renegotiating connection for:', userId);
-
-          // Создаем новый offer
-          const offer = await pc.createOffer();
-          await pc.setLocalDescription(offer);
-          socketService.sendOffer(room.slug, userId, offer);
-
-          console.log('[useWebRTC] Renegotiation offer sent to:', userId);
-        } catch (error) {
-          console.error('[useWebRTC] Error renegotiating connection for:', userId, error);
-        }
-      }
-    };
-
-    renegotiateAll();
-  }, [streamUpdateTrigger, room, localStream]);
+  // Примечание: renegotiation при toggleAudio/toggleVideo НЕ нужна.
+  // track.enabled автоматически отражается на remote стороне через WebRTC.
 
   return {
     peerConnections: peerConnectionsRef.current,

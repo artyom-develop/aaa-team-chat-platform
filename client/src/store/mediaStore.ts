@@ -205,16 +205,14 @@ export const useMediaStore = create<MediaStore>((set, get) => {
       const prefs = loadMediaPreferences();
       saveMediaPreferences({ ...prefs, audioEnabled: newAudioEnabled });
       
-      // Синхронно обновляем localParticipant и триггерим renegotiation
+      // Синхронно обновляем localParticipant (renegotiation НЕ нужна - track.enabled
+      // автоматически отражается на remote стороне через существующее WebRTC соединение)
       setTimeout(async () => {
         const { useRoomStore } = await import('../store/roomStore');
         const localParticipant = useRoomStore.getState().localParticipant;
         if (localParticipant) {
           console.log('[mediaStore] Updating localParticipant audioEnabled:', newAudioEnabled);
           useRoomStore.getState().updateLocalParticipant({ audioEnabled: newAudioEnabled });
-          
-          // Триггерим обновление localStream чтобы вызвать renegotiation в useWebRTC
-          useRoomStore.getState().triggerStreamUpdate();
         }
       }, 0);
     } else {
@@ -251,16 +249,14 @@ export const useMediaStore = create<MediaStore>((set, get) => {
       const prefs = loadMediaPreferences();
       saveMediaPreferences({ ...prefs, videoEnabled: newVideoEnabled });
       
-      // Синхронно обновляем localParticipant и триггерим renegotiation
+      // Синхронно обновляем localParticipant (renegotiation НЕ нужна - track.enabled
+      // автоматически отражается на remote стороне через существующее WebRTC соединение)
       setTimeout(async () => {
         const { useRoomStore } = await import('../store/roomStore');
         const localParticipant = useRoomStore.getState().localParticipant;
         if (localParticipant) {
           console.log('[mediaStore] Updating localParticipant videoEnabled:', newVideoEnabled);
           useRoomStore.getState().updateLocalParticipant({ videoEnabled: newVideoEnabled });
-          
-          // Триггерим обновление localStream чтобы вызвать renegotiation в useWebRTC
-          useRoomStore.getState().triggerStreamUpdate();
         }
       }, 0);
     } else {

@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { X, Crown, UserMinus } from 'lucide-react';
 import { useRoomStore } from '../../store/roomStore';
 import { useAuthStore } from '../../store/authStore';
 import { useSocket } from '../../hooks/useSocket';
+import { ConfirmDialog } from '../common/ConfirmDialog';
 
 interface ParticipantsProps {
   onClose: () => void;
@@ -12,13 +14,20 @@ export const Participants = ({ onClose }: ParticipantsProps) => {
   const { room, participants, localParticipant, isHost } = useRoomStore();
   const { kickUser } = useSocket();
 
+  const [kickTarget, setKickTarget] = useState<{ userId: string; displayName: string } | null>(null);
+
   const allParticipants = localParticipant
     ? [localParticipant, ...Array.from(participants.values())]
     : Array.from(participants.values());
 
   const handleKick = (userId: string, displayName: string) => {
-    if (window.confirm(`Вы уверены, что хотите удалить ${displayName} из комнаты?`)) {
-      kickUser(userId);
+    setKickTarget({ userId, displayName });
+  };
+
+  const confirmKick = () => {
+    if (kickTarget) {
+      kickUser(kickTarget.userId);
+      setKickTarget(null);
     }
   };
 
@@ -105,6 +114,17 @@ export const Participants = ({ onClose }: ParticipantsProps) => {
           </div>
         </div>
       )}
+
+      {/* Модальное окно подтверждения удаления */}
+      <ConfirmDialog
+        isOpen={!!kickTarget}
+        onClose={() => setKickTarget(null)}
+        onConfirm={confirmKick}
+        title="Удалить участника"
+        message={`Вы уверены, что хотите удалить ${kickTarget?.displayName || ''} из комнаты?`}
+        confirmText="Удалить"
+        cancelText="Отмена"
+      />
     </div>
   );
 };

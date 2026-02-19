@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { socketService } from '../services/socket';
 import { useRoomStore } from '../store/roomStore';
 import { useAuthStore } from '../store/authStore';
@@ -6,13 +6,16 @@ import { useMediaStore } from '../store/mediaStore';
 import { Participant } from '../types';
 import toast from 'react-hot-toast';
 
+// Глобальный флаг: event listeners зарегистрированы только один раз
+let socketEventsRegistered = false;
+
 /**
- * Хук для работы с Socket.io
+ * Хук для регистрации событий Socket.io — вызывать ТОЛЬКО ОДИН РАЗ (в RoomPage).
+ * Регистрирует обработчики room:joined, room:user-joined, room:user-left и т.д.
  */
-export const useSocket = () => {
+export const useSocketEvents = () => {
   const { user } = useAuthStore();
-  const { room, addParticipant, removeParticipant, updateParticipant, setRoom, clearRoom } = useRoomStore();
-  const { audioEnabled, videoEnabled } = useMediaStore();
+  const registeredRef = useRef(false);
 
   // Подключение к Socket.io
   useEffect(() => {
@@ -22,61 +25,45 @@ export const useSocket = () => {
         socketService.connect(token);
       }
     }
-
-    // НЕ отключаем socket при unmount - соединение сохраняется
-    // Disconnect должен вызываться только при logout
   }, [user]);
 
-  // Подписка на события участников
+  // Подписка на события участников — один раз
   useEffect(() => {
-    console.log('[useSocket] Setting up event listeners. Room:', room?.slug, 'User:', user?.id);
-    
-    // Устанавливаем обработчики независимо от наличия room
-    // потому что room:joined может прийти до того как room установлена в стейт
+    // Защита от дублирования при StrictMode и множественных маунтах
+    if (registeredRef.current || socketEventsRegistered) {
+      console.log('[useSocket] Event listeners already registered, skipping');
+      return;
+    }
+    registeredRef.current = true;
+    socketEventsRegistered = true;
 
-    // Обработка события room:joined с изначальным списком участников
+    console.log('[useSocket] Setting up event listeners. User:', user?.id);
+
     const handleRoomJoined = (data: any) => {
       console.log('[useSocket] Room joined event received:', data);
-      console.log('[useSocket] Current user ID:', user?.id);
-      
+      const currentUser = useAuthStore.getState().user;
+      console.log('[useSocket] Current user ID:', currentUser?.id);
+
       const socketId = socketService.getId();
-      console.log('[useSocket] Current socketId:', socketId);
-      
+
       // Проверяем, есть ли уже участники (признак reconnect)
       const currentParticipants = useRoomStore.getState().participants;
       if (currentParticipants.size > 0) {
-        console.log('[useSocket] Detected reconnect - clearing old participants and WebRTC connections');
-        // Очищаем старых участников (это триггернет очистку WebRTC в useWebRTC)
+        console.log('[useSocket] Detected reconnect - clearing old participants');
         currentParticipants.forEach((p) => {
-          if (p.userId !== user?.id) {
+          if (p.userId !== currentUser?.id) {
             useRoomStore.getState().removeParticipant(p.userId);
           }
         });
       }
-      
-      // Преобразуем данные участников из серверного формата в клиентский
+
       if (data.participants && Array.isArray(data.participants)) {
         console.log('[useSocket] Processing participants:', data.participants.length);
-        
+
         data.participants.forEach((p: any) => {
-          // Если это мы сами - создаем localParticipant
-          if (p.userId === user?.id) {
-            console.log('[useSocket] Creating localParticipant for self:', p.userId);
-            
+          if (p.userId === currentUser?.id) {
             const { localStream, audioEnabled, videoEnabled } = useMediaStore.getState();
-            
-            console.log('[useSocket] Media state:', {
-              hasLocalStream: !!localStream,
-              streamId: localStream?.id,
-              audioEnabled,
-              videoEnabled,
-              videoTracks: localStream?.getVideoTracks().length || 0,
-              audioTracks: localStream?.getAudioTracks().length || 0,
-            });
-            
-            // ✅ ИСПРАВЛЕНО: Используем реальное состояние enabled из mediaStore
-            // Даже если localStream существует, audioEnabled/videoEnabled могут быть false
-            // если пользователь отключил их в лобби
+
             const localParticipant: Participant = {
               userId: p.userId,
               socketId: socketId || '',
@@ -91,7 +78,7 @@ export const useSocket = () => {
               joinedAt: Date.now(),
               stream: localStream || undefined,
             };
-            
+
             console.log('[useSocket] Setting localParticipant:', {
               userId: localParticipant.userId,
               hasStream: !!localParticipant.stream,
@@ -101,12 +88,12 @@ export const useSocket = () => {
             useRoomStore.getState().setLocalParticipant(localParticipant);
             return;
           }
-          
+
           console.log('[useSocket] Adding participant:', p.displayName, p.userId);
-          
+
           const participant: Participant = {
             userId: p.userId,
-            socketId: '', // Будет обновлено при WebRTC соединении
+            socketId: '',
             displayName: p.displayName,
             avatarUrl: p.avatarUrl,
             isHost: p.isHost,
@@ -117,20 +104,28 @@ export const useSocket = () => {
             handRaised: false,
             joinedAt: Date.now(),
           };
-          addParticipant(participant);
+          useRoomStore.getState().addParticipant(participant);
         });
-        
-        console.log('[useSocket] Participants added. Total:', useRoomStore.getState().participants.size);
-      } else {
-        console.log('[useSocket] No participants in room:joined event');
       }
     };
 
     const handleUserJoined = (data: any) => {
       console.log('[useSocket] User joined:', data);
-      // Пропускаем себя
-      if (data.userId === user?.id) return;
-      
+      const currentUser = useAuthStore.getState().user;
+      if (data.userId === currentUser?.id) return;
+
+      // Проверяем что участник еще не добавлен (защита от дублирования)
+      const existing = useRoomStore.getState().participants.get(data.userId);
+      if (existing) {
+        console.log('[useSocket] Participant already exists, updating:', data.userId);
+        useRoomStore.getState().updateParticipant(data.userId, {
+          audioEnabled: !data.isMuted,
+          videoEnabled: !data.isCameraOff,
+          screenSharing: data.isScreenSharing,
+        });
+        return;
+      }
+
       const participant: Participant = {
         userId: data.userId,
         socketId: '',
@@ -144,57 +139,45 @@ export const useSocket = () => {
         handRaised: false,
         joinedAt: Date.now(),
       };
-      addParticipant(participant);
+      useRoomStore.getState().addParticipant(participant);
       toast.success(`${participant.displayName} присоединился к комнате`);
     };
 
     const handleRequestOffers = (data: { participants: any[] }) => {
       console.log('[useSocket] Request to create offers for participants:', data.participants);
-      // Этот обработчик будет вызван, когда мы присоединяемся к комнате
-      // и должны создать offers для всех существующих участников
-      // Логика создания offers находится в useWebRTC, мы просто логируем
     };
 
     const handleUserLeft = (data: { userId: string }) => {
       const participant = useRoomStore.getState().participants.get(data.userId);
       if (participant) {
-        removeParticipant(data.userId);
+        useRoomStore.getState().removeParticipant(data.userId);
         toast(`${participant.displayName} покинул комнату`);
       }
     };
 
     const handleMediaControl = (data: any) => {
-      console.log('[useSocket] Received media:control event (raw):', data);
-      
+      console.log('[useSocket] Received media:control event:', data);
+
       const updates: Partial<Participant> = {};
-      
-      // Сервер шлёт isMuted/isCameraOff/isScreenSharing — конвертируем в клиентский формат
+
       if (data.isMuted !== undefined) updates.audioEnabled = !data.isMuted;
       if (data.isCameraOff !== undefined) updates.videoEnabled = !data.isCameraOff;
       if (data.isScreenSharing !== undefined) updates.screenSharing = data.isScreenSharing;
-      
-      // Поддержка старого формата на случай если сервер пришлёт audioEnabled/videoEnabled
+
       if (data.audioEnabled !== undefined) updates.audioEnabled = data.audioEnabled;
       if (data.videoEnabled !== undefined) updates.videoEnabled = data.videoEnabled;
       if (data.screenSharing !== undefined) updates.screenSharing = data.screenSharing;
-      
-      console.log('[useSocket] Updating participant media state:', {
-        userId: data.userId,
-        updates,
-      });
-      
+
       if (Object.keys(updates).length > 0) {
-        updateParticipant(data.userId, updates);
-        console.log('[useSocket] Participant media state updated successfully');
+        useRoomStore.getState().updateParticipant(data.userId, updates);
       }
     };
 
     const handleUserKicked = () => {
       toast.error('Вы были удалены из комнаты');
-      clearRoom();
+      useRoomStore.getState().clearRoom();
     };
 
-    // Подписываемся на события
     socketService.on('room:joined', handleRoomJoined);
     socketService.on('room:user-joined', handleUserJoined);
     socketService.on('room:user-left', handleUserLeft);
@@ -202,7 +185,6 @@ export const useSocket = () => {
     socketService.on('media:control', handleMediaControl);
     socketService.on('user:kicked', handleUserKicked);
 
-    // Отписываемся при размонтировании
     return () => {
       socketService.off('room:joined', handleRoomJoined);
       socketService.off('room:user-joined', handleUserJoined);
@@ -210,20 +192,28 @@ export const useSocket = () => {
       socketService.off('room:request-offers', handleRequestOffers);
       socketService.off('media:control', handleMediaControl);
       socketService.off('user:kicked', handleUserKicked);
+      registeredRef.current = false;
+      socketEventsRegistered = false;
     };
-  }, [user, addParticipant, removeParticipant, updateParticipant, clearRoom]);
+  }, [user]);
+};
 
-  // Методы для взаимодействия с сокетом
+/**
+ * Хук для действий с Socket.io — можно вызывать в любом компоненте.
+ * Возвращает методы: joinRoom, leaveRoom, toggleMute, toggleCamera и т.д.
+ */
+export const useSocket = () => {
+  const { room } = useRoomStore();
+  const { audioEnabled, videoEnabled } = useMediaStore();
+
   const joinRoom = useCallback(
     (slug: string, password?: string) => {
       return new Promise<void>((resolve, reject) => {
         console.log('[useSocket] joinRoom called for:', slug, {
-          audioEnabled,
-          videoEnabled,
           isMuted: !audioEnabled,
           isCameraOff: !videoEnabled,
         });
-        
+
         socketService.joinRoom(slug, password, !audioEnabled, !videoEnabled, (response) => {
           console.log('[useSocket] joinRoom callback response:', response);
           if (response.success) {
@@ -240,12 +230,8 @@ export const useSocket = () => {
   const leaveRoom = useCallback(() => {
     if (room) {
       console.log('[useSocket] Leaving room and stopping media streams');
-      
-      // Останавливаем все медиа потоки перед выходом
       const { stopAllStreams } = useMediaStore.getState();
       stopAllStreams();
-      
-      // Отправляем событие выхода из комнаты
       socketService.leaveRoom(room.slug);
     }
   }, [room]);

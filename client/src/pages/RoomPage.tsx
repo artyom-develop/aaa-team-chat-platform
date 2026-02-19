@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { VideoGrid, Controls, Chat, Participants } from '../components/room';
-import { useSocket } from '../hooks/useSocket';
+import { useSocket, useSocketEvents } from '../hooks/useSocket';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { useChat } from '../hooks/useChat';
 import { useRoomStore } from '../store/roomStore';
@@ -15,6 +15,8 @@ import toast from 'react-hot-toast';
 export const RoomPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  // Регистрация socket event listeners — ОДИН РАЗ здесь
+  useSocketEvents();
   const { joinRoom } = useSocket();
   const { setRoom, updateLocalParticipant, room, localParticipant } = useRoomStore();
   const { screenSharing, audioEnabled, videoEnabled, localStream } = useMediaStore();
