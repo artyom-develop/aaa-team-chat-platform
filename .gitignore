@@ -52,3 +52,6 @@ Desktop.ini
 .cache/
 .temp/
 tmp/
+
+./logs-devtools.txt
+./logs-server.txt
