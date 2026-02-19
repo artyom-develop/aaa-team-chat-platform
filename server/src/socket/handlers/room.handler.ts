@@ -30,6 +30,42 @@ export class RoomHandler {
         return callback({ success: false, error: 'Комната не найдена' });
       }
 
+      // ✅ НОВАЯ ПРОВЕРКА: Пользователь уже в комнате?
+      const existingParticipant = await RoomStateService.getParticipant(roomSlug, socket.userId || '');
+      if (existingParticipant) {
+        logger.warn(`User ${socket.userId} already in room ${roomSlug}, updating socketId`);
+        
+        // Обновляем socketId (при reconnect)
+        await RoomStateService.updateParticipant(roomSlug, socket.userId || '', {
+          socketId: socket.id,
+          isMuted,
+          isCameraOff,
+        });
+        
+        // Получаем актуальный список участников
+        const participants = await RoomStateService.getParticipants(roomSlug);
+        const participantsData: ParticipantData[] = participants.map((p) => ({
+          userId: p.userId,
+          displayName: p.displayName,
+          avatarUrl: p.avatarUrl,
+          isMuted: p.isMuted,
+          isCameraOff: p.isCameraOff,
+          isScreenSharing: p.isScreenSharing,
+          isHost: p.isHost,
+        }));
+        
+        // Подключаем к Socket.io room
+        await socket.join(roomSlug);
+        
+        // Отправляем подтверждение БЕЗ отправки room:user-joined другим (они уже знают)
+        callback({ success: true });
+        socket.emit('room:joined', { roomSlug, participants: participantsData });
+        socket.emit('room:request-offers', { participants: participantsData });
+        
+        logger.info(`User ${socket.userId} reconnected to room ${roomSlug}`);
+        return;
+      }
+
       // Проверяем пароль, если есть
       if (room.password) {
         if (!password) {

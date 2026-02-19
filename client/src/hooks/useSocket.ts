@@ -74,6 +74,9 @@ export const useSocket = () => {
               audioTracks: localStream?.getAudioTracks().length || 0,
             });
             
+            // ✅ ИСПРАВЛЕНО: Используем реальное состояние enabled из mediaStore
+            // Даже если localStream существует, audioEnabled/videoEnabled могут быть false
+            // если пользователь отключил их в лобби
             const localParticipant: Participant = {
               userId: p.userId,
               socketId: socketId || '',
@@ -81,8 +84,8 @@ export const useSocket = () => {
               avatarUrl: p.avatarUrl,
               isHost: p.isHost,
               isGuest: false,
-              audioEnabled: audioEnabled && !!localStream,
-              videoEnabled: videoEnabled && !!localStream,
+              audioEnabled: audioEnabled,
+              videoEnabled: videoEnabled,
               screenSharing: false,
               handRaised: false,
               joinedAt: Date.now(),
@@ -160,33 +163,29 @@ export const useSocket = () => {
       }
     };
 
-    const handleMediaControl = (data: {
-      userId: string;
-      audioEnabled?: boolean;
-      videoEnabled?: boolean;
-      screenSharing?: boolean;
-    }) => {
-      console.log('[useSocket] Received media:control event:', {
-        userId: data.userId,
-        audioEnabled: data.audioEnabled,
-        videoEnabled: data.videoEnabled,
-        screenSharing: data.screenSharing,
-      });
+    const handleMediaControl = (data: any) => {
+      console.log('[useSocket] Received media:control event (raw):', data);
       
       const updates: Partial<Participant> = {};
+      
+      // Сервер шлёт isMuted/isCameraOff/isScreenSharing — конвертируем в клиентский формат
+      if (data.isMuted !== undefined) updates.audioEnabled = !data.isMuted;
+      if (data.isCameraOff !== undefined) updates.videoEnabled = !data.isCameraOff;
+      if (data.isScreenSharing !== undefined) updates.screenSharing = data.isScreenSharing;
+      
+      // Поддержка старого формата на случай если сервер пришлёт audioEnabled/videoEnabled
       if (data.audioEnabled !== undefined) updates.audioEnabled = data.audioEnabled;
       if (data.videoEnabled !== undefined) updates.videoEnabled = data.videoEnabled;
-      if (data.screenSharing !== undefined) {
-        updates.screenSharing = data.screenSharing;
-        console.log('[useSocket] Updating participant screen sharing state:', {
-          userId: data.userId,
-          screenSharing: data.screenSharing,
-        });
-      }
+      if (data.screenSharing !== undefined) updates.screenSharing = data.screenSharing;
+      
+      console.log('[useSocket] Updating participant media state:', {
+        userId: data.userId,
+        updates,
+      });
       
       if (Object.keys(updates).length > 0) {
         updateParticipant(data.userId, updates);
-        console.log('[useSocket] Participant updated successfully');
+        console.log('[useSocket] Participant media state updated successfully');
       }
     };
 

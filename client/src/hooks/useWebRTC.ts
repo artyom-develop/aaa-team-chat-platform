@@ -16,7 +16,7 @@ interface PeerConnection {
  * Хук для управления WebRTC соединениями
  */
 export const useWebRTC = (iceServers?: IceServer[]) => {
-  const { room, participants, updateParticipant } = useRoomStore();
+  const { room, participants, updateParticipant, streamUpdateTrigger } = useRoomStore();
   const { localStream, screenStream } = useMediaStore();
   const { user } = useAuthStore();
   const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map());
@@ -40,14 +40,14 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
     (userId: string): RTCPeerConnection => {
       // Проверяем, нет ли уже соединения с этим пользователем
       const existingPc = peerConnectionsRef.current.get(userId);
-      if (existingPc && existingPc.connectionState !== 'closed') {
-        console.log('[useWebRTC] Peer connection already exists for:', userId, 'state:', existingPc.connectionState);
-        return existingPc;
+      if (existingPc && existingPc.connectionState !== 'closed' && existingPc.connectionState !== 'failed') {
+        console.log('[useWebRTC] ✅ Peer connection already exists and active for:', userId, 'state:', existingPc.connectionState);
+        return existingPc; // ✅ ВОЗВРАЩАЕМ существующее соединение
       }
 
-      // Если старое соединение закрыто, удаляем его
+      // Если старое соединение закрыто или failed, удаляем его
       if (existingPc) {
-        console.log('[useWebRTC] Removing closed peer connection for:', userId);
+        console.log('[useWebRTC] ⚠️ Removing old peer connection for:', userId, 'state:', existingPc.connectionState);
         existingPc.close();
         peerConnectionsRef.current.delete(userId);
       }
@@ -194,15 +194,35 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
         // Отслеживаем disconnected (но не паникуем - может восстановиться)
         if (pc.iceConnectionState === 'disconnected') {
           console.warn(`[useWebRTC] ICE disconnected for ${userId}, waiting for reconnection...`);
-          // Даем 5 секунд на восстановление
+          
+          // ✅ Даем 3 секунды на восстановление (по требованию)
           setTimeout(() => {
             if (pc.iceConnectionState === 'disconnected') {
-              console.log(`[useWebRTC] ICE still disconnected after 5s, trying ICE restart for ${userId}`);
-              if (pc.restartIce && pc.signalingState === 'stable') {
-                pc.restartIce();
+              console.log(`[useWebRTC] ICE still disconnected after 3s, trying ICE restart for ${userId}`);
+              
+              if (pc.signalingState === 'stable') {
+                // Используем restartIce + новый offer
+                if (pc.restartIce) {
+                  pc.restartIce();
+                }
+                
+                // Создаем новый offer с iceRestart флагом
+                const createRestartOffer = async () => {
+                  try {
+                    if (room && localStream) {
+                      console.log('[useWebRTC] Creating ICE restart offer for:', userId);
+                      const offer = await pc.createOffer({ iceRestart: true });
+                      await pc.setLocalDescription(offer);
+                      socketService.sendOffer(room.slug, userId, offer);
+                    }
+                  } catch (error) {
+                    console.error('[useWebRTC] Error during ICE restart offer:', error);
+                  }
+                };
+                createRestartOffer();
               }
             }
-          }, 5000);
+          }, 3000); // ✅ ИЗМЕНЕНО на 3000
         }
       };
 
@@ -238,6 +258,13 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
   const createOffer = useCallback(
     async (userId: string) => {
       try {
+        // ✅ Защита от дублей: не создаём offer если соединение уже активно
+        const existingPc = peerConnectionsRef.current.get(userId);
+        if (existingPc && (existingPc.connectionState === 'connecting' || existingPc.connectionState === 'connected')) {
+          console.log('[useWebRTC] ⏭️ Skipping createOffer - connection already active for:', userId, existingPc.connectionState);
+          return;
+        }
+
         console.log('[useWebRTC] Creating offer for user:', userId, {
           hasLocalStream: !!localStream,
           localStreamId: localStream?.id,
@@ -554,6 +581,70 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
       peerConnectionsRef.current.clear();
     };
   }, []);
+
+  // Обработка socket reconnect
+  useEffect(() => {
+    const handleSocketReconnect = () => {
+      console.log('[useWebRTC] Socket reconnected, recreating WebRTC connections');
+      
+      // Закрываем все старые соединения
+      peerConnectionsRef.current.forEach((pc, userId) => {
+        console.log('[useWebRTC] Closing old connection for:', userId);
+        pc.close();
+      });
+      peerConnectionsRef.current.clear();
+      
+      // Новые соединения создадутся автоматически через useEffect с participants
+      toast('Переподключение к участникам...', { icon: '🔄' });
+    };
+    
+    socketService.onConnect(handleSocketReconnect);
+    
+    return () => {
+      socketService.offConnect(handleSocketReconnect);
+    };
+  }, []);
+
+  // Обработка изменений треков (включение/выключение камеры/микрофона)
+  // streamUpdateTrigger меняется когда пользователь переключает камеру/микрофон
+  useEffect(() => {
+    if (!room || !localStream || peerConnectionsRef.current.size === 0 || streamUpdateTrigger === 0) {
+      return;
+    }
+
+    console.log('[useWebRTC] Stream update triggered, renegotiating all connections');
+
+    const renegotiateAll = async () => {
+      for (const [userId, pc] of peerConnectionsRef.current.entries()) {
+        try {
+          // Проверяем состояние соединения
+          if (pc.connectionState === 'closed' || pc.connectionState === 'failed') {
+            console.log('[useWebRTC] Skipping renegotiation for closed/failed connection:', userId);
+            continue;
+          }
+
+          // Проверяем signaling state
+          if (pc.signalingState !== 'stable') {
+            console.log('[useWebRTC] Skipping renegotiation - signaling state not stable:', userId, pc.signalingState);
+            continue;
+          }
+
+          console.log('[useWebRTC] Renegotiating connection for:', userId);
+
+          // Создаем новый offer
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+          socketService.sendOffer(room.slug, userId, offer);
+
+          console.log('[useWebRTC] Renegotiation offer sent to:', userId);
+        } catch (error) {
+          console.error('[useWebRTC] Error renegotiating connection for:', userId, error);
+        }
+      }
+    };
+
+    renegotiateAll();
+  }, [streamUpdateTrigger, room, localStream]);
 
   return {
     peerConnections: peerConnectionsRef.current,

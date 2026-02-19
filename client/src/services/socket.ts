@@ -138,10 +138,16 @@ class SocketService {
 
   // Media controls
   toggleMute(roomSlug: string, isMuted: boolean): void {
+    // Обновляем сохраненное состояние для переподключений
+    this.currentIsMuted = isMuted;
+    console.log('[SocketService] toggleMute:', { roomSlug, isMuted });
     this.socket?.emit('media:toggle-mute', { roomSlug, isMuted });
   }
 
   toggleCamera(roomSlug: string, isCameraOff: boolean): void {
+    // Обновляем сохраненное состояние для переподключений
+    this.currentIsCameraOff = isCameraOff;
+    console.log('[SocketService] toggleCamera:', { roomSlug, isCameraOff });
     this.socket?.emit('media:toggle-camera', { roomSlug, isCameraOff });
   }
 
@@ -205,6 +211,15 @@ class SocketService {
     handler?: ServerToClientEvents[K]
   ): void {
     this.socket?.off(event, handler as any);
+  }
+
+  // Встроенные события Socket.io (connect, disconnect и т.д.)
+  onConnect(handler: () => void): void {
+    this.socket?.on('connect', handler);
+  }
+
+  offConnect(handler: () => void): void {
+    this.socket?.off('connect', handler);
   }
 }
 

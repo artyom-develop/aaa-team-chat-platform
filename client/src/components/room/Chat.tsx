@@ -1,40 +1,41 @@
-import { useState, useRef, useEffect } from 'react';
-import { Send, X } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore';
-import { ChatMessage } from '../../types';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { useState, useRef, useEffect } from 'react'
+import { Send, X } from 'lucide-react'
+import { useAuthStore } from '../../store/authStore'
+import { ChatMessage } from '../../types'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 interface ChatProps {
-  messages: ChatMessage[];
-  isLoading: boolean;
-  sendMessage: (content: string) => Promise<void>;
-  onClose: () => void;
+  messages: ChatMessage[]
+  isLoading: boolean
+  sendMessage: (content: string) => Promise<void>
+  onClose: () => void
 }
 
 export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) => {
-  const { user } = useAuthStore();
-  const [input, setInput] = useState('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuthStore()
+  const [input, setInput] = useState('')
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Автоскролл при новых сообщениях
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+    e.preventDefault()
+    e.stopPropagation()
+    if (!input.trim()) return
 
-    console.log('[Chat] Submitting message:', input);
+    console.log('[Chat] Submitting message:', input)
     try {
-      await sendMessage(input);
-      console.log('[Chat] Message sent successfully');
-      setInput('');
+      await sendMessage(input)
+      console.log('[Chat] Message sent successfully')
+      setInput('')
     } catch (error) {
-      console.error('[Chat] Error sending message:', error);
+      console.error('[Chat] Error sending message:', error)
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 md:relative md:w-80 bg-gray-900 md:border-l border-gray-800 flex flex-col h-full z-20">
@@ -64,7 +65,7 @@ export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) =
           </div>
         ) : (
           messages.map((message) => {
-            const isOwnMessage = message.user.id === user?.id;
+            const isOwnMessage = message.user.id === user?.id
 
             return (
               <div
@@ -77,11 +78,10 @@ export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) =
                   </span>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                    isOwnMessage
+                  className={`max-w-[80%] rounded-lg px-3 py-2 ${isOwnMessage
                       ? 'bg-purple-600 text-white'
                       : 'bg-gray-800 text-gray-100'
-                  }`}
+                    }`}
                 >
                   <p className="text-sm break-words">{message.text}</p>
                   <span className="text-xs opacity-70 mt-1 block">
@@ -89,7 +89,7 @@ export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) =
                   </span>
                 </div>
               </div>
-            );
+            )
           })
         )}
         <div ref={messagesEndRef} />
@@ -116,5 +116,5 @@ export const Chat = ({ messages, isLoading, sendMessage, onClose }: ChatProps) =
         </div>
       </form>
     </div>
-  );
-};
+  )
+}

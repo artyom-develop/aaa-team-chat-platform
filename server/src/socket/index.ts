@@ -46,6 +46,14 @@ export const initializeSocketIO = (httpServer: HttpServer): Server => {
       credentials: true,
     },
     transports: ['websocket', 'polling'],
+    
+    // ✅ Лимиты для экономии памяти (0.5GB RAM на Render.com)
+    maxHttpBufferSize: 1e6, // 1 MB максимальный размер HTTP буфера
+    pingTimeout: 10000, // 10 секунд таймаут для ping
+    pingInterval: 5000, // 5 секунд интервал проверки живых соединений
+    allowUpgrades: true,
+    perMessageDeflate: false, // Отключаем сжатие для экономии CPU
+    connectTimeout: 45000, // 45 секунд таймаут на подключение
   };
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, socketOptions);

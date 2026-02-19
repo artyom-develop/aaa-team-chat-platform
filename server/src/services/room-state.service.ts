@@ -31,7 +31,7 @@ export interface RoomState {
 export class RoomStateService {
   private static readonly ROOM_PREFIX = 'room:';
   private static readonly PARTICIPANT_PREFIX = 'participant:';
-  private static readonly ROOM_TTL = 24 * 60 * 60; // 24 часа
+  private static readonly ROOM_TTL = 6 * 60 * 60; // ✅ 6 часов (21600 секунд) для экономии памяти
 
   /**
    * Добавить участника в комнату

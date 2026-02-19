@@ -7,6 +7,7 @@ interface RoomStore {
   localParticipant: Participant | null;
   isHost: boolean;
   isInLobby: boolean;
+  streamUpdateTrigger: number;
   
   setRoom: (room: Room) => void;
   setLocalParticipant: (participant: Participant) => void;
@@ -17,6 +18,7 @@ interface RoomStore {
   getParticipant: (userId: string) => Participant | undefined;
   clearRoom: () => void;
   setIsInLobby: (inLobby: boolean) => void;
+  triggerStreamUpdate: () => void;
 }
 
 export const useRoomStore = create<RoomStore>((set, get) => ({
@@ -25,6 +27,7 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
   localParticipant: null,
   isHost: false,
   isInLobby: false,
+  streamUpdateTrigger: 0,
 
   setRoom: (room) => {
     set({ room });
@@ -88,5 +91,9 @@ export const useRoomStore = create<RoomStore>((set, get) => ({
 
   setIsInLobby: (inLobby) => {
     set({ isInLobby: inLobby });
+  },
+
+  triggerStreamUpdate: () => {
+    set((state) => ({ streamUpdateTrigger: state.streamUpdateTrigger + 1 }));
   },
 }));

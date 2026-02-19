@@ -14,54 +14,81 @@ export const LobbyPage = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [roomName, setRoomName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [mediaStarted, setMediaStarted] = useState(false);
+  const [isRequestingMedia, setIsRequestingMedia] = useState(false);
 
   const { localStream, audioEnabled, videoEnabled, toggleAudio, toggleVideo } = useMedia();
 
-  // Повторная попытка получить доступ к медиа
-  const retryMediaAccess = async () => {
+  // Ручной старт медиа
+  const startMedia = async () => {
+    setIsRequestingMedia(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: { width: 1280, height: 720 },
       });
       
-      // Сохраняем поток в медиа-сторе
+      const prefs = useMediaStore.getState().getMediaPreferences();
+      
+      // ✅ При первом включении устанавливаем оба устройства в true
+      // При последующих включениях сохраняем предыдущие настройки
+      if (!prefs.autoStart) {
+        console.log('[LobbyPage] First time enabling media, setting both to true');
+        useMediaStore.getState().saveMediaPreferences({ 
+          audioEnabled: true, 
+          videoEnabled: true, 
+          autoStart: true // Помечаем что медиа было включено хотя бы раз
+        });
+      } else {
+        console.log('[LobbyPage] Re-enabling media, keeping previous settings:', {
+          audioEnabled: prefs.audioEnabled,
+          videoEnabled: prefs.videoEnabled,
+        });
+        // При повторном включении сохраняем предыдущие настройки пользователя
+        useMediaStore.getState().saveMediaPreferences({ 
+          ...prefs, 
+          autoStart: true 
+        });
+      }
+      
+      // setLocalStream применит текущий audioEnabled/videoEnabled из store к трекам
       useMediaStore.getState().setLocalStream(stream);
-      console.log('[LobbyPage] Media access granted on retry:', stream.id);
+      
+      setMediaStarted(true);
+      console.log('[LobbyPage] Local stream initialized:', stream.id);
       toast.success('Доступ к камере и микрофону получен');
     } catch (error) {
-      console.error('Error accessing media devices on retry:', error);
-      toast.error('Не удалось получить доступ к камере и микрофону. Проверьте настройки браузера.');
+      console.error('Error accessing media devices:', error);
+      toast.error('Не удалось получить доступ к камере и микрофону');
+    } finally {
+      setIsRequestingMedia(false);
     }
   };
 
-  // Инициализация локального медиа-потока
+  // Проверка autoStart предпочтения при монтировании
   useEffect(() => {
-    const initMedia = async () => {
-      // Проверяем, есть ли уже stream
-      const existingStream = useMediaStore.getState().localStream;
-      if (existingStream) {
-        console.log('[LobbyPage] Using existing stream:', existingStream.id);
-        return;
-      }
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: { width: 1280, height: 720 },
-        });
-        
-        // Сохраняем поток в медиа-сторе
-        useMediaStore.getState().setLocalStream(stream);
-        console.log('[LobbyPage] Local stream initialized:', stream.id);
-      } catch (error) {
-        console.error('Error accessing media devices:', error);
-        toast.error('Не удалось получить доступ к камере и микрофону. Вы можете продолжить без них.');
+    const checkAutoStart = async () => {
+      const prefs = useMediaStore.getState().getMediaPreferences();
+      if (prefs.autoStart) {
+        await startMedia();
       }
     };
-
-    initMedia();
+    checkAutoStart();
   }, []);
+
+  // Отслеживаем наличие localStream
+  useEffect(() => {
+    if (localStream) {
+      setMediaStarted(true);
+    } else {
+      setMediaStarted(false);
+    }
+  }, [localStream]);
+
+  // Повторная попытка получить доступ к медиа
+  const retryMediaAccess = async () => {
+    await startMedia();
+  };
 
   // Отображение локального видео
   useEffect(() => {
@@ -152,7 +179,22 @@ export const LobbyPage = () => {
                 <div className="space-y-3 sm:space-y-4">
                   <h2 className="text-lg sm:text-xl font-semibold text-white">Настройка устройств</h2>
 
-                  {!localStream && (
+                  {!mediaStarted && (
+                    <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-3 sm:p-4 mb-4">
+                      <p className="text-blue-200 text-xs sm:text-sm mb-3">
+                        Для участия в видеоконференции включите камеру и микрофон
+                      </p>
+                      <button
+                        onClick={startMedia}
+                        disabled={isRequestingMedia}
+                        className="w-full px-3 py-2 sm:px-4 text-sm sm:text-base bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                      >
+                        {isRequestingMedia ? 'Запрашиваем доступ...' : 'Включить камеру и микрофон'}
+                      </button>
+                    </div>
+                  )}
+
+                  {!localStream && mediaStarted && (
                     <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 sm:p-4 mb-4">
                       <p className="text-yellow-200 text-xs sm:text-sm mb-2">
                         Не удалось получить доступ к камере и микрофону

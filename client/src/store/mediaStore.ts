@@ -3,6 +3,42 @@ import { MEDIA_CONSTRAINTS } from '../constants';
 import type { MediaDevices, SelectedDevices } from '../types';
 import toast from 'react-hot-toast';
 
+// Константы для localStorage
+const MEDIA_PREFS_KEY = 'videoMeetMediaPrefs';
+
+interface MediaPreferences {
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+  autoStart: boolean;
+}
+
+// Загрузить предпочтения из localStorage
+const loadMediaPreferences = (): MediaPreferences => {
+  try {
+    const stored = localStorage.getItem(MEDIA_PREFS_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('[mediaStore] Failed to load media preferences:', error);
+  }
+  // Значения по умолчанию - НЕ автоматически включать
+  return {
+    audioEnabled: false,
+    videoEnabled: false,
+    autoStart: false,
+  };
+};
+
+// Сохранить предпочтения
+const saveMediaPreferences = (prefs: MediaPreferences) => {
+  try {
+    localStorage.setItem(MEDIA_PREFS_KEY, JSON.stringify(prefs));
+  } catch (error) {
+    console.error('[mediaStore] Failed to save media preferences:', error);
+  }
+};
+
 interface MediaStore {
   devices: MediaDevices;
   selectedDevices: SelectedDevices;
@@ -22,9 +58,14 @@ interface MediaStore {
   startScreenShare: () => Promise<MediaStream | null>;
   stopScreenShare: () => void;
   stopAllStreams: () => void;
+  getMediaPreferences: () => MediaPreferences;
+  saveMediaPreferences: (prefs: MediaPreferences) => void;
 }
 
-export const useMediaStore = create<MediaStore>((set, get) => ({
+export const useMediaStore = create<MediaStore>((set, get) => {
+  const prefs = loadMediaPreferences();
+  
+  return {
   devices: {
     audioInputs: [],
     videoInputs: [],
@@ -37,8 +78,8 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
   },
   localStream: null,
   screenStream: null,
-  audioEnabled: true,
-  videoEnabled: true,
+  audioEnabled: prefs.audioEnabled,
+  videoEnabled: prefs.videoEnabled,
   screenSharing: false,
   isLoadingDevices: false,
 
@@ -79,14 +120,57 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
   setLocalStream: (stream) => {
     const { localStream: currentStream } = get();
     
-    // Останавливаем предыдущий stream только если это другой stream
-    if (currentStream && currentStream !== stream) {
+    // Проверяем, действительно ли это новый stream
+    // Не останавливаем треки при reconnect если это тот же stream
+    if (currentStream && currentStream !== stream && currentStream.id !== stream?.id) {
       console.log('[mediaStore] Stopping previous stream:', currentStream.id);
-      currentStream.getTracks().forEach((track) => track.stop());
+      // Только если это ДЕЙСТВИТЕЛЬНО другой stream (не reconnect)
+      currentStream.getTracks().forEach((track) => {
+        if (track.readyState === 'live') {
+          track.stop();
+        }
+      });
+    } else if (currentStream && currentStream.id === stream?.id) {
+      console.log('[mediaStore] Same stream, keeping tracks alive');
+      return; // Не заменяем, если это тот же stream
     }
 
     console.log('[mediaStore] Setting new local stream:', stream?.id);
     set({ localStream: stream });
+    
+    // ✅ Применяем текущее состояние enabled к трекам нового стрима
+    // Это гарантирует что настройки из лобби или предыдущей сессии применятся к трекам
+    if (stream) {
+      const { audioEnabled, videoEnabled } = get();
+      
+      console.log('[mediaStore] Applying enabled state to stream tracks:', { 
+        audioEnabled, 
+        videoEnabled,
+        audioTracks: stream.getAudioTracks().length,
+        videoTracks: stream.getVideoTracks().length,
+      });
+      
+      stream.getAudioTracks().forEach((track) => {
+        console.log('[mediaStore] Setting audio track enabled:', {
+          trackId: track.id,
+          enabled: audioEnabled,
+          prevEnabled: track.enabled,
+        });
+        track.enabled = audioEnabled;
+      });
+      
+      stream.getVideoTracks().forEach((track) => {
+        console.log('[mediaStore] Setting video track enabled:', {
+          trackId: track.id,
+          label: track.label,
+          enabled: videoEnabled,
+          prevEnabled: track.enabled,
+        });
+        track.enabled = videoEnabled;
+      });
+      
+      console.log('[mediaStore] Stream tracks configured with enabled state');
+    }
   },
 
   setScreenStream: (stream) => {
@@ -110,17 +194,27 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
           enabled: newAudioEnabled,
           readyState: track.readyState,
         });
+        // ✅ ВАЖНО: Используем track.enabled вместо track.stop()
+        // track.stop() полностью убивает трек и требует нового getUserMedia
+        // track.enabled = false просто отключает трансляцию, трек остается живым
         track.enabled = newAudioEnabled;
       });
       set({ audioEnabled: newAudioEnabled });
       
-      // Синхронно обновляем localParticipant
+      // Сохраняем предпочтение
+      const prefs = loadMediaPreferences();
+      saveMediaPreferences({ ...prefs, audioEnabled: newAudioEnabled });
+      
+      // Синхронно обновляем localParticipant и триггерим renegotiation
       setTimeout(async () => {
         const { useRoomStore } = await import('../store/roomStore');
         const localParticipant = useRoomStore.getState().localParticipant;
         if (localParticipant) {
           console.log('[mediaStore] Updating localParticipant audioEnabled:', newAudioEnabled);
           useRoomStore.getState().updateLocalParticipant({ audioEnabled: newAudioEnabled });
+          
+          // Триггерим обновление localStream чтобы вызвать renegotiation в useWebRTC
+          useRoomStore.getState().triggerStreamUpdate();
         }
       }, 0);
     } else {
@@ -146,17 +240,27 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
           enabled: newVideoEnabled,
           readyState: track.readyState,
         });
+        // ✅ ВАЖНО: Используем track.enabled вместо track.stop()
+        // track.stop() полностью убивает трек и требует нового getUserMedia
+        // track.enabled = false просто отключает трансляцию, трек остается живым
         track.enabled = newVideoEnabled;
       });
       set({ videoEnabled: newVideoEnabled });
       
-      // Синхронно обновляем localParticipant
+      // Сохраняем предпочтение
+      const prefs = loadMediaPreferences();
+      saveMediaPreferences({ ...prefs, videoEnabled: newVideoEnabled });
+      
+      // Синхронно обновляем localParticipant и триггерим renegotiation
       setTimeout(async () => {
         const { useRoomStore } = await import('../store/roomStore');
         const localParticipant = useRoomStore.getState().localParticipant;
         if (localParticipant) {
           console.log('[mediaStore] Updating localParticipant videoEnabled:', newVideoEnabled);
           useRoomStore.getState().updateLocalParticipant({ videoEnabled: newVideoEnabled });
+          
+          // Триггерим обновление localStream чтобы вызвать renegotiation в useWebRTC
+          useRoomStore.getState().triggerStreamUpdate();
         }
       }, 0);
     } else {
@@ -265,4 +369,15 @@ export const useMediaStore = create<MediaStore>((set, get) => ({
       screenSharing: false,
     });
   },
-}));
+
+  getMediaPreferences: () => loadMediaPreferences(),
+  
+  saveMediaPreferences: (prefs: MediaPreferences) => {
+    saveMediaPreferences(prefs);
+    set({ 
+      audioEnabled: prefs.audioEnabled, 
+      videoEnabled: prefs.videoEnabled 
+    });
+  },
+};
+});
