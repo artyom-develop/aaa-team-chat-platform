@@ -87,17 +87,23 @@ export const useMediaStore = create<MediaStore>((set, get) => {
     set({ isLoadingDevices: true });
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      
+
       const audioInputs = devices.filter((d) => d.kind === 'audioinput');
       const videoInputs = devices.filter((d) => d.kind === 'videoinput');
       const audioOutputs = devices.filter((d) => d.kind === 'audiooutput');
 
+      // Сохраняем текущий выбор, если устройство всё ещё доступно
+      const current = get().selectedDevices;
+      const audioInputStillExists = current.audioInput && audioInputs.some(d => d.deviceId === current.audioInput);
+      const videoInputStillExists = current.videoInput && videoInputs.some(d => d.deviceId === current.videoInput);
+      const audioOutputStillExists = current.audioOutput && audioOutputs.some(d => d.deviceId === current.audioOutput);
+
       set({
         devices: { audioInputs, videoInputs, audioOutputs },
         selectedDevices: {
-          audioInput: audioInputs[0]?.deviceId || null,
-          videoInput: videoInputs[0]?.deviceId || null,
-          audioOutput: audioOutputs[0]?.deviceId || null,
+          audioInput: audioInputStillExists ? current.audioInput : (audioInputs[0]?.deviceId || null),
+          videoInput: videoInputStillExists ? current.videoInput : (videoInputs[0]?.deviceId || null),
+          audioOutput: audioOutputStillExists ? current.audioOutput : (audioOutputs[0]?.deviceId || null),
         },
       });
     } catch (error) {
