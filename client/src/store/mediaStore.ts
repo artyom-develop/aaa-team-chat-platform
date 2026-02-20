@@ -133,13 +133,14 @@ export const useMediaStore = create<MediaStore>((set, get) => {
     const newSelectedDevices = { ...prev, [type]: deviceId };
 
     try {
+      const videoBase = typeof MEDIA_CONSTRAINTS.video === 'object' ? MEDIA_CONSTRAINTS.video : {};
       const constraints: MediaStreamConstraints = {
         audio: newSelectedDevices.audioInput
           ? { deviceId: { exact: newSelectedDevices.audioInput } }
           : true,
         video: newSelectedDevices.videoInput
-          ? { deviceId: { exact: newSelectedDevices.videoInput }, width: 1280, height: 720 }
-          : { width: 1280, height: 720 },
+          ? { ...videoBase, deviceId: { exact: newSelectedDevices.videoInput } }
+          : videoBase,
       };
 
       const newStream = await navigator.mediaDevices.getUserMedia(constraints);

@@ -31,6 +31,7 @@ export interface RoomState {
 export class RoomStateService {
   private static readonly ROOM_PREFIX = 'room:';
   private static readonly PARTICIPANT_PREFIX = 'participant:';
+  private static readonly USER_ROOMS_PREFIX = 'user-rooms:';
   private static readonly ROOM_TTL = 6 * 60 * 60; // ✅ 6 часов (21600 секунд) для экономии памяти
 
   /**
@@ -55,6 +56,11 @@ export class RoomStateService {
       await redisClient.sAdd(key, participant.userId);
       await redisClient.expire(key, this.ROOM_TTL);
 
+      // Отслеживаем в каких комнатах находится пользователь
+      const userRoomsKey = this.USER_ROOMS_PREFIX + participant.userId;
+      await redisClient.sAdd(userRoomsKey, roomSlug);
+      await redisClient.expire(userRoomsKey, this.ROOM_TTL);
+
       logger.info(`Participant ${participant.userId} added to room ${roomSlug}`);
     } catch (error) {
       logger.error('Error adding participant to room:', error);
@@ -73,6 +79,10 @@ export class RoomStateService {
       // Удаляем участника
       await redisClient.del(participantKey);
       await redisClient.sRem(key, userId);
+
+      // Удаляем комнату из списка комнат пользователя
+      const userRoomsKey = this.USER_ROOMS_PREFIX + userId;
+      await redisClient.sRem(userRoomsKey, roomSlug);
 
       logger.info(`Participant ${userId} removed from room ${roomSlug}`);
 
@@ -192,6 +202,19 @@ export class RoomStateService {
     } catch (error) {
       logger.error('Error checking user in room:', error);
       return false;
+    }
+  }
+
+  /**
+   * Получить все комнаты, в которых находится пользователь
+   */
+  static async getUserRooms(userId: string): Promise<string[]> {
+    try {
+      const userRoomsKey = this.USER_ROOMS_PREFIX + userId;
+      return await redisClient.sMembers(userRoomsKey);
+    } catch (error) {
+      logger.error('Error getting user rooms:', error);
+      return [];
     }
   }
 

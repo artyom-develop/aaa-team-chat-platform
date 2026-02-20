@@ -10,7 +10,8 @@ interface AuthStore {
   accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+  isCheckingAuth: boolean;
+
   setUser: (user: User, token: string) => void;
   login: (credentials: LoginDto, redirectTo?: string) => Promise<string | undefined>;
   loginGuest: (data: GuestLoginDto, redirectTo?: string) => Promise<string | undefined>;
@@ -25,6 +26,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   accessToken: localStorage.getItem('accessToken'),
   isAuthenticated: !!localStorage.getItem('accessToken'), // Если токен есть, считаем авторизованным
   isLoading: false,
+  isCheckingAuth: false,
 
   setUser: (user, token) => {
     console.log('[authStore] setUser called with token:', token);
@@ -167,7 +169,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     // Убеждаемся что токен установлен в apiService
     apiService.setToken(token);
 
-    set({ isLoading: true });
+    set({ isCheckingAuth: true });
     try {
       const user = await apiService.getMe();
       set({ user, accessToken: token, isAuthenticated: true });
@@ -184,7 +186,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         get().clearAuth();
       }
     } finally {
-      set({ isLoading: false });
+      set({ isCheckingAuth: false });
     }
   },
 

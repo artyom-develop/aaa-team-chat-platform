@@ -5,6 +5,7 @@ import { useMedia } from '../hooks/useMedia';
 import { useMediaStore } from '../store/mediaStore';
 import { DeviceSettings } from '../components/room/DeviceSettings';
 import { apiService } from '../services/api';
+import { MEDIA_CONSTRAINTS } from '../constants';
 import toast from 'react-hot-toast';
 
 export const LobbyPage = () => {
@@ -23,10 +24,22 @@ export const LobbyPage = () => {
   const startMedia = async () => {
     setIsRequestingMedia(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: { width: 1280, height: 720 },
-      });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(MEDIA_CONSTRAINTS);
+      } catch {
+        // Fallback: запрашиваем последовательно (Chrome mobile может крашиться при одновременном запросе)
+        console.log('[LobbyPage] Combined getUserMedia failed, trying sequential...');
+        const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        try {
+          const videoStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user' } });
+          videoStream.getVideoTracks().forEach(track => audioStream.addTrack(track));
+          stream = audioStream;
+        } catch {
+          console.warn('[LobbyPage] Video unavailable, using audio only');
+          stream = audioStream;
+        }
+      }
       
       const prefs = useMediaStore.getState().getMediaPreferences();
       

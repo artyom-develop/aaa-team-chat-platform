@@ -162,21 +162,41 @@ export class RoomHandler {
 
   /**
    * Отключение пользователя (автоматический выход из всех комнат)
+   * Grace period даёт возможность переподключиться без потери сессии
    */
   async handleDisconnect(socket: AuthenticatedSocket): Promise<void> {
-    logger.info(`Socket disconnected: userId=${socket.userId}`);
+    const userId = socket.userId;
+    const socketId = socket.id;
+    logger.info(`Socket disconnected: userId=${userId}, socketId=${socketId}`);
 
-    // Получаем комнаты, в которых находится пользователь
-    const rooms = Array.from(socket.rooms).filter((room) => room !== socket.id);
-    
-    for (const roomSlug of rooms) {
-      // Удаляем участника из Redis
-      if (socket.userId) {
-        await RoomStateService.removeParticipant(roomSlug, socket.userId);
+    if (!userId) return;
+
+    // Grace period: ждём 5 секунд перед удалением
+    const DISCONNECT_GRACE_MS = 5000;
+
+    setTimeout(async () => {
+      try {
+        // Получаем комнаты из Redis (надёжнее чем socket.rooms, которые уже очищены)
+        const rooms = await RoomStateService.getUserRooms(userId);
+
+        for (const roomSlug of rooms) {
+          // Проверяем, не переподключился ли пользователь за время grace period
+          const participant = await RoomStateService.getParticipant(roomSlug, userId);
+          if (participant && participant.socketId !== socketId) {
+            // Пользователь переподключился с новым socketId — не удаляем
+            logger.info(`User ${userId} reconnected to room ${roomSlug}, skipping cleanup`);
+            continue;
+          }
+
+          if (participant) {
+            await RoomStateService.removeParticipant(roomSlug, userId);
+            this.io.to(roomSlug).emit('room:user-left', { userId });
+            logger.info(`User ${userId} removed from room ${roomSlug} after disconnect`);
+          }
+        }
+      } catch (error) {
+        logger.error(`Error handling disconnect for user ${userId}:`, error);
       }
-
-      // Уведомляем других участников о выходе
-      socket.to(roomSlug).emit('room:user-left', { userId: socket.userId || '' });
-    }
+    }, DISCONNECT_GRACE_MS);
   }
 }

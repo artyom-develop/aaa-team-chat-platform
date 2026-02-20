@@ -34,6 +34,9 @@ export class App {
 	 * Инициализация глобальных middlewares
 	 */
 	private initializeMiddlewares(): void {
+		// Trust proxy (needed for express-rate-limit behind reverse proxy like Render.com)
+		this.app.set('trust proxy', 1)
+
 		// Security
 		this.app.use(helmet({
 			crossOriginResourcePolicy: { policy: 'cross-origin' },

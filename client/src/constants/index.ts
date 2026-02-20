@@ -36,9 +36,10 @@ export const MEDIA_CONSTRAINTS: MediaStreamConstraints = {
     autoGainControl: true,
   },
   video: {
-    width: { ideal: 1280 },
-    height: { ideal: 720 },
+    width: { ideal: 1280, max: 1920 },
+    height: { ideal: 720, max: 1080 },
     frameRate: { ideal: 30 },
+    facingMode: 'user',
   },
 };
 

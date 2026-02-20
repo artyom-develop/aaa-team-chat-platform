@@ -163,7 +163,7 @@ export const Controls = ({
 
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="hidden sm:flex p-2 sm:p-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition-colors"
+              className="flex p-2 sm:p-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition-colors"
               title="Настройки"
             >
               <Settings className="w-4 h-4 sm:w-5 sm:h-5" />

@@ -333,8 +333,35 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
           const senders = pc.getSenders();
           const stream = localStreamRef.current;
 
-          // Replace video track (с fallback на addTrack если sender отсутствует)
-          const videoSender = senders.find((s) => s.track?.kind === 'video');
+          // Находим sender-ы по kind трека ИЛИ по типу трансивера
+          // s.track может быть null после track.stop() в некоторых браузерах
+          let videoSender: RTCRtpSender | undefined;
+          let audioSender: RTCRtpSender | undefined;
+
+          for (const sender of senders) {
+            if (sender.track?.kind === 'video' || sender.track === null) {
+              // Если track null — определяем по трансиверу
+              if (sender.track?.kind === 'video') {
+                videoSender = sender;
+              } else if (sender.track === null && !videoSender) {
+                // Проверяем через getTransceivers
+                const transceiver = pc.getTransceivers().find(t => t.sender === sender);
+                if (transceiver?.mid !== null || transceiver?.receiver.track?.kind === 'video') {
+                  videoSender = sender;
+                }
+              }
+            }
+            if (sender.track?.kind === 'audio') {
+              audioSender = sender;
+            } else if (sender.track === null && !audioSender) {
+              const transceiver = pc.getTransceivers().find(t => t.sender === sender);
+              if (transceiver?.receiver.track?.kind === 'audio') {
+                audioSender = sender;
+              }
+            }
+          }
+
+          // Replace video track
           if (newVideoTrack) {
             if (videoSender) {
               await videoSender.replaceTrack(newVideoTrack);
@@ -343,8 +370,7 @@ export const useWebRTC = (iceServers?: IceServer[]) => {
             }
           }
 
-          // Replace audio track (с fallback на addTrack если sender отсутствует)
-          const audioSender = senders.find((s) => s.track?.kind === 'audio');
+          // Replace audio track
           if (audioTrack) {
             if (audioSender) {
               await audioSender.replaceTrack(audioTrack);

@@ -9,7 +9,7 @@ import { useMediaStore } from '../store/mediaStore';
 import { useAuthStore } from '../store/authStore';
 import { apiService } from '../services/api';
 import { socketService } from '../services/socket';
-import { PEER_CONNECTION_CONFIG } from '../constants';
+import { PEER_CONNECTION_CONFIG, MEDIA_CONSTRAINTS } from '../constants';
 import toast from 'react-hot-toast';
 
 export const RoomPage = () => {
@@ -90,18 +90,22 @@ export const RoomPage = () => {
         if (!currentStream) {
           console.log('[RoomPage] No media stream found, requesting access...');
           try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-              audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                autoGainControl: true,
-              },
-              video: {
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-                frameRate: { ideal: 30 },
-              },
-            });
+            let stream: MediaStream;
+            try {
+              stream = await navigator.mediaDevices.getUserMedia(MEDIA_CONSTRAINTS);
+            } catch {
+              // Fallback: запрашиваем последовательно (Chrome mobile)
+              console.log('[RoomPage] Combined getUserMedia failed, trying sequential...');
+              const audioStream = await navigator.mediaDevices.getUserMedia({ audio: MEDIA_CONSTRAINTS.audio, video: false });
+              try {
+                const videoStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user' } });
+                videoStream.getVideoTracks().forEach(track => audioStream.addTrack(track));
+                stream = audioStream;
+              } catch {
+                console.warn('[RoomPage] Video unavailable, using audio only');
+                stream = audioStream;
+              }
+            }
             console.log('[RoomPage] Media stream obtained:', {
               streamId: stream.id,
               videoTracks: stream.getVideoTracks().length,
